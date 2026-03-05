@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Extra Brut — French Bloom</title>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<style>
+/* @font-face — French Bloom Brand Typography */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & DESIGN TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white-bloom:     #FCF5ED;
+  --blanc:           #FFFFFF;
+  --noir:            #1A1A1A;
+  --noir-doux:       #3A3A3A;
+  --encre:           #2C2620;
+  --or:              #D4B188;
+  --or-pale:         #E2C9A6;
+  --or-sombre:       #B89A6E;
+  --or-glow:         rgba(212,177,136,0.15);
+  --coral:           #EA5438;
+  --coral-hover:     #D44828;
+  --almond-green:    #ACB99C;
+  --gris:            #8A8A8A;
+  --gris-clair:      #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose:            #D4A094;
+  --rose-pale:       #E8C4B8;
+  --cuvee-blanc:     #F5EDD4;
+  --cuvee-rose:      #F2D5CC;
+  --cuvee-brut:      #E8E0D8;
+  --cuvee-vintage:   #2C2620;
+
+  --ease-luxe:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft:    cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring:  cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --t-fast:       0.3s;
+  --t-medium:     0.5s;
+  --t-slow:       0.8s;
+  --t-cinematic:  1.2s;
+
+  --z-cursor:  9999;
+  --z-reveal:  9000;
+  --z-nav:     1000;
+  --z-mobile:  800;
+  --z-toast:   700;
+}
+
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: var(--noir);
+  background: var(--white-bloom);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ============================================
+   PAGE REVEAL
+   ============================================ */
+.reveal-overlay {
+  position: fixed; inset: 0;
+  background: var(--encre);
+  z-index: var(--z-reveal);
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.reveal-overlay__text {
+  font-family: 'Begum', serif;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  letter-spacing: 0.3em;
+  color: var(--or);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   CUSTOM CURSOR (desktop only)
+   ============================================ */
+.cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: var(--z-cursor); mix-blend-mode: difference; }
+.cursor__outer { width: 40px; height: 40px; border: 1.5px solid var(--or); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.4s var(--ease-luxe), height 0.4s var(--ease-luxe), border-color 0.3s; }
+.cursor__dot { position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: var(--or); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: var(--z-cursor); }
+.cursor--hover .cursor__outer { width: 56px; height: 56px; border-color: var(--coral); }
+@media (pointer: coarse) { .cursor, .cursor__dot { display: none !important; } }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed; top: 0; left: 0; width: 100%; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  z-index: var(--z-nav);
+  background: rgba(44,38,32,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: transform 0.5s var(--ease-luxe), background 0.4s, opacity 0.5s var(--ease-luxe);
+}
+.nav--hidden { transform: translateY(-100%); }
+.nav--frosted { background: rgba(44,38,32,0.92); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.nav__links { display: flex; gap: 2.5rem; list-style: none; }
+.nav__links a {
+  font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--blanc); opacity: 0.7; transition: opacity var(--t-fast);
+}
+.nav__links a:hover, .nav__links a.active { opacity: 1; }
+.nav__links a.active { border-bottom: 1.5px solid var(--or); padding-bottom: 2px; }
+.nav__logo {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-family: 'Begum', serif; font-size: 0.95rem; letter-spacing: 0.25em;
+  color: var(--blanc); text-transform: uppercase; white-space: nowrap;
+}
+.nav__right { display: flex; align-items: center; gap: 1.2rem; }
+.nav__icon { color: var(--blanc); opacity: 0.7; transition: opacity var(--t-fast); }
+.nav__icon:hover { opacity: 1; }
+.nav__cart { position: relative; }
+.nav__cart-count {
+  position: absolute; top: -5px; right: -8px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--coral); color: var(--blanc);
+  font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav__hamburger {
+  display: none; flex-direction: column; gap: 5px; width: 24px; cursor: pointer; order: -1;
+}
+.nav__hamburger span {
+  width: 100%; height: 1.5px; background: var(--blanc);
+  transition: transform var(--t-fast) var(--ease-luxe), opacity var(--t-fast);
+}
+.nav__hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.nav__hamburger.active span:nth-child(2) { opacity: 0; }
+.nav__hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+.mobile-menu {
+  position: fixed; inset: 0; background: var(--encre);
+  z-index: calc(var(--z-nav) - 1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+  opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease-luxe);
+}
+.mobile-menu.open { opacity: 1; pointer-events: all; }
+.mobile-menu__section-title {
+  font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--or); opacity: 0.6; margin-bottom: -0.5rem; margin-top: 1rem;
+}
+.mobile-menu a {
+  font-family: 'Begum', serif; font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+  color: var(--blanc); opacity: 0.8; transition: opacity var(--t-fast), color var(--t-fast);
+}
+.mobile-menu a:hover { opacity: 1; color: var(--or); }
+
+/* ============================================
+   SECTION 1 — HERO IMMERSIF
+   ============================================ */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  text-align: center;
+  padding-bottom: clamp(4rem, 8vh, 6rem);
+}
+.hero__bg {
+  position: absolute; inset: 0;
+  background: url('assets/lifestyle/lifestyle-dining.jpg') center/cover no-repeat;
+  z-index: 0;
+}
+.hero__bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(26,26,26,0.85) 0%, rgba(44,38,32,0.5) 40%, rgba(44,38,32,0.35) 100%);
+}
+.hero__bubbles {
+  position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none;
+}
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(212,177,136,0.4), rgba(212,177,136,0.05));
+  pointer-events: none;
+  animation: bubbleFloat var(--duration, 8s) var(--delay, 0s) infinite ease-in-out;
+}
+@keyframes bubbleFloat {
+  0%   { transform: translateY(0) scale(1); opacity: 0; }
+  10%  { opacity: var(--max-opacity, 0.3); }
+  90%  { opacity: var(--max-opacity, 0.3); }
+  100% { transform: translateY(calc(-100vh - 50px)) scale(var(--end-scale, 0.5)); opacity: 0; }
+}
+.hero__bottle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  height: 55vh;
+  max-height: 500px;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 80px rgba(0,0,0,0.5));
+  opacity: 0;
+}
+.hero__content {
+  position: relative; z-index: 4;
+  display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+}
+.hero__badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--or);
+  border: 1px solid var(--or);
+  padding: 0.35rem 1.2rem;
+  border-radius: 50px;
+  opacity: 0;
+}
+.hero__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  color: var(--blanc);
+  opacity: 0;
+}
+.hero__tagline {
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(0.8rem, 1.1vw, 1rem);
+  color: var(--or-pale);
+  opacity: 0;
+  max-width: 480px;
+  line-height: 1.8;
+}
+.hero__scroll {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  opacity: 0;
+  z-index: 4;
+}
+.hero__scroll-text {
+  font-size: 0.55rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--or);
+  opacity: 0.5;
+}
+.hero__scroll-line {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom, var(--or), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+}
+
+/* ============================================
+   SECTION 2 — STORY SCROLL (3 CHAPTERS)
+   ============================================ */
+.story {
+  background: var(--white-bloom);
+  padding: 0;
+}
+
+/* Chapter layout — shared */
+.chapter {
+  padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 5vw, 4rem);
+}
+.chapter__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.chapter__row--reverse .chapter__image { order: 2; }
+.chapter__row--reverse .chapter__text { order: 1; }
+.chapter__image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.chapter__image img {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.chapter__label {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 1rem;
+}
+.chapter__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  line-height: 1.15;
+  color: var(--encre);
+  margin-bottom: 1.2rem;
+}
+.chapter__body {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  color: var(--noir-doux);
+  line-height: 1.8;
+  max-width: 500px;
+}
+
+/* Chapter 2 — Aroma Wheel */
+.aroma {
+  padding: clamp(5rem, 12vh, 9rem) clamp(1.5rem, 5vw, 4rem);
+  text-align: center;
+}
+.aroma__header {
+  margin-bottom: clamp(3rem, 5vh, 4rem);
+}
+.aroma__label {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 0.8rem;
+}
+.aroma__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  color: var(--encre);
+}
+.aroma__wheel {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.aroma__bottle {
+  width: auto;
+  height: clamp(280px, 40vh, 380px);
+  object-fit: contain;
+  filter: drop-shadow(0 20px 50px rgba(0,0,0,0.15));
+  z-index: 2;
+  position: relative;
+}
+.petal {
+  position: absolute;
+  background: var(--blanc);
+  border: 1px solid var(--gris-tres-clair);
+  border-radius: 12px;
+  padding: 1.5rem 1.8rem;
+  max-width: 220px;
+  text-align: left;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  transition: transform var(--t-fast) var(--ease-spring), border-color var(--t-fast), box-shadow var(--t-fast);
+  z-index: 3;
+  opacity: 0;
+}
+.petal:hover {
+  transform: scale(1.05);
+  border-color: var(--or);
+  box-shadow: 0 8px 36px var(--or-glow);
+}
+.petal--nez    { top: 0; left: 50%; transform: translateX(-50%); }
+.petal--nez:hover { transform: translateX(-50%) scale(1.05); }
+.petal--bouche { bottom: 2rem; left: 0; }
+.petal--finale { bottom: 2rem; right: 0; }
+.petal__icon {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+.petal__title {
+  font-family: 'Begum', serif;
+  font-size: 0.95rem;
+  color: var(--encre);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.petal__desc {
+  font-size: 0.78rem;
+  color: var(--gris);
+  line-height: 1.6;
+}
+
+/* Chapter 3 — Terroir Data */
+.terroir-data {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.terroir-data__item {
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--gris-tres-clair);
+}
+.terroir-data__label {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 0.2rem;
+}
+.terroir-data__value {
+  font-family: 'Begum', serif;
+  font-size: 0.95rem;
+  color: var(--encre);
+}
+
+/* Separator ornament between story and composer */
+.separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  background: var(--white-bloom);
+}
+.separator__line {
+  width: 60px;
+  height: 1px;
+  background: var(--gris-clair);
+}
+.separator__diamond {
+  width: 6px;
+  height: 6px;
+  background: var(--or);
+  transform: rotate(45deg);
+  margin: 0 1rem;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   SECTION 3 — COMPOSER SON MOMENT
+   ============================================ */
+.composer {
+  background: var(--white-bloom);
+  border-top: 1px solid var(--gris-tres-clair);
+  padding: clamp(4rem, 10vh, 7rem) clamp(1.5rem, 5vw, 4rem);
+}
+.composer__inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.composer__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  color: var(--encre);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/* Step shared */
+.composer__step {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--gris-tres-clair);
+}
+.composer__step:first-child {
+  border-top: 1px solid var(--gris-tres-clair);
+}
+.composer__step-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 0.8rem;
+}
+.composer__step-title {
+  font-family: 'Begum', serif;
+  font-size: 1.1rem;
+  color: var(--encre);
+  margin-bottom: 0.3rem;
+}
+
+/* Step 1 — Cuvee */
+.step-cuvee {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.step-cuvee__bottle {
+  width: 50px;
+  height: auto;
+  object-fit: contain;
+}
+.step-cuvee__info {
+  flex: 1;
+}
+.step-cuvee__name {
+  font-family: 'Begum', serif;
+  font-size: 1rem;
+  color: var(--encre);
+}
+.step-cuvee__price {
+  font-size: 0.85rem;
+  color: var(--gris);
+}
+
+/* Step 2 — Quantite */
+.qty-selector {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--gris-clair);
+  border-radius: 50px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+.qty-selector__btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--encre);
+  background: transparent;
+  transition: background var(--t-fast);
+}
+.qty-selector__btn:hover {
+  background: var(--gris-tres-clair);
+}
+.qty-selector__value {
+  width: 44px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--encre);
+}
+.step-qty__hint {
+  font-size: 0.75rem;
+  color: var(--gris);
+  font-style: italic;
+  margin-top: 0.6rem;
+}
+
+/* Step 3 — Coffret */
+.coffret-toggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.coffret-toggle__switch {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  background: var(--gris-clair);
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background var(--t-fast);
+  flex-shrink: 0;
+}
+.coffret-toggle__switch.active {
+  background: var(--or);
+}
+.coffret-toggle__switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--blanc);
+  transition: transform var(--t-fast) var(--ease-spring);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.coffret-toggle__switch.active::after {
+  transform: translateX(22px);
+}
+.coffret-toggle__label {
+  font-size: 0.85rem;
+  color: var(--encre);
+}
+.coffret-toggle__price {
+  font-size: 0.85rem;
+  color: var(--or-sombre);
+  font-weight: 500;
+}
+.coffret-preview {
+  margin-top: 1rem;
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--gris-tres-clair);
+  border-radius: 8px;
+}
+.coffret-preview.visible {
+  display: flex;
+}
+.coffret-preview__img {
+  width: 60px;
+  height: auto;
+  object-fit: contain;
+}
+.coffret-preview__text {
+  font-size: 0.8rem;
+  color: var(--noir-doux);
+}
+
+/* Step 4 — Message */
+.step-message {
+  display: none;
+}
+.step-message.visible {
+  display: block;
+}
+.step-message__textarea {
+  width: 100%;
+  height: 100px;
+  padding: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--encre);
+  background: var(--blanc);
+  border: 1px solid var(--gris-clair);
+  border-radius: 8px;
+  resize: none;
+  margin-top: 0.5rem;
+  transition: border-color var(--t-fast);
+}
+.step-message__textarea:focus {
+  outline: none;
+  border-color: var(--or);
+}
+.step-message__counter {
+  text-align: right;
+  font-size: 0.7rem;
+  color: var(--gris);
+  margin-top: 0.3rem;
+}
+
+/* CTA Button */
+.composer__cta {
+  display: block;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1.15rem 2rem;
+  background: var(--coral);
+  color: var(--blanc);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: background var(--t-fast), transform 0.2s;
+}
+.composer__cta:hover {
+  background: var(--coral-hover);
+  transform: scale(1.02);
+}
+.composer__cta:active {
+  transform: scale(0.98);
+}
+/* Ripple effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  transform: scale(0);
+  animation: rippleAnim 0.6s ease-out;
+  pointer-events: none;
+}
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* Confetti burst */
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: var(--z-toast);
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: confettiFall 1.2s ease-out forwards;
+}
+@keyframes confettiFall {
+  0%   { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translate(var(--cx), var(--cy)) rotate(var(--cr)) scale(0.3); }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--encre);
+  color: var(--blanc);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  z-index: var(--z-toast);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  transition: transform 0.5s var(--ease-spring), opacity 0.4s;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================
+   SECTION 4 — ACCORD DE MOMENTS (CROSS-SELL)
+   ============================================ */
+.accord {
+  background: var(--encre);
+  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 5vw, 4rem);
+}
+.accord__header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.accord__label {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--or);
+  opacity: 0.6;
+  margin-bottom: 0.8rem;
+}
+.accord__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  color: var(--blanc);
+}
+
+/* Moment Cards */
+.accord__moments {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto 4rem;
+}
+.moment-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  min-height: 280px;
+  cursor: pointer;
+}
+.moment-card__bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s var(--ease-luxe);
+}
+.moment-card:hover .moment-card__bg {
+  transform: scale(1.06);
+}
+.moment-card__overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(26,26,26,0.75), transparent 60%);
+}
+.moment-card__content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 1.5rem;
+  z-index: 2;
+}
+.moment-card__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  color: var(--blanc);
+  margin-bottom: 0.3rem;
+}
+.moment-card__desc {
+  font-size: 0.78rem;
+  color: var(--gris-clair);
+  line-height: 1.5;
+}
+
+/* Product suggestions */
+.accord__products-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.accord__products-title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  color: var(--blanc);
+}
+.accord__products {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.product-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(212,177,136,0.12);
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.product-card:hover {
+  border-color: var(--or);
+  background: rgba(255,255,255,0.07);
+}
+.product-card__img {
+  height: clamp(160px, 22vh, 220px);
+  object-fit: contain;
+  margin: 0 auto 1.2rem;
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+}
+.product-card__name {
+  font-family: 'Begum', serif;
+  font-size: 1.05rem;
+  color: var(--blanc);
+  margin-bottom: 0.3rem;
+}
+.product-card__price {
+  font-size: 0.85rem;
+  color: var(--or);
+  margin-bottom: 1rem;
+}
+.product-card__cta {
+  display: inline-block;
+  padding: 0.7rem 2rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--or);
+  border: 1px solid var(--or);
+  border-radius: 50px;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.product-card__cta:hover {
+  background: var(--or);
+  color: var(--encre);
+}
+
+/* ============================================
+   SECTION 5 — NEWSLETTER
+   ============================================ */
+.newsletter {
+  background: var(--white-bloom);
+  padding: clamp(4rem, 8vh, 6rem) clamp(1.5rem, 5vw, 3rem);
+  text-align: center;
+}
+.newsletter__crest {
+  width: 50px;
+  margin: 0 auto 1.5rem;
+  opacity: 0.4;
+}
+.newsletter__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  color: var(--encre);
+  margin-bottom: 0.6rem;
+}
+.newsletter__subtitle {
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  color: var(--gris);
+  max-width: 460px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.newsletter__form {
+  display: flex;
+  max-width: 440px;
+  margin: 0 auto;
+  border: 1px solid var(--gris-clair);
+  border-radius: 50px;
+  overflow: hidden;
+  transition: border-color var(--t-fast);
+}
+.newsletter__form:focus-within { border-color: var(--or); }
+.newsletter__input {
+  flex: 1;
+  padding: 0.9rem 1.5rem;
+  border: none;
+  background: transparent;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--encre);
+}
+.newsletter__input::placeholder { color: var(--gris); }
+.newsletter__input:focus { outline: none; }
+.newsletter__btn {
+  padding: 0.9rem 1.8rem;
+  background: var(--encre);
+  color: var(--blanc);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.newsletter__btn:hover { background: var(--noir); }
+
+/* ============================================
+   FOOTER LUXE
+   ============================================ */
+.footer {
+  background: var(--encre);
+  padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 5vw, 3rem) 1.5rem;
+  color: var(--blanc);
+}
+.footer__top {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.footer__crest {
+  width: 42px;
+  margin: 0 auto 0.8rem;
+  opacity: 0.3;
+}
+.footer__tagline {
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--or-pale);
+  opacity: 0.5;
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto 2.5rem;
+}
+.footer__col-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 0.8rem;
+}
+.footer__col ul { list-style: none; }
+.footer__col li { margin-bottom: 0.4rem; }
+.footer__col a {
+  font-size: 0.78rem;
+  color: var(--blanc);
+  opacity: 0.5;
+  transition: opacity var(--t-fast);
+}
+.footer__col a:hover { opacity: 1; }
+.footer__badges {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--or);
+  opacity: 0.3;
+  margin-bottom: 1.5rem;
+}
+.footer__bottom {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--blanc);
+  opacity: 0.25;
+}
+
+/* ============================================
+   PRODUCT BADGE DETAIL
+   ============================================ */
+.chapter__highlight {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: var(--or-glow);
+  border-left: 2px solid var(--or);
+  font-size: 0.8rem;
+  color: var(--encre);
+  font-style: italic;
+  margin-top: 1rem;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Accordion transition helper */
+.slide-enter {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s var(--ease-luxe), opacity 0.4s;
+}
+.slide-enter.visible {
+  max-height: 300px;
+  opacity: 1;
+}
+
+/* ============================================
+   SECTION TRANSITION — GRADIENT FADE
+   ============================================ */
+.accord::before {
+  content: '';
+  display: block;
+  height: 80px;
+  margin-top: -80px;
+  background: linear-gradient(to bottom, var(--white-bloom), var(--encre));
+  pointer-events: none;
+}
+
+/* ============================================
+   COMPOSER STEP NUMBERS
+   ============================================ */
+.composer__step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--or);
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--or);
+  margin-right: 0.6rem;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .nav__links { display: none; }
+  .nav__hamburger { display: flex; }
+
+  .chapter__row,
+  .chapter__row--reverse {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .chapter__row--reverse .chapter__image { order: 0; }
+  .chapter__row--reverse .chapter__text { order: 0; }
+
+  .chapter__image img {
+    min-height: 260px;
+  }
+
+  .chapter {
+    padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .aroma {
+    padding: clamp(3rem, 8vh, 5rem) clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .aroma__wheel {
+    flex-direction: column;
+    min-height: auto;
+    gap: 1.5rem;
+    padding: 2rem 0;
+  }
+  .petal {
+    position: relative;
+    top: auto; left: auto; right: auto; bottom: auto;
+    transform: none;
+    max-width: 100%;
+  }
+  .petal--nez { transform: none; }
+  .petal--nez:hover { transform: scale(1.03); }
+  .aroma__bottle {
+    height: 200px;
+    margin-bottom: 1rem;
+  }
+
+  .accord__moments { grid-template-columns: 1fr; }
+  .accord__products { grid-template-columns: 1fr; max-width: 340px; }
+
+  .moment-card {
+    min-height: 220px;
+  }
+
+  .product-card {
+    padding: 1.5rem 1rem;
+  }
+  .product-card__img {
+    height: 160px;
+  }
+
+  .composer__title {
+    font-size: 1.6rem;
+  }
+
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding-bottom: 3rem;
+  }
+  .hero__bottle {
+    height: 40vh;
+    max-height: 320px;
+  }
+  .hero__title {
+    font-size: 2.6rem;
+  }
+  .hero__badge {
+    font-size: 0.5rem;
+    padding: 0.25rem 0.8rem;
+  }
+  .hero__tagline {
+    font-size: 0.78rem;
+    padding: 0 1rem;
+  }
+  .hero__scroll {
+    bottom: 1.2rem;
+  }
+  .hero__scroll-line {
+    height: 35px;
+  }
+
+  .chapter__body {
+    font-size: 0.85rem;
+  }
+  .chapter__title {
+    font-size: 1.4rem;
+  }
+
+  .terroir-data {
+    grid-template-columns: 1fr;
+  }
+
+  .aroma__title {
+    font-size: 1.4rem;
+  }
+
+  .composer {
+    padding: clamp(3rem, 6vh, 5rem) 1.2rem;
+  }
+  .composer__step {
+    padding: 1.2rem 0;
+  }
+  .composer__cta {
+    font-size: 0.75rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .qty-selector__btn {
+    width: 38px;
+    height: 38px;
+  }
+  .qty-selector__value {
+    width: 38px;
+    font-size: 0.85rem;
+  }
+
+  .coffret-toggle {
+    flex-wrap: wrap;
+  }
+  .coffret-toggle__price {
+    width: 100%;
+    padding-left: 58px;
+    margin-top: -0.3rem;
+  }
+
+  .step-message__textarea {
+    height: 80px;
+    font-size: 0.8rem;
+  }
+
+  .accord {
+    padding: clamp(3rem, 6vh, 5rem) 1.2rem;
+  }
+  .accord__title {
+    font-size: 1.4rem;
+  }
+  .accord__products-title {
+    font-size: 1.1rem;
+  }
+  .moment-card {
+    min-height: 180px;
+  }
+  .moment-card__title {
+    font-size: 1rem;
+  }
+  .moment-card__desc {
+    font-size: 0.72rem;
+  }
+
+  .newsletter {
+    padding: 3rem 1.2rem;
+  }
+  .newsletter__title {
+    font-size: 1.3rem;
+  }
+
+  .footer__grid { grid-template-columns: 1fr; text-align: center; }
+  .newsletter__form {
+    flex-direction: column;
+    border-radius: 12px;
+  }
+  .newsletter__btn {
+    border-radius: 0 0 12px 12px;
+  }
+
+  .separator {
+    padding: 1.5rem 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE REVEAL ========== -->
+<div class="reveal-overlay" aria-hidden="true">
+  <span class="reveal-overlay__text">L'Extra Brut</span>
+</div>
+
+<!-- ========== CUSTOM CURSOR ========== -->
+<div class="cursor" aria-hidden="true"><div class="cursor__outer"></div></div>
+<div class="cursor__dot" aria-hidden="true"></div>
+
+<!-- ========== NAVIGATION ========== -->
+<nav class="nav" aria-label="Navigation principale">
+  <div class="nav__hamburger" aria-label="Menu" aria-expanded="false" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+  <ul class="nav__links">
+    <li><a href="collection-v2.html">Nos Moments</a></li>
+    <li><a href="la-maison-v2.html">La Maison</a></li>
+    <li><a href="collection-v2.html" class="active">La Collection</a></li>
+  </ul>
+  <a href="homepage-v2.html" class="nav__logo">French Bloom</a>
+  <div class="nav__right">
+    <a href="#" class="nav__icon" aria-label="Rechercher">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </a>
+    <a href="cart-v2.html" class="nav__icon nav__cart" aria-label="Panier">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="nav__cart-count">3</span>
+    </a>
+  </div>
+</nav>
+<div class="mobile-menu" aria-hidden="true">
+  <span class="mobile-menu__section-title">Les Moments</span>
+  <a href="collection-v2.html">L'Apéro Rooftop</a>
+  <a href="collection-v2.html">La Célébration</a>
+  <a href="collection-v2.html">Le Brunch</a>
+  <a href="collection-v2.html">Le Cadeau</a>
+  <a href="collection-v2.html">L'After F1</a>
+  <span class="mobile-menu__section-title">La Maison</span>
+  <a href="collection-v2.html">Nos Moments</a>
+  <a href="la-maison-v2.html">La Maison</a>
+  <a href="collection-v2.html">La Collection</a>
+</div>
+
+<!-- ========== SECTION 1 — HERO IMMERSIF ========== -->
+<section class="hero" aria-label="L'Extra Brut">
+  <div class="hero__bg" aria-hidden="true"></div>
+
+  <!-- Golden bubbles -->
+  <div class="hero__bubbles" aria-hidden="true">
+    <div class="bubble" style="left:12%;bottom:-20px;width:10px;height:10px;--duration:7s;--delay:0s;--max-opacity:0.25;--end-scale:0.4;"></div>
+    <div class="bubble" style="left:30%;bottom:-30px;width:14px;height:14px;--duration:9s;--delay:1.5s;--max-opacity:0.2;--end-scale:0.6;"></div>
+    <div class="bubble" style="left:50%;bottom:-15px;width:8px;height:8px;--duration:6.5s;--delay:0.8s;--max-opacity:0.3;--end-scale:0.3;"></div>
+    <div class="bubble" style="left:68%;bottom:-25px;width:12px;height:12px;--duration:8.5s;--delay:2s;--max-opacity:0.22;--end-scale:0.5;"></div>
+    <div class="bubble" style="left:82%;bottom:-10px;width:6px;height:6px;--duration:7.5s;--delay:3s;--max-opacity:0.28;--end-scale:0.35;"></div>
+    <div class="bubble" style="left:45%;bottom:-35px;width:16px;height:16px;--duration:10s;--delay:4s;--max-opacity:0.15;--end-scale:0.7;"></div>
+    <div class="bubble" style="left:22%;bottom:-18px;width:9px;height:9px;--duration:8s;--delay:2.5s;--max-opacity:0.2;--end-scale:0.45;"></div>
+  </div>
+
+  <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut — French Bloom" class="hero__bottle">
+
+  <div class="hero__content">
+    <span class="hero__badge">Cuvée Prestige</span>
+    <h1 class="hero__title">L'Extra Brut</h1>
+    <p class="hero__tagline">L'audace de la pureté. Zéro compromis, zéro alcool.</p>
+  </div>
+
+  <div class="hero__scroll">
+    <span class="hero__scroll-text">Découvrir</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- ========== SECTION 2 — STORY SCROLL ========== -->
+<section class="story" aria-label="L'histoire de L'Extra Brut">
+
+  <!-- Chapter 1: L'Intention -->
+  <div class="chapter chapter--intention">
+    <div class="chapter__row">
+      <div class="chapter__image" data-reveal="left">
+        <img src="assets/lifestyle/lifestyle-festive.jpg" alt="Moment festif French Bloom" loading="lazy">
+      </div>
+      <div class="chapter__text" data-reveal="right">
+        <p class="chapter__label">Chapitre I</p>
+        <h2 class="chapter__title">Pourquoi L'Extra Brut ?</h2>
+        <p class="chapter__body">Né de l'audace, L'Extra Brut est la réponse French Bloom à ceux qui recherchent une effervescence sans concession. Élaboré à partir de Chardonnay d'exception de Limoux, il offre la vivacité d'un grand brut sans alcool.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter 2: Les Sens — Aroma Wheel -->
+  <div class="chapter aroma">
+    <div class="aroma__header" data-reveal="up">
+      <p class="aroma__label">Chapitre II</p>
+      <h2 class="aroma__title">Les Sens</h2>
+    </div>
+    <div class="aroma__wheel">
+      <div class="petal petal--nez" data-petal>
+        <div class="petal__icon">&#127818;</div>
+        <p class="petal__title">Nez</p>
+        <p class="petal__desc">Agrumes frais, fleur d'acacia, touche de brioche</p>
+      </div>
+      <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut" class="aroma__bottle" loading="lazy">
+      <div class="petal petal--bouche" data-petal>
+        <div class="petal__icon">&#127862;</div>
+        <p class="petal__title">Bouche</p>
+        <p class="petal__desc">Bulles fines et persistantes, fraîcheur minérale, pomme verte</p>
+      </div>
+      <div class="petal petal--finale" data-petal>
+        <div class="petal__icon">&#10024;</div>
+        <p class="petal__title">Finale</p>
+        <p class="petal__desc">Longueur élégante, notes d'amande, finale sèche et nette</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter 3: Le Terroir -->
+  <div class="chapter chapter--terroir">
+    <div class="chapter__row chapter__row--reverse">
+      <div class="chapter__image" data-reveal="right">
+        <img src="assets/lifestyle/hero-sand.jpg" alt="Terroir de Limoux" loading="lazy">
+      </div>
+      <div class="chapter__text" data-reveal="left">
+        <p class="chapter__label">Chapitre III</p>
+        <h2 class="chapter__title">Le Terroir</h2>
+        <p class="chapter__body">Nos vignes de Chardonnay s'épanouissent dans les coteaux de Limoux, berceau historique de l'effervescence en France. L'altitude, le climat et le savoir-faire séculaire de la région donnent à L'Extra Brut sa personnalité unique.</p>
+        <div class="terroir-data">
+          <div class="terroir-data__item">
+            <p class="terroir-data__label">Origine</p>
+            <p class="terroir-data__value">Limoux, Languedoc</p>
+          </div>
+          <div class="terroir-data__item">
+            <p class="terroir-data__label">Altitude</p>
+            <p class="terroir-data__value">250m</p>
+          </div>
+          <div class="terroir-data__item">
+            <p class="terroir-data__label">Cépage</p>
+            <p class="terroir-data__value">Chardonnay 100%</p>
+          </div>
+          <div class="terroir-data__item">
+            <p class="terroir-data__label">Méthode</p>
+            <p class="terroir-data__value">Méthode traditionnelle</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Separator -->
+<div class="separator" aria-hidden="true">
+  <div class="separator__line"></div>
+  <div class="separator__diamond"></div>
+  <div class="separator__line"></div>
+</div>
+
+<!-- ========== SECTION 3 — COMPOSER SON MOMENT ========== -->
+<section class="composer" aria-label="Composer votre moment" id="composer">
+  <div class="composer__inner">
+    <h2 class="composer__title">Composer Votre Moment</h2>
+
+    <!-- Step 1: Cuvee -->
+    <div class="composer__step">
+      <p class="composer__step-label">Étape 1</p>
+      <p class="composer__step-title">Votre Cuvée</p>
+      <div class="step-cuvee">
+        <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut" class="step-cuvee__bottle">
+        <div class="step-cuvee__info">
+          <p class="step-cuvee__name">L'Extra Brut</p>
+          <p class="step-cuvee__price">49€ la bouteille</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Quantite -->
+    <div class="composer__step">
+      <p class="composer__step-label">Étape 2</p>
+      <p class="composer__step-title">Quantité</p>
+      <div class="qty-selector">
+        <button class="qty-selector__btn" data-qty="minus" aria-label="Diminuer la quantité">&minus;</button>
+        <span class="qty-selector__value" data-qty-value>1</span>
+        <button class="qty-selector__btn" data-qty="plus" aria-label="Augmenter la quantité">+</button>
+      </div>
+      <p class="step-qty__hint">Pour un dîner à 4, 2 bouteilles — Pour une fête, 6 bouteilles</p>
+    </div>
+
+    <!-- Step 3: Coffret -->
+    <div class="composer__step">
+      <p class="composer__step-label">Étape 3</p>
+      <p class="composer__step-title">Coffret Cadeau</p>
+      <div class="coffret-toggle">
+        <div class="coffret-toggle__switch" data-coffret-switch role="switch" aria-checked="false" tabindex="0" aria-label="Coffret cadeau"></div>
+        <span class="coffret-toggle__label">Ajouter un coffret cadeau</span>
+        <span class="coffret-toggle__price">+12€</span>
+      </div>
+      <div class="coffret-preview" data-coffret-preview>
+        <img src="assets/bottles/la-cuvee-coffret.png" alt="Coffret cadeau" class="coffret-preview__img">
+        <p class="coffret-preview__text">Écrin de la Maison, finition dorée, ruban signature.</p>
+      </div>
+    </div>
+
+    <!-- Step 4: Message Personnel -->
+    <div class="composer__step step-message" data-message-step>
+      <p class="composer__step-label">Étape 4</p>
+      <p class="composer__step-title">Message Personnel</p>
+      <textarea class="step-message__textarea" placeholder="Votre message" maxlength="200" data-message-input></textarea>
+      <p class="step-message__counter"><span data-char-count>0</span> / 200</p>
+    </div>
+
+    <!-- CTA -->
+    <button class="composer__cta" data-cta aria-label="Créer mon moment">
+      Créer mon moment — <span data-total-price>49</span>€
+    </button>
+  </div>
+</section>
+
+<!-- ========== SECTION 4 — ACCORD DE MOMENTS ========== -->
+<section class="accord" aria-label="Accords de moments">
+
+  <!-- Moment suggestions -->
+  <div class="accord__header" data-reveal="up">
+    <p class="accord__label">Accords</p>
+    <h2 class="accord__title">Ce Brut est parfait pour...</h2>
+  </div>
+  <div class="accord__moments">
+    <a href="collection-v2.html" class="moment-card" data-reveal="left">
+      <div class="moment-card__bg" style="background-image:url('assets/lifestyle/lifestyle-convivial.jpg')"></div>
+      <div class="moment-card__overlay"></div>
+      <div class="moment-card__content">
+        <h3 class="moment-card__title">L'Apéro Rooftop</h3>
+        <p class="moment-card__desc">En altitude, sous le ciel doré, le brut révèle ses notes les plus vives.</p>
+      </div>
+    </a>
+    <a href="collection-v2.html" class="moment-card" data-reveal="right">
+      <div class="moment-card__bg" style="background-image:url('assets/lifestyle/lifestyle-festive.jpg')"></div>
+      <div class="moment-card__overlay"></div>
+      <div class="moment-card__content">
+        <h3 class="moment-card__title">La Célébration</h3>
+        <p class="moment-card__desc">L'éclat d'un grand moment, la légèreté du lendemain.</p>
+      </div>
+    </a>
+  </div>
+
+  <!-- Product suggestions -->
+  <div class="accord__products-header" data-reveal="up">
+    <h3 class="accord__products-title">Complétez l'expérience</h3>
+  </div>
+  <div class="accord__products">
+    <a href="product-v2.html" class="product-card" data-reveal="left">
+      <img src="assets/bottles/le-blanc.png" alt="Le Blanc" class="product-card__img" loading="lazy">
+      <p class="product-card__name">Le Blanc</p>
+      <p class="product-card__price">39€</p>
+      <span class="product-card__cta">Découvrir</span>
+    </a>
+    <a href="product-v2.html" class="product-card" data-reveal="right">
+      <img src="assets/bottles/le-rose.png" alt="Le Rosé" class="product-card__img" loading="lazy">
+      <p class="product-card__name">Le Rosé</p>
+      <p class="product-card__price">39€</p>
+      <span class="product-card__cta">Découvrir</span>
+    </a>
+  </div>
+</section>
+
+<!-- ========== SECTION 5 — NEWSLETTER ========== -->
+<section class="newsletter" aria-label="Rejoindre la Maison">
+  <img src="assets/logos/french-bloom-crest.png" alt="French Bloom" class="newsletter__crest">
+  <h2 class="newsletter__title">Rejoignez La Maison French Bloom</h2>
+  <p class="newsletter__subtitle">Accédez aux cuvées avant tout le monde, aux invitations privées et aux récits de la Maison.</p>
+  <form class="newsletter__form" onsubmit="event.preventDefault(); this.querySelector('.newsletter__btn').textContent = 'Merci';">
+    <input type="email" class="newsletter__input" placeholder="Votre adresse e-mail" required aria-label="Adresse e-mail">
+    <button type="submit" class="newsletter__btn">Rejoindre</button>
+  </form>
+</section>
+
+<!-- ========== SECTION 6 — FOOTER ========== -->
+<footer class="footer">
+  <div class="footer__top">
+    <img src="assets/logos/french-bloom-crest.png" alt="French Bloom" class="footer__crest">
+    <p class="footer__tagline">L'effervescence réinventée</p>
+  </div>
+  <div class="footer__grid">
+    <div class="footer__col">
+      <p class="footer__col-title">Les Moments</p>
+      <ul><li><a href="collection-v2.html">L'Apéro</a></li><li><a href="collection-v2.html">La Célébration</a></li><li><a href="collection-v2.html">Le Brunch</a></li><li><a href="collection-v2.html">Le Cadeau</a></li></ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">La Maison</p>
+      <ul><li><a href="la-maison-v2.html">Savoir-Faire</a></li><li><a href="la-maison-v2.html">Histoire</a></li><li><a href="la-maison-v2.html">Terroir</a></li><li><a href="la-maison-v2.html">Formule 1</a></li></ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Aide</p>
+      <ul><li><a href="#">FAQ</a></li><li><a href="#">Livraison</a></li><li><a href="#">Contact</a></li><li><a href="#">CGV</a></li></ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Suivez-nous</p>
+      <ul><li><a href="#">Instagram</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Facebook</a></li></ul>
+    </div>
+  </div>
+  <p class="footer__badges">0,0% Alcool · Bio · Vegan · Sans sulfite</p>
+  <p class="footer__bottom">© 2025 French Bloom — L'effervescence réinventée.</p>
+</footer>
+
+<!-- ========== TOAST ========== -->
+<div class="toast" data-toast aria-live="polite"></div>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ============================================
+     LENIS SMOOTH SCROLL
+     ============================================ */
+  const lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+  gsap.registerPlugin(ScrollTrigger);
+  lenis.on('scroll', ScrollTrigger.update);
+
+  /* ============================================
+     PAGE REVEAL
+     ============================================ */
+  const overlay = document.querySelector('.reveal-overlay');
+  if (!prefersReducedMotion) {
+    gsap.fromTo(overlay,
+      { clipPath: 'inset(0 0 0 0)' },
+      { clipPath: 'inset(0 0 100% 0)', duration: 1.2, ease: 'power3.inOut', delay: 0.4,
+        onComplete: () => overlay.remove()
+      }
+    );
+  } else {
+    overlay.remove();
+  }
+
+  /* ============================================
+     CUSTOM CURSOR
+     ============================================ */
+  const cursor = document.querySelector('.cursor');
+  const cursorDot = document.querySelector('.cursor__dot');
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    gsap.ticker.add(() => {
+      cx += (tx - cx) * 0.15;
+      cy += (ty - cy) * 0.15;
+      gsap.set(cursor, { x: cx, y: cy });
+      gsap.set(cursorDot, { x: tx, y: ty });
+    });
+    document.querySelectorAll('a, button, [data-cursor], .coffret-toggle__switch').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
+    });
+  } else {
+    if (cursor) cursor.remove();
+    if (cursorDot) cursorDot.remove();
+  }
+
+  /* ============================================
+     NAV — FROSTED + AUTO-HIDE ON SCROLL
+     ============================================ */
+  const nav = document.querySelector('.nav');
+  let lastY = 0;
+
+  lenis.on('scroll', ({ scroll }) => {
+    /* Frosted intensify on scroll */
+    nav.classList.toggle('nav--frosted', scroll > 80);
+    /* Hide on scroll down, show on scroll up */
+    if (scroll > 300) {
+      nav.classList.toggle('nav--hidden', scroll > lastY);
+    } else {
+      nav.classList.remove('nav--hidden');
+    }
+    lastY = scroll;
+  });
+
+  /* ============================================
+     MOBILE MENU
+     ============================================ */
+  const hamburger = document.querySelector('.nav__hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', String(open));
+    mobileMenu.setAttribute('aria-hidden', String(!open));
+    open ? lenis.stop() : lenis.start();
+  });
+
+  /* ============================================
+     SECTION 1 — HERO ENTRANCE
+     ============================================ */
+  if (!prefersReducedMotion) {
+    const heroTl = gsap.timeline({ delay: 0.9 });
+    heroTl
+      .fromTo('.hero__bottle',
+        { opacity: 0, y: 60, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out' }
+      )
+      .fromTo('.hero__badge',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+        '-=0.5'
+      )
+      .fromTo('.hero__title',
+        { opacity: 0, y: 40, skewY: 2 },
+        { opacity: 1, y: 0, skewY: 0, duration: 1, ease: 'power3.out' },
+        '-=0.4'
+      )
+      .fromTo('.hero__tagline',
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+        '-=0.4'
+      )
+      .fromTo('.hero__scroll',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.6 },
+        '-=0.2'
+      );
+  } else {
+    document.querySelectorAll('.hero__bottle, .hero__badge, .hero__title, .hero__tagline, .hero__scroll').forEach(el => {
+      el.style.opacity = '1';
+    });
+  }
+
+  /* ============================================
+     SECTION 2 — STORY CHAPTERS (SCROLL REVEAL)
+     ============================================ */
+  if (!prefersReducedMotion) {
+    /* Chapter 1 & 3 side-by-side reveals */
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      const dir = el.getAttribute('data-reveal');
+      let fromVars = { opacity: 0, y: 50 };
+      if (dir === 'left')  fromVars = { opacity: 0, x: -60 };
+      if (dir === 'right') fromVars = { opacity: 0, x: 60 };
+      if (dir === 'up')    fromVars = { opacity: 0, y: 40 };
+
+      let toVars = { opacity: 1, x: 0, y: 0, duration: 1, ease: 'power3.out' };
+
+      gsap.fromTo(el, fromVars, {
+        ...toVars,
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 82%',
+          end: 'bottom 20%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    /* Chapter 2 — Aroma Wheel petals stagger */
+    const petals = document.querySelectorAll('[data-petal]');
+    gsap.fromTo(petals,
+      { opacity: 0, y: 40, scale: 0.9 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out',
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: '.aroma__wheel',
+          start: 'top 75%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  } else {
+    document.querySelectorAll('[data-reveal], [data-petal]').forEach(el => {
+      el.style.opacity = '1';
+    });
+  }
+
+  /* ============================================
+     SECTION 3 — COMPOSER INTERACTIONS
+     ============================================ */
+  const UNIT_PRICE = 49;
+  const COFFRET_PRICE = 12;
+  let quantity = 1;
+  let coffretOn = false;
+
+  const qtyValue = document.querySelector('[data-qty-value]');
+  const totalPrice = document.querySelector('[data-total-price]');
+  const coffretSwitch = document.querySelector('[data-coffret-switch]');
+  const coffretPreview = document.querySelector('[data-coffret-preview]');
+  const messageStep = document.querySelector('[data-message-step]');
+  const messageInput = document.querySelector('[data-message-input]');
+  const charCount = document.querySelector('[data-char-count]');
+  const ctaBtn = document.querySelector('[data-cta]');
+  const toast = document.querySelector('[data-toast]');
+
+  function updatePrice() {
+    const total = (UNIT_PRICE * quantity) + (coffretOn ? COFFRET_PRICE : 0);
+    totalPrice.textContent = total;
+  }
+
+  /* Quantity buttons */
+  document.querySelectorAll('[data-qty]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.qty === 'plus') {
+        quantity = Math.min(quantity + 1, 24);
+      } else {
+        quantity = Math.max(quantity - 1, 1);
+      }
+      qtyValue.textContent = quantity;
+      updatePrice();
+    });
+  });
+
+  /* Coffret toggle */
+  coffretSwitch.addEventListener('click', () => {
+    coffretOn = !coffretOn;
+    coffretSwitch.classList.toggle('active', coffretOn);
+    coffretSwitch.setAttribute('aria-checked', String(coffretOn));
+    coffretPreview.classList.toggle('visible', coffretOn);
+    messageStep.classList.toggle('visible', coffretOn);
+    updatePrice();
+  });
+  coffretSwitch.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      coffretSwitch.click();
+    }
+  });
+
+  /* Character counter */
+  messageInput.addEventListener('input', () => {
+    charCount.textContent = messageInput.value.length;
+  });
+
+  /* CTA — ripple + confetti + toast */
+  ctaBtn.addEventListener('click', (e) => {
+    /* Ripple */
+    const rect = ctaBtn.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    ctaBtn.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+
+    /* Confetti burst */
+    fireConfetti(e.clientX, e.clientY);
+
+    /* Toast */
+    showToast('Ajouté à votre sélection \u2713');
+  });
+
+  function fireConfetti(originX, originY) {
+    const container = document.createElement('div');
+    container.classList.add('confetti-container');
+    document.body.appendChild(container);
+
+    const colors = ['#EA5438', '#D4B188', '#ACB99C', '#E2C9A6', '#D4A094', '#FCF5ED'];
+    for (let i = 0; i < 30; i++) {
+      const piece = document.createElement('div');
+      piece.classList.add('confetti-piece');
+      piece.style.left = originX + 'px';
+      piece.style.top = originY + 'px';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.setProperty('--cx', (Math.random() - 0.5) * 400 + 'px');
+      piece.style.setProperty('--cy', (Math.random() - 0.8) * 500 + 'px');
+      piece.style.setProperty('--cr', Math.random() * 720 - 360 + 'deg');
+      piece.style.width = Math.random() * 8 + 4 + 'px';
+      piece.style.height = Math.random() * 8 + 4 + 'px';
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      piece.style.animationDelay = Math.random() * 0.15 + 's';
+      container.appendChild(piece);
+    }
+    setTimeout(() => container.remove(), 1500);
+  }
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  /* ============================================
+     SECTION 4 — ACCORD REVEALS (already using data-reveal)
+     ============================================ */
+  /* Covered by the generic [data-reveal] loop above */
+
+});
+</script>
+</body>
+</html>

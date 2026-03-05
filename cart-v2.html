@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Votre Moment — French Bloom</title>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+/* @font-face — French Bloom Brand Typography */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & DESIGN TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white-bloom:     #FCF5ED;
+  --blanc:           #FFFFFF;
+  --noir:            #1A1A1A;
+  --noir-doux:       #3A3A3A;
+  --encre:           #2C2620;
+  --encre-lift:      rgba(255,255,255,0.05);
+  --or:              #D4B188;
+  --or-pale:         #E2C9A6;
+  --or-sombre:       #B89A6E;
+  --or-glow:         rgba(212,177,136,0.15);
+  --coral:           #EA5438;
+  --coral-hover:     #D44828;
+  --almond-green:    #ACB99C;
+  --gris:            #8A8A8A;
+  --gris-clair:      #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose:            #D4A094;
+  --cuvee-blanc:     #F5EDD4;
+  --cuvee-rose:      #F2D5CC;
+  --cuvee-brut:      #E8E0D8;
+  --cuvee-vintage:   #2C2620;
+
+  --ease-luxe:   cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft:   cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --t-fast:      0.3s;
+  --t-medium:    0.5s;
+  --t-slow:      0.8s;
+
+  --z-cursor: 9999;
+  --z-nav:    1000;
+  --z-mobile: 800;
+}
+
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: var(--encre);
+  background: var(--white-bloom);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+.cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: var(--z-cursor); mix-blend-mode: difference; }
+.cursor__outer { width: 40px; height: 40px; border: 1.5px solid var(--or); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.4s var(--ease-luxe), height 0.4s var(--ease-luxe), border-color 0.3s; }
+.cursor__dot { position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: var(--or); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: var(--z-cursor); }
+.cursor--hover .cursor__outer { width: 56px; height: 56px; border-color: var(--coral); }
+@media (pointer: coarse) { .cursor, .cursor__dot { display: none !important; } }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed; top: 0; left: 0; width: 100%; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  z-index: var(--z-nav);
+  background: rgba(252,245,237,0.95);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(44,38,32,0.08);
+  transition: transform 0.5s var(--ease-luxe);
+}
+.nav--hidden { transform: translateY(-100%); }
+.nav__links { display: flex; gap: 2.5rem; list-style: none; }
+.nav__links a {
+  font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--encre); opacity: 0.7; transition: opacity var(--t-fast);
+}
+.nav__links a:hover, .nav__links a.active { opacity: 1; }
+.nav__links a.active { border-bottom: 1.5px solid var(--or); padding-bottom: 2px; }
+.nav__logo {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-family: 'Begum', serif; font-size: 0.95rem; letter-spacing: 0.25em;
+  color: var(--encre); text-transform: uppercase; white-space: nowrap;
+}
+.nav__right { display: flex; align-items: center; gap: 1.2rem; }
+.nav__icon { color: var(--encre); opacity: 0.7; transition: opacity var(--t-fast); }
+.nav__icon:hover { opacity: 1; }
+.nav__cart { position: relative; }
+.nav__cart-count {
+  position: absolute; top: -5px; right: -8px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--coral); color: var(--blanc);
+  font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav__hamburger {
+  display: none; flex-direction: column; gap: 5px; width: 24px; cursor: pointer; order: -1;
+}
+.nav__hamburger span {
+  width: 100%; height: 1.5px; background: var(--encre);
+  transition: transform var(--t-fast) var(--ease-luxe), opacity var(--t-fast);
+}
+.nav__hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.nav__hamburger.active span:nth-child(2) { opacity: 0; }
+.nav__hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+.mobile-menu {
+  position: fixed; inset: 0; background: var(--encre);
+  z-index: calc(var(--z-nav) - 1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+  opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease-luxe);
+}
+.mobile-menu.open { opacity: 1; pointer-events: all; }
+.mobile-menu a {
+  font-family: 'Begum', serif; font-size: clamp(1.4rem, 4vw, 2rem);
+  color: var(--blanc); opacity: 0.8; transition: opacity var(--t-fast), color var(--t-fast);
+}
+.mobile-menu a:hover { opacity: 1; color: var(--or); }
+.mobile-menu__section-title {
+  font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--or); display: block; margin-bottom: 0.5rem; margin-top: 1.5rem;
+}
+.mobile-menu__section-title:first-child { margin-top: 0; }
+
+/* ============================================
+   CART HEADER
+   ============================================ */
+.cart-header {
+  padding: 100px clamp(1.5rem, 6vw, 5rem) 2.5rem;
+  border-bottom: 1px solid var(--gris-clair);
+  display: flex; align-items: baseline; gap: 1rem;
+}
+.cart-header__label {
+  font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--or); font-weight: 400;
+}
+.cart-header__count {
+  font-size: 0.65rem; letter-spacing: 0.1em;
+  color: var(--gris); opacity: 1;
+}
+
+/* ============================================
+   CART LAYOUT — 65/35 GRID
+   ============================================ */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 65fr 35fr;
+  gap: 2.5rem;
+  padding: 3rem clamp(1.5rem, 6vw, 5rem) 4rem;
+  align-items: start;
+}
+
+/* ============================================
+   CART ITEMS — LEFT COLUMN
+   ============================================ */
+.cart-items { display: flex; flex-direction: column; }
+
+.cart-item {
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: 1.8rem;
+  background: var(--blanc);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(44,38,32,0.06);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+.cart-item:first-child { border-top: none; }
+
+.cart-item__image-wrap {
+  width: 120px; height: 150px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.cart-item__image-wrap--blanc   { background: var(--cuvee-blanc); }
+.cart-item__image-wrap--rose    { background: var(--cuvee-rose); }
+.cart-item__image-wrap--brut    { background: var(--cuvee-brut); }
+.cart-item__image-wrap--vintage { background: var(--cuvee-vintage); border: 1px solid rgba(212,177,136,0.15); }
+
+.cart-item__bottle {
+  height: 130px; object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2));
+  transition: transform var(--t-medium) var(--ease-luxe);
+}
+.cart-item:hover .cart-item__bottle { transform: translateY(-4px); }
+
+.cart-item__info {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+.cart-item__name {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  line-height: 1.1; color: var(--encre);
+}
+.cart-item__tagline {
+  font-style: italic; font-size: 0.8rem; font-weight: 300;
+  color: var(--or-sombre); opacity: 0.7;
+}
+.cart-item__meta {
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gris); margin-top: 0.1rem;
+}
+.cart-item__moment {
+  font-size: 0.7rem; font-style: italic; font-weight: 300;
+  color: var(--or); margin-top: 0.3rem;
+}
+.cart-item__controls {
+  display: flex; align-items: center; gap: 1.5rem;
+  margin-top: 0.6rem;
+}
+
+/* Quantity pill */
+.qty-selector {
+  display: flex; align-items: center;
+  border: 1px solid var(--gris-clair);
+  border-radius: 50px; overflow: hidden;
+}
+.qty-selector__btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gris); font-size: 1.05rem; font-weight: 300;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.qty-selector__btn:hover { background: rgba(212,177,136,0.1); color: var(--encre); }
+.qty-selector__value {
+  min-width: 28px; text-align: center;
+  font-size: 0.8rem; font-weight: 400; color: var(--encre);
+}
+
+.cart-item__price {
+  font-family: 'Begum', serif;
+  font-size: 1.2rem; color: var(--encre); font-weight: 700;
+  white-space: nowrap; min-width: 76px; text-align: right;
+}
+
+.cart-item__remove {
+  width: 32px; height: 32px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gris); opacity: 0.7;
+  transition: opacity var(--t-fast), color var(--t-fast);
+}
+.cart-item__remove:hover { opacity: 1; color: var(--coral); }
+.cart-item__remove svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.5; fill: none; }
+
+/* ============================================
+   GIFT WRAPPING
+   ============================================ */
+.cart-gift {
+  margin-top: 2.5rem;
+  background: var(--blanc);
+  border: 1px solid var(--gris-clair);
+  padding: 1.4rem 1.8rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(44,38,32,0.06);
+}
+.cart-gift__header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cart-gift__label-wrap { display: flex; align-items: center; gap: 0.8rem; }
+.cart-gift__icon { font-size: 1rem; opacity: 0.6; }
+.cart-gift__label { font-size: 0.8rem; letter-spacing: 0.04em; color: var(--encre); }
+.cart-gift__price { font-size: 0.72rem; color: var(--or-pale); opacity: 0.6; margin-left: 0.4rem; }
+
+/* Toggle switch */
+.toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle-switch__track {
+  position: absolute; inset: 0;
+  background: rgba(44,38,32,0.06);
+  border-radius: 50px;
+  border: 1px solid var(--gris-clair);
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+.toggle-switch__track::after {
+  content: '';
+  position: absolute; top: 3px; left: 3px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--or-pale);
+  transition: transform var(--t-fast) var(--ease-spring);
+}
+.toggle-switch input:checked + .toggle-switch__track { background: rgba(212,177,136,0.14); border-color: var(--or); }
+.toggle-switch input:checked + .toggle-switch__track::after { transform: translateX(20px); background: var(--or); }
+
+.cart-gift__textarea-wrap {
+  overflow: hidden; max-height: 0;
+  transition: max-height 0.45s var(--ease-luxe), opacity 0.35s;
+  opacity: 0;
+}
+.cart-gift__textarea-wrap.open { max-height: 140px; opacity: 1; }
+.cart-gift__textarea {
+  width: 100%; margin-top: 1.2rem;
+  background: var(--white-bloom);
+  border: 1px solid var(--gris-clair);
+  color: var(--encre);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem; font-weight: 300;
+  padding: 0.9rem 1rem;
+  resize: none; height: 90px; outline: none;
+  transition: border-color var(--t-fast);
+}
+.cart-gift__textarea::placeholder { color: var(--gris); }
+.cart-gift__textarea:focus { border-color: var(--or-pale); }
+
+/* ============================================
+   CART SIDEBAR — RIGHT COLUMN
+   ============================================ */
+.cart-sidebar {
+  position: sticky; top: 88px;
+  background: var(--gris-tres-clair);
+  border: 1px solid var(--gris-clair);
+  border-radius: 4px;
+  padding: 2rem;
+  display: flex; flex-direction: column;
+}
+
+.cart-sidebar__title {
+  font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--or); margin-bottom: 1.8rem;
+}
+
+.cart-sidebar__line {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 0.85rem;
+}
+.cart-sidebar__line-label {
+  font-size: 0.78rem; font-weight: 300; color: var(--noir-doux); opacity: 1;
+}
+.cart-sidebar__line-value { font-size: 0.85rem; font-weight: 400; color: var(--encre); }
+.cart-sidebar__line-value--green { color: var(--almond-green); }
+
+/* Shipping progress bar */
+.shipping-bar { margin-bottom: 1.5rem; }
+.shipping-bar__text {
+  font-size: 0.63rem; letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+  transition: color var(--t-fast);
+}
+.shipping-bar__track {
+  height: 2px; background: var(--gris-clair); position: relative; overflow: hidden;
+}
+.shipping-bar__fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: var(--almond-green); width: 0%;
+}
+
+.cart-sidebar__divider {
+  height: 1px; background: var(--gris-clair); margin: 1.2rem 0;
+}
+
+.cart-sidebar__total-line {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 2rem;
+}
+.cart-sidebar__total-label {
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--encre); opacity: 1;
+}
+.cart-sidebar__total-value {
+  font-family: 'Begum', serif;
+  font-size: 1.8rem; color: var(--or); line-height: 1;
+}
+
+/* CTAs */
+.cart-cta-primary {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; padding: 1.05rem 2rem;
+  background: var(--coral); color: var(--blanc);
+  font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  border-radius: 50px;
+  transition: background var(--t-fast), transform 0.2s var(--ease-spring);
+  margin-bottom: 1rem;
+}
+.cart-cta-primary:hover { background: var(--coral-hover); transform: scale(1.02); }
+
+.cart-cta-secondary {
+  display: block; text-align: center;
+  font-size: 0.72rem; letter-spacing: 0.1em;
+  color: var(--or-sombre); opacity: 0.8;
+  transition: opacity var(--t-fast);
+  margin-bottom: 1.8rem;
+  position: relative;
+}
+.cart-cta-secondary::after {
+  content: ''; position: absolute;
+  bottom: -2px; left: 50%; transform: translateX(-50%);
+  width: 0%; height: 1px; background: var(--or-pale);
+  transition: width var(--t-medium) var(--ease-luxe);
+}
+.cart-cta-secondary:hover { opacity: 1; }
+.cart-cta-secondary:hover::after { width: 78%; }
+
+.cart-trust {
+  font-size: 0.62rem; letter-spacing: 0.05em;
+  color: var(--gris); text-align: center; line-height: 1.8;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.cart-empty {
+  display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  min-height: 40vh; padding: 4rem 2rem;
+  text-align: center; gap: 1.5rem;
+}
+.cart-empty__icon { font-size: 3rem; opacity: 0.12; }
+.cart-empty__title {
+  font-family: 'Begum', serif; font-size: 2rem;
+  color: var(--encre); opacity: 0.55;
+}
+.cart-empty__cta {
+  display: inline-flex; align-items: center;
+  padding: 0.9rem 2.2rem;
+  border: 1px solid var(--gris-clair);
+  color: var(--or-sombre); font-size: 0.7rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  border-radius: 50px;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.cart-empty__cta:hover { background: rgba(212,177,136,0.12); color: var(--or); }
+
+/* ============================================
+   CROSS-SELL
+   ============================================ */
+.cross-sell {
+  padding: 5rem clamp(1.5rem, 6vw, 5rem);
+  background: var(--encre);
+  border-top: 1px solid rgba(212,177,136,0.08);
+}
+.cross-sell__header { margin-bottom: 3rem; }
+.cross-sell__label {
+  font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--or); margin-bottom: 0.5rem;
+}
+.cross-sell__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  color: var(--blanc); line-height: 1.1;
+}
+
+.cross-sell__grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.cross-sell-card {
+  display: flex; align-items: center; gap: 1.5rem;
+  background: var(--encre-lift);
+  border: 1px solid rgba(212,177,136,0.1);
+  padding: 1.8rem;
+  transition: border-color var(--t-fast);
+}
+.cross-sell-card:hover { border-color: rgba(212,177,136,0.28); }
+
+.cross-sell-card__image-wrap {
+  width: 90px; height: 110px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.cross-sell-card__image-wrap--vintage { background: var(--cuvee-vintage); border: 1px solid rgba(212,177,136,0.14); }
+.cross-sell-card__image-wrap--coffret { background: rgba(0,0,0,0.2); border: 1px solid rgba(212,177,136,0.1); }
+
+.cross-sell-card__bottle {
+  height: 96px; object-fit: contain;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.25));
+  transition: transform var(--t-medium) var(--ease-luxe);
+}
+.cross-sell-card:hover .cross-sell-card__bottle { transform: translateY(-4px); }
+
+.cross-sell-card__info { flex: 1; min-width: 0; }
+.cross-sell-card__name {
+  font-family: 'Begum', serif; font-size: 1.2rem;
+  color: var(--blanc); margin-bottom: 0.3rem; line-height: 1.1;
+}
+.cross-sell-card__sub {
+  font-size: 0.7rem; font-style: italic; font-weight: 300;
+  color: var(--or-pale); opacity: 0.5; margin-bottom: 0.9rem;
+}
+.cross-sell-card__price {
+  font-size: 0.85rem; color: var(--or-pale); margin-bottom: 1rem;
+}
+.cross-sell-card__atc {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.6rem 1.3rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(212,177,136,0.22);
+  color: var(--blanc);
+  font-size: 0.62rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+  border-radius: 50px;
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+}
+.cross-sell-card__atc:hover {
+  background: rgba(212,177,136,0.1);
+  border-color: var(--or-pale); color: var(--or-pale);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  background: var(--encre);
+  color: var(--blanc);
+  border-top: 1px solid rgba(212,177,136,0.07);
+  padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 6vw, 5rem) 2rem;
+}
+.footer__top {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: 3rem; text-align: center;
+}
+.footer__crest {
+  width: 64px; height: auto; margin-bottom: 1rem;
+  filter: brightness(0) invert(1); opacity: 0.65;
+}
+.footer__tagline {
+  font-family: 'Begum', serif; font-style: italic;
+  font-size: 0.85rem; color: var(--or-pale); opacity: 0.6;
+  letter-spacing: 0.06em;
+}
+.footer__grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 2rem; margin-bottom: 3rem;
+}
+.footer__col-title {
+  font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--or); margin-bottom: 1rem;
+}
+.footer__col ul { list-style: none; }
+.footer__col li { margin-bottom: 0.6rem; }
+.footer__col a {
+  font-size: 0.8rem; font-weight: 300; color: var(--blanc); opacity: 0.5;
+  transition: opacity var(--t-fast);
+}
+.footer__col a:hover { opacity: 1; }
+.footer__badges {
+  font-size: 0.7rem; font-weight: 300;
+  color: var(--or-pale); opacity: 0.5; margin-bottom: 2rem;
+}
+.footer__bottom {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 1.5rem;
+  font-size: 0.7rem; font-weight: 300;
+  color: var(--blanc); opacity: 0.3;
+}
+
+/* ============================================
+   RESPONSIVE — 900px
+   ============================================ */
+@media (max-width: 900px) {
+  .nav__links { display: none; }
+  .nav__hamburger { display: flex; }
+  .nav__right { margin-left: auto; }
+
+  .cart-layout { grid-template-columns: 1fr; padding-top: 2rem; }
+  .cart-sidebar { position: static; top: auto; }
+
+  .cross-sell__grid { grid-template-columns: 1fr; }
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================
+   RESPONSIVE — 600px
+   ============================================ */
+@media (max-width: 600px) {
+  .cart-item { flex-wrap: wrap; gap: 1rem; }
+  .cart-item__image-wrap { width: 90px; height: 110px; }
+  .cart-item__bottle { height: 96px; }
+  .cart-item__controls { flex-wrap: wrap; }
+
+  .cross-sell-card { flex-direction: column; align-items: flex-start; }
+  .cross-sell-card__image-wrap { width: 100%; height: 120px; }
+  .cross-sell-card__bottle { height: 100px; }
+
+  .footer__grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ========== CUSTOM CURSOR ========== -->
+<div class="cursor" aria-hidden="true"><div class="cursor__outer"></div></div>
+<div class="cursor__dot" aria-hidden="true"></div>
+
+<!-- ========== NAVIGATION ========== -->
+<nav class="nav" aria-label="Navigation principale">
+  <div class="nav__hamburger" aria-label="Menu" aria-expanded="false" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+  <ul class="nav__links">
+    <li><a href="collection-v2.html">Nos Moments</a></li>
+    <li><a href="la-maison-v2.html">La Maison</a></li>
+    <li><a href="collection-v2.html">La Collection</a></li>
+  </ul>
+  <a href="homepage-v2.html" class="nav__logo">French Bloom</a>
+  <div class="nav__right">
+    <a href="#" class="nav__icon" aria-label="Rechercher">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </a>
+    <a href="cart-v2.html" class="nav__icon nav__cart" aria-label="Panier">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="nav__cart-count" id="cart-count-badge">3</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ========== MOBILE MENU ========== -->
+<div class="mobile-menu" aria-hidden="true">
+  <span class="mobile-menu__section-title">Les Moments</span>
+  <a href="collection-v2.html">L'Apéro Rooftop</a>
+  <a href="collection-v2.html">La Célébration</a>
+  <a href="collection-v2.html">Le Brunch</a>
+  <a href="collection-v2.html">Le Cadeau</a>
+  <a href="collection-v2.html">L'After F1</a>
+  <span class="mobile-menu__section-title">La Maison</span>
+  <a href="collection-v2.html">Nos Moments</a>
+  <a href="la-maison-v2.html">La Maison</a>
+  <a href="collection-v2.html">La Collection</a>
+</div>
+
+<!-- ========== CART HEADER ========== -->
+<header class="cart-header">
+  <h1 class="cart-header__label">Votre Moment French Bloom</h1>
+  <span class="cart-header__count" id="header-count">— 4 articles</span>
+</header>
+
+<!-- ========== MAIN ========== -->
+<main>
+  <div class="cart-layout">
+
+    <!-- ===== COLONNE GAUCHE — ITEMS ===== -->
+    <div class="cart-items-col">
+      <div class="cart-items" id="cart-items-list">
+
+        <!-- ITEM 1 — L'Extra Brut x2 -->
+        <article class="cart-item" data-id="extra-brut" data-unit="49" data-qty="2">
+          <div class="cart-item__image-wrap cart-item__image-wrap--brut">
+            <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut" class="cart-item__bottle" loading="eager">
+          </div>
+          <div class="cart-item__info">
+            <h2 class="cart-item__name">L'Extra Brut</h2>
+            <p class="cart-item__tagline">L'élégance de la précision</p>
+            <p class="cart-item__meta">75 cl · 0,0% alcool</p>
+            <span class="cart-item__moment">Parfait pour : Dîner d'exception</span>
+            <div class="cart-item__controls">
+              <div class="qty-selector" role="group" aria-label="Quantité">
+                <button class="qty-selector__btn qty-minus" aria-label="Diminuer">−</button>
+                <span class="qty-selector__value" aria-live="polite">2</span>
+                <button class="qty-selector__btn qty-plus" aria-label="Augmenter">+</button>
+              </div>
+              <span class="cart-item__price">98,00 €</span>
+            </div>
+          </div>
+          <button class="cart-item__remove" aria-label="Supprimer L'Extra Brut">
+            <svg viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13"/></svg>
+          </button>
+        </article>
+
+        <!-- ITEM 2 — Le Rosé x1 -->
+        <article class="cart-item" data-id="le-rose" data-unit="34" data-qty="1">
+          <div class="cart-item__image-wrap cart-item__image-wrap--rose">
+            <img src="assets/bottles/le-rose.png" alt="Le Rosé" class="cart-item__bottle" loading="eager">
+          </div>
+          <div class="cart-item__info">
+            <h2 class="cart-item__name">Le Rosé</h2>
+            <p class="cart-item__tagline">L'élégance incarnée</p>
+            <p class="cart-item__meta">75 cl · 0,0% alcool</p>
+            <span class="cart-item__moment">Parfait pour : Célébration</span>
+            <div class="cart-item__controls">
+              <div class="qty-selector" role="group" aria-label="Quantité">
+                <button class="qty-selector__btn qty-minus" aria-label="Diminuer">−</button>
+                <span class="qty-selector__value" aria-live="polite">1</span>
+                <button class="qty-selector__btn qty-plus" aria-label="Augmenter">+</button>
+              </div>
+              <span class="cart-item__price">34,00 €</span>
+            </div>
+          </div>
+          <button class="cart-item__remove" aria-label="Supprimer Le Rosé">
+            <svg viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13"/></svg>
+          </button>
+        </article>
+
+        <!-- ITEM 3 — Le Blanc x1 -->
+        <article class="cart-item" data-id="le-blanc" data-unit="29" data-qty="1">
+          <div class="cart-item__image-wrap cart-item__image-wrap--blanc">
+            <img src="assets/bottles/le-blanc.png" alt="Le Blanc" class="cart-item__bottle" loading="eager">
+          </div>
+          <div class="cart-item__info">
+            <h2 class="cart-item__name">Le Blanc</h2>
+            <p class="cart-item__tagline">La fraîcheur lumineuse</p>
+            <p class="cart-item__meta">75 cl · 0,0% alcool</p>
+            <span class="cart-item__moment">Parfait pour : Apéro</span>
+            <div class="cart-item__controls">
+              <div class="qty-selector" role="group" aria-label="Quantité">
+                <button class="qty-selector__btn qty-minus" aria-label="Diminuer">−</button>
+                <span class="qty-selector__value" aria-live="polite">1</span>
+                <button class="qty-selector__btn qty-plus" aria-label="Augmenter">+</button>
+              </div>
+              <span class="cart-item__price">29,00 €</span>
+            </div>
+          </div>
+          <button class="cart-item__remove" aria-label="Supprimer Le Blanc">
+            <svg viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13"/></svg>
+          </button>
+        </article>
+
+      </div><!-- /cart-items -->
+
+      <!-- Empty state -->
+      <div class="cart-empty" id="cart-empty" role="status" aria-live="polite">
+        <div class="cart-empty__icon" aria-hidden="true">◇</div>
+        <p class="cart-empty__title">Votre moment n'a pas encore commencé</p>
+        <a href="collection-v2.html" class="cart-empty__cta">Découvrir la collection →</a>
+      </div>
+
+      <!-- ===== GIFT WRAPPING ===== -->
+      <div class="cart-gift" id="cart-gift">
+        <div class="cart-gift__header">
+          <div class="cart-gift__label-wrap">
+            <span class="cart-gift__icon" aria-hidden="true">◈</span>
+            <span class="cart-gift__label">Inclure un message cadeau</span>
+            <span class="cart-gift__price">+ 5,00 €</span>
+          </div>
+          <label class="toggle-switch" aria-label="Activer le message cadeau">
+            <input type="checkbox" id="gift-toggle">
+            <span class="toggle-switch__track"></span>
+          </label>
+        </div>
+        <div class="cart-gift__textarea-wrap" id="gift-textarea-wrap">
+          <textarea
+            class="cart-gift__textarea"
+            id="gift-message"
+            placeholder="Votre message personnalisé…"
+            maxlength="280"
+            aria-label="Message cadeau"
+          ></textarea>
+        </div>
+      </div>
+
+    </div><!-- /cart-items-col -->
+
+    <!-- ===== COLONNE DROITE — SIDEBAR ===== -->
+    <aside class="cart-sidebar" aria-label="Votre Moment">
+      <p class="cart-sidebar__title">Votre Moment</p>
+
+      <div class="cart-sidebar__line">
+        <span class="cart-sidebar__line-label">Sous-total</span>
+        <span class="cart-sidebar__line-value" id="sidebar-subtotal">161,00 €</span>
+      </div>
+
+      <div class="shipping-bar">
+        <p class="shipping-bar__text" id="shipping-text" style="color: var(--almond-green)">Livraison offerte</p>
+        <div class="shipping-bar__track" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Progression livraison offerte">
+          <div class="shipping-bar__fill" id="shipping-fill"></div>
+        </div>
+      </div>
+
+      <div class="cart-sidebar__line">
+        <span class="cart-sidebar__line-label">Livraison</span>
+        <span class="cart-sidebar__line-value cart-sidebar__line-value--green" id="sidebar-shipping">Offerte</span>
+      </div>
+
+      <div class="cart-sidebar__divider"></div>
+
+      <div class="cart-sidebar__total-line">
+        <span class="cart-sidebar__total-label">Total</span>
+        <span class="cart-sidebar__total-value" id="sidebar-total">161,00 €</span>
+      </div>
+
+      <a href="checkout-v2.html" class="cart-cta-primary" id="checkout-btn">
+        Finaliser mon moment
+      </a>
+      <a href="collection-v2.html" class="cart-cta-secondary">
+        Continuer l'exploration →
+      </a>
+
+      <p class="cart-trust">
+        Livraison offerte · Paiement sécurisé · Retours gratuits
+      </p>
+    </aside>
+
+  </div><!-- /cart-layout -->
+
+  <!-- ========== CROSS-SELL ========== -->
+  <section class="cross-sell" aria-labelledby="cross-sell-title">
+    <div class="cross-sell__header">
+      <p class="cross-sell__label">Suggestions</p>
+      <h2 class="cross-sell__title" id="cross-sell-title">Complétez votre moment</h2>
+    </div>
+    <div class="cross-sell__grid">
+
+      <article class="cross-sell-card" role="group" aria-label="La Cuvée Vintage 2023">
+        <div class="cross-sell-card__image-wrap cross-sell-card__image-wrap--vintage">
+          <img src="assets/bottles/la-cuvee.png" alt="La Cuvée Vintage 2023" class="cross-sell-card__bottle" loading="lazy">
+        </div>
+        <div class="cross-sell-card__info">
+          <h3 class="cross-sell-card__name">La Cuvée Vintage 2023</h3>
+          <p class="cross-sell-card__sub">Blanc de Blancs · Édition limitée</p>
+          <p class="cross-sell-card__price">89,00 €</p>
+          <button class="cross-sell-card__atc" data-product="La Cuvée Vintage 2023" data-price="89">Découvrir</button>
+        </div>
+      </article>
+
+      <article class="cross-sell-card" role="group" aria-label="Le Coffret Découverte">
+        <div class="cross-sell-card__image-wrap cross-sell-card__image-wrap--coffret">
+          <img src="assets/bottles/la-cuvee-coffret.png" alt="Le Coffret Découverte" class="cross-sell-card__bottle" loading="lazy">
+        </div>
+        <div class="cross-sell-card__info">
+          <h3 class="cross-sell-card__name">Le Coffret Découverte</h3>
+          <p class="cross-sell-card__sub">3 cuvées · Édition cadeau</p>
+          <p class="cross-sell-card__price">119,00 €</p>
+          <button class="cross-sell-card__atc" data-product="Le Coffret Découverte" data-price="119">Découvrir</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <div class="footer__top">
+    <img src="assets/logos/french-bloom-crest.png" alt="French Bloom" class="footer__crest">
+    <p class="footer__tagline">L'effervescence réinventée</p>
+  </div>
+  <div class="footer__grid">
+    <div class="footer__col">
+      <p class="footer__col-title">Les Moments</p>
+      <ul><li><a href="collection-v2.html">L'Apéro</a></li><li><a href="collection-v2.html">La Célébration</a></li><li><a href="collection-v2.html">Le Brunch</a></li><li><a href="collection-v2.html">Le Cadeau</a></li></ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">La Maison</p>
+      <ul><li><a href="la-maison-v2.html">Savoir-Faire</a></li><li><a href="la-maison-v2.html">Histoire</a></li><li><a href="la-maison-v2.html">Terroir</a></li><li><a href="la-maison-v2.html">Formule 1</a></li></ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Aide</p>
+      <ul><li><a href="#">FAQ</a></li><li><a href="#">Livraison</a></li><li><a href="#">Contact</a></li><li><a href="#">CGV</a></li></ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Suivez-nous</p>
+      <ul><li><a href="#">Instagram</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Facebook</a></li></ul>
+    </div>
+  </div>
+  <p class="footer__badges">0,0% Alcool · Bio · Vegan · Sans sulfite</p>
+  <p class="footer__bottom">© 2025 French Bloom — L'effervescence réinventée.</p>
+</footer>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FREE_SHIPPING = 60;
+
+  /* ============================================
+     CART STATE — read from DOM
+     ============================================ */
+  const itemsData = [];
+  document.querySelectorAll('.cart-item').forEach(el => {
+    itemsData.push({
+      id:   el.dataset.id,
+      el:   el,
+      unit: parseFloat(el.dataset.unit),
+      qty:  parseInt(el.dataset.qty, 10)
+    });
+  });
+
+  /* ============================================
+     GSAP + SCROLLTRIGGER REGISTRATION
+     ============================================ */
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ============================================
+     CUSTOM CURSOR
+     ============================================ */
+  const cursor    = document.querySelector('.cursor');
+  const cursorDot = document.querySelector('.cursor__dot');
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    gsap.ticker.add(() => {
+      cx += (tx - cx) * 0.15;
+      cy += (ty - cy) * 0.15;
+      gsap.set(cursor,    { x: cx, y: cy });
+      gsap.set(cursorDot, { x: tx, y: ty });
+    });
+    document.querySelectorAll('a, button, label').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
+    });
+  } else {
+    cursor?.remove();
+    cursorDot?.remove();
+  }
+
+  /* ============================================
+     NAV — AUTO-HIDE ON SCROLL
+     ============================================ */
+  const nav = document.querySelector('.nav');
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 300) { nav.classList.toggle('nav--hidden', y > lastY); }
+    else { nav.classList.remove('nav--hidden'); }
+    lastY = y;
+  }, { passive: true });
+
+  /* ============================================
+     MOBILE MENU
+     ============================================ */
+  const hamburger  = document.querySelector('.nav__hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', open);
+    mobileMenu.setAttribute('aria-hidden', !open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  /* ============================================
+     HELPERS
+     ============================================ */
+  function formatPrice(val) {
+    return val.toFixed(2).replace('.', ',') + '\u00a0€';
+  }
+
+  function computeSubtotal() {
+    return itemsData.filter(i => i.qty > 0).reduce((acc, i) => acc + i.unit * i.qty, 0);
+  }
+
+  /* ============================================
+     UPDATE TOTALS
+     ============================================ */
+  function updateTotals(animate) {
+    const subtotal  = computeSubtotal();
+    const hasItems  = subtotal > 0;
+    const totalQty  = itemsData.reduce((a, i) => a + Math.max(0, i.qty), 0);
+
+    // Empty state toggle
+    const emptyEl   = document.getElementById('cart-empty');
+    const giftEl    = document.getElementById('cart-gift');
+    emptyEl.style.display = hasItems ? 'none' : 'flex';
+    giftEl.style.display  = hasItems ? 'block' : 'none';
+
+    // Count badge + header
+    const badge      = document.getElementById('cart-count-badge');
+    const hCount     = document.getElementById('header-count');
+    badge.textContent  = totalQty;
+    hCount.textContent = `— ${totalQty} article${totalQty !== 1 ? 's' : ''}`;
+
+    // Shipping
+    const freeShip   = subtotal >= FREE_SHIPPING;
+    const shippingEl = document.getElementById('sidebar-shipping');
+    const shippingText = document.getElementById('shipping-text');
+    const shippingFill = document.getElementById('shipping-fill');
+    const pct = Math.min(100, (subtotal / FREE_SHIPPING) * 100);
+
+    if (animate && !prefersReducedMotion) {
+      gsap.fromTo(shippingFill,
+        { width: shippingFill.style.width || '0%' },
+        { width: pct + '%', duration: 0.8, ease: 'power2.out' }
+      );
+    } else {
+      shippingFill.style.width = pct + '%';
+    }
+    document.querySelector('.shipping-bar__track').setAttribute('aria-valuenow', Math.round(pct));
+
+    if (freeShip) {
+      shippingText.textContent = 'Livraison offerte';
+      shippingText.style.color = 'var(--almond-green)';
+      shippingEl.textContent   = 'Offerte';
+      shippingEl.className     = 'cart-sidebar__line-value cart-sidebar__line-value--green';
+    } else {
+      const rem = FREE_SHIPPING - subtotal;
+      shippingText.textContent = `Plus que ${formatPrice(rem)} pour la livraison offerte`;
+      shippingText.style.color = 'var(--coral)';
+      shippingEl.textContent   = formatPrice(7.90);
+      shippingEl.className     = 'cart-sidebar__line-value';
+    }
+
+    const total = subtotal + (freeShip ? 0 : 7.90);
+    const subtotalEl = document.getElementById('sidebar-subtotal');
+    const totalEl    = document.getElementById('sidebar-total');
+
+    if (animate && !prefersReducedMotion) {
+      gsap.fromTo(subtotalEl, { opacity: 0.35, y: -4 }, { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out' });
+      gsap.fromTo(totalEl,    { opacity: 0.35, y: -4 }, { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out' });
+    }
+    subtotalEl.textContent = formatPrice(subtotal);
+    totalEl.textContent    = formatPrice(total);
+  }
+
+  /* ============================================
+     QTY SELECTORS
+     ============================================ */
+  document.querySelectorAll('.cart-item').forEach(itemEl => {
+    const data     = itemsData.find(i => i.id === itemEl.dataset.id);
+    if (!data) return;
+    const qtySpan  = itemEl.querySelector('.qty-selector__value');
+    const priceEl  = itemEl.querySelector('.cart-item__price');
+    const minusBtn = itemEl.querySelector('.qty-minus');
+    const plusBtn  = itemEl.querySelector('.qty-plus');
+
+    function refreshLine(animate) {
+      qtySpan.textContent = data.qty;
+      if (animate && !prefersReducedMotion) {
+        gsap.fromTo(priceEl,
+          { opacity: 0.3, y: -5 },
+          { opacity: 1,   y: 0, duration: 0.28, ease: 'power2.out' }
+        );
+      }
+      priceEl.textContent = formatPrice(data.unit * data.qty);
+      updateTotals(animate);
+    }
+
+    minusBtn.addEventListener('click', () => {
+      if (data.qty <= 1) return;
+      data.qty--;
+      refreshLine(true);
+    });
+
+    plusBtn.addEventListener('click', () => {
+      data.qty++;
+      refreshLine(true);
+    });
+  });
+
+  /* ============================================
+     REMOVE ITEM — slide out + height collapse
+     ============================================ */
+  document.querySelectorAll('.cart-item__remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const itemEl = btn.closest('.cart-item');
+      const data   = itemsData.find(i => i.id === itemEl.dataset.id);
+      if (!data) return;
+
+      if (!prefersReducedMotion) {
+        const h = itemEl.offsetHeight;
+        gsap.fromTo(itemEl,
+          { x: 0, opacity: 1, height: h, paddingTop: 0, paddingBottom: 0 },
+          {
+            x: -64, opacity: 0, height: 0,
+            duration: 0.46, ease: 'power3.in',
+            onComplete: () => {
+              itemEl.remove();
+              data.qty = 0;
+              updateTotals(true);
+            }
+          }
+        );
+      } else {
+        itemEl.remove();
+        data.qty = 0;
+        updateTotals(false);
+      }
+    });
+  });
+
+  /* ============================================
+     GIFT TOGGLE
+     ============================================ */
+  const giftToggle = document.getElementById('gift-toggle');
+  const giftWrap   = document.getElementById('gift-textarea-wrap');
+
+  giftToggle?.addEventListener('change', () => {
+    const open = giftToggle.checked;
+    giftWrap.classList.toggle('open', open);
+    if (open) {
+      setTimeout(() => document.getElementById('gift-message')?.focus(), 300);
+    }
+  });
+
+  /* ============================================
+     CROSS-SELL ATC FEEDBACK
+     ============================================ */
+  document.querySelectorAll('.cross-sell-card__atc').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      const orig = btn.textContent;
+      btn.textContent   = 'Ajouté ✓'; // feedback state
+      btn.style.borderColor = 'var(--almond-green)';
+      btn.style.color       = 'var(--almond-green)';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent       = orig;
+        btn.style.borderColor = '';
+        btn.style.color       = '';
+        btn.disabled = false;
+      }, 2000);
+    });
+  });
+
+  /* ============================================
+     ENTRANCE ANIMATIONS (no page reveal on cart)
+     ============================================ */
+  if (!prefersReducedMotion) {
+    gsap.fromTo('.cart-header',
+      { opacity: 0, y: -18 },
+      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', delay: 0.1 }
+    );
+    gsap.fromTo('.cart-item',
+      { opacity: 0, x: -28 },
+      { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out', stagger: 0.1, delay: 0.18 }
+    );
+    gsap.fromTo('.cart-sidebar',
+      { opacity: 0, y: 28 },
+      { opacity: 1, y: 0, duration: 0.62, ease: 'power3.out', delay: 0.32 }
+    );
+    gsap.fromTo('.cart-gift',
+      { opacity: 0 },
+      { opacity: 1, duration: 0.5, ease: 'power2.out', delay: 0.52 }
+    );
+
+    // Shipping bar animate on load
+    const initPct = Math.min(100, (computeSubtotal() / FREE_SHIPPING) * 100);
+    gsap.fromTo('#shipping-fill',
+      { width: '0%' },
+      { width: initPct + '%', duration: 1.1, ease: 'power2.out', delay: 0.55 }
+    );
+
+    // Cross-sell scroll reveal
+    gsap.fromTo('.cross-sell__label, .cross-sell__title',
+      { opacity: 0, y: 28 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1,
+        scrollTrigger: { trigger: '.cross-sell', start: 'top 82%' } }
+    );
+    gsap.fromTo('.cross-sell-card',
+      { opacity: 0, y: 36 },
+      { opacity: 1, y: 0, duration: 0.62, ease: 'power3.out', stagger: 0.13,
+        scrollTrigger: { trigger: '.cross-sell__grid', start: 'top 86%' } }
+    );
+  }
+
+  /* ============================================
+     INIT — synchronise totals from DOM state
+     ============================================ */
+  updateTotals(false);
+
+  // For reduced motion: set bar width directly
+  if (prefersReducedMotion) {
+    const pct = Math.min(100, (computeSubtotal() / FREE_SHIPPING) * 100);
+    document.getElementById('shipping-fill').style.width = pct + '%';
+  }
+
+}); /* End DOMContentLoaded */
+</script>
+
+</body>
+</html>

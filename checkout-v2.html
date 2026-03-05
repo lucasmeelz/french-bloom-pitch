@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finaliser mon moment — French Bloom</title>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+/* ============================================
+   TYPOGRAPHY — @font-face
+   ============================================ */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & DESIGN TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white-bloom:     #FCF5ED;
+  --blanc:           #FFFFFF;
+  --noir:            #1A1A1A;
+  --noir-doux:       #3A3A3A;
+  --encre:           #2C2620;
+  --or:              #D4B188;
+  --or-pale:         #E2C9A6;
+  --or-sombre:       #B89A6E;
+  --or-glow:         rgba(212,177,136,0.15);
+  --coral:           #EA5438;
+  --coral-hover:     #D44828;
+  --almond-green:    #ACB99C;
+  --gris:            #8A8A8A;
+  --gris-clair:      #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose:            #D4A094;
+  --rose-pale:       #E8C4B8;
+  --cuvee-blanc:     #F5EDD4;
+  --cuvee-rose:      #F2D5CC;
+  --cuvee-brut:      #E8E0D8;
+
+  --ease-luxe:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft:    cubic-bezier(0.25, 0.1, 0.25, 1);
+  --t-fast:       0.3s;
+  --t-medium:     0.5s;
+
+  --z-header: 90;
+}
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  background: var(--white-bloom);
+  color: var(--noir);
+  overflow-x: hidden;
+  cursor: auto;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 { font-family: 'Begum', serif; font-weight: 400; line-height: 1.1; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ============================================
+   CHECKOUT HEADER
+   ============================================ */
+.checkout-header {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: var(--z-header);
+  background: var(--blanc);
+  border-bottom: 1px solid var(--gris-tres-clair);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(1.5rem, 3vw, 3rem);
+}
+
+.checkout-header__back {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--gris);
+  transition: color var(--t-fast) var(--ease-soft);
+  white-space: nowrap;
+}
+.checkout-header__back:hover { color: var(--noir); }
+.checkout-header__back svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+.checkout-header__logo {
+  font-family: 'Begum', serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.22em;
+  color: var(--encre);
+  text-transform: uppercase;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.checkout-header__secure {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--gris);
+}
+.checkout-header__secure svg { width: 13px; height: 13px; flex-shrink: 0; }
+.checkout-header__secure span {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+.progress-wrapper {
+  margin-top: 64px;
+  padding: 1.6rem clamp(1.5rem, 3vw, 3rem) 0.8rem;
+  display: flex;
+  justify-content: center;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.progress-step__dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.68rem;
+  border: 1.5px solid var(--gris-clair);
+  color: var(--gris);
+  background: transparent;
+  transition: background 0.4s var(--ease-luxe), color 0.4s var(--ease-luxe), border-color 0.4s var(--ease-luxe);
+}
+
+.progress-step__label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: var(--gris);
+  transition: color 0.4s var(--ease-luxe), font-weight 0.4s var(--ease-luxe);
+  white-space: nowrap;
+}
+
+.progress-step.active .progress-step__dot {
+  background: var(--or);
+  color: var(--blanc);
+  border-color: var(--or);
+}
+.progress-step.active .progress-step__label {
+  color: var(--or-sombre);
+  font-weight: 600;
+}
+
+.progress-step.completed .progress-step__dot {
+  background: var(--or);
+  color: var(--blanc);
+  border-color: var(--or);
+}
+.progress-step.completed .progress-step__label { color: var(--or-sombre); }
+
+.progress-connector {
+  flex: 1;
+  height: 1.5px;
+  margin: 0 0.6rem;
+  align-self: flex-start;
+  margin-top: 15px;
+  position: relative;
+  background: var(--gris-clair);
+  overflow: hidden;
+}
+
+.progress-connector__fill {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--or);
+  transition: width 0.5s var(--ease-luxe);
+}
+.progress-connector.completed .progress-connector__fill { width: 100%; }
+
+/* ============================================
+   MAIN LAYOUT — 2 COLUMNS
+   ============================================ */
+.checkout-main {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 2rem clamp(1.5rem, 3vw, 3rem) 5rem;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: clamp(2.5rem, 4vw, 5rem);
+  align-items: start;
+}
+
+/* ============================================
+   LEFT COLUMN
+   ============================================ */
+.checkout-form { min-width: 0; }
+
+/* ============================================
+   EXPRESS CHECKOUT
+   ============================================ */
+.express-checkout {
+  background: var(--white-bloom);
+  border: 1px solid var(--gris-tres-clair);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.express-checkout__label {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.72rem;
+  color: var(--gris);
+  letter-spacing: 0.04em;
+  margin-bottom: 1rem;
+}
+
+.express-checkout__btns {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.express-btn {
+  flex: 1;
+  height: 46px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.78rem;
+  transition: opacity var(--t-fast) var(--ease-soft), transform var(--t-fast) var(--ease-soft);
+  border: none;
+  flex-shrink: 0;
+}
+.express-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.express-btn:active { transform: translateY(0); }
+
+.express-btn--apple  { background: #000; color: #fff; }
+.express-btn--apple svg { height: 20px; width: auto; }
+.express-btn--google { background: var(--blanc); color: #5f6368; border: 1.5px solid var(--gris-clair); }
+.express-btn--google svg { height: 18px; width: 18px; flex-shrink: 0; }
+.express-btn--paypal { background: #0070ba; color: #fff; }
+.express-btn--paypal svg { height: 20px; width: auto; flex-shrink: 0; }
+
+.express-divider {
+  display: flex;
+  align-items: center;
+  margin-top: 1.4rem;
+}
+.express-divider::before,
+.express-divider::after { content: ''; flex: 1; height: 1px; background: var(--gris-clair); }
+.express-divider__text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.72rem;
+  color: var(--gris);
+  padding: 0 1rem;
+}
+
+/* ============================================
+   STEP TITLE
+   ============================================ */
+.step-title {
+  font-family: 'Begum', serif;
+  font-size: 1.5rem;
+  color: var(--encre);
+  margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   STEP VISIBILITY
+   ============================================ */
+.checkout-step {
+  display: none;
+  opacity: 0;
+}
+.checkout-step.active {
+  display: block;
+}
+
+/* ============================================
+   CONDENSED RECAP (steps 2 & 3)
+   ============================================ */
+.step-recap {
+  background: var(--white-bloom);
+  border: 1px solid var(--gris-tres-clair);
+  padding: 1rem 1.2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.step-recap__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.step-recap__data {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--noir-doux);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.step-recap__edit {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: var(--or-sombre);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--t-fast);
+}
+.step-recap__edit:hover { color: var(--coral); }
+
+/* ============================================
+   SECTION LABEL
+   ============================================ */
+.section-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--noir);
+  margin-bottom: 1rem;
+  margin-top: 1.8rem;
+}
+
+/* ============================================
+   FLOATING LABEL INPUTS
+   ============================================ */
+.form-group {
+  position: relative;
+  margin-bottom: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid var(--gris-clair);
+  border-radius: 8px;
+  padding: 14px 1rem 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.88rem;
+  background: var(--blanc);
+  color: var(--noir);
+  transition: border-color var(--t-fast) var(--ease-soft), box-shadow var(--t-fast) var(--ease-soft);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-group select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8A8A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--or);
+  box-shadow: 0 0 0 3px var(--or-glow);
+}
+
+.form-group label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.82rem;
+  color: var(--gris);
+  pointer-events: none;
+  transition: top 0.22s var(--ease-soft), font-size 0.22s var(--ease-soft), color 0.22s var(--ease-soft);
+}
+
+.form-group.focused label,
+.form-group.filled label {
+  top: 9px;
+  transform: none;
+  font-size: 0.62rem;
+  color: var(--or-sombre);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
+/* Card icon */
+.form-group--icon .form-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gris-clair);
+  pointer-events: none;
+  line-height: 0;
+}
+.form-group--icon .form-icon svg { width: 22px; height: 16px; display: block; }
+
+/* ============================================
+   CUSTOM CHECKBOX
+   ============================================ */
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  margin-top: 0.6rem;
+  margin-bottom: 0.4rem;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+
+.custom-checkbox__box {
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid var(--gris-clair);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--t-fast) var(--ease-soft), border-color var(--t-fast) var(--ease-soft);
+}
+
+.custom-checkbox input:checked + .custom-checkbox__box {
+  background: var(--noir);
+  border-color: var(--noir);
+}
+
+.custom-checkbox__box svg { width: 10px; height: 10px; opacity: 0; transition: opacity 0.15s; }
+.custom-checkbox input:checked + .custom-checkbox__box svg { opacity: 1; }
+
+.custom-checkbox__text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--noir);
+}
+
+/* ============================================
+   SHIPPING OPTION CARDS
+   ============================================ */
+.shipping-cards { display: flex; flex-direction: column; }
+
+.shipping-card {
+  border: 1.5px solid var(--gris-clair);
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: border-color 0.28s var(--ease-soft), background 0.28s var(--ease-soft);
+  margin-bottom: -1.5px;
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+}
+.shipping-card:first-child { border-radius: 8px 8px 0 0; }
+.shipping-card:last-child  { border-radius: 0 0 8px 8px; }
+
+.shipping-card.selected {
+  border-color: var(--or);
+  background: rgba(212,177,136,0.06);
+  z-index: 1;
+}
+
+.shipping-card input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.shipping-card__radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--gris-clair);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.25s var(--ease-soft);
+}
+.shipping-card__radio::after {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--or);
+  transform: scale(0);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.shipping-card.selected .shipping-card__radio { border-color: var(--or); }
+.shipping-card.selected .shipping-card__radio::after { transform: scale(1); }
+
+.shipping-card__info { flex: 1; min-width: 0; }
+.shipping-card__name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--noir);
+}
+.shipping-card__desc {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.74rem;
+  color: var(--gris);
+  margin-top: 0.1rem;
+}
+.shipping-card__price {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--noir);
+  flex-shrink: 0;
+}
+.shipping-card__price.free { color: var(--almond-green); }
+
+/* ============================================
+   PAYMENT METHOD TABS
+   ============================================ */
+.payment-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.5rem;
+}
+.payment-tab {
+  flex: 1;
+  height: 44px;
+  border: 1.5px solid var(--gris-clair);
+  background: transparent;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--gris);
+  cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.payment-tab:first-child { border-radius: 8px 0 0 8px; }
+.payment-tab:last-child  { border-radius: 0 8px 8px 0; margin-left: -1.5px; }
+.payment-tab.active {
+  border-color: var(--or);
+  background: rgba(212,177,136,0.08);
+  color: var(--noir);
+  z-index: 1;
+  position: relative;
+}
+.payment-tab svg { width: 14px; height: 14px; }
+
+/* ============================================
+   CTA BUTTONS
+   ============================================ */
+.btn-continue {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.1rem 2rem;
+  background: var(--coral);
+  color: var(--blanc);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 1.8rem;
+  transition: background var(--t-fast) var(--ease-soft), transform var(--t-fast) var(--ease-soft);
+  cursor: pointer;
+}
+.btn-continue:hover { background: var(--coral-hover); transform: translateY(-2px); }
+.btn-continue:active { transform: translateY(0); }
+.btn-continue svg { width: 16px; height: 16px; }
+
+.btn-pay {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.2rem 2rem;
+  background: var(--coral);
+  color: var(--blanc);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2rem;
+  transition: background var(--t-fast) var(--ease-soft), transform var(--t-fast) var(--ease-soft);
+  cursor: pointer;
+}
+.btn-pay:hover { background: var(--coral-hover); transform: translateY(-2px); }
+.btn-pay:active { transform: translateY(0); }
+.btn-pay svg { width: 14px; height: 14px; }
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.76rem;
+  color: var(--gris);
+  margin-top: 1.2rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--t-fast);
+}
+.btn-back:hover { color: var(--noir); }
+.btn-back svg { width: 13px; height: 13px; }
+
+/* ============================================
+   SSL NOTE
+   ============================================ */
+.ssl-note {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  color: var(--gris);
+}
+.ssl-note svg { width: 13px; height: 13px; flex-shrink: 0; }
+.ssl-note span {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.7rem;
+}
+
+/* ============================================
+   RIGHT COLUMN — ORDER SUMMARY (sticky)
+   ============================================ */
+.order-summary {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+  background: var(--white-bloom);
+  border: 1px solid var(--gris-tres-clair);
+  padding: 1.8rem;
+}
+
+.order-summary__title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 1.5rem;
+}
+
+/* Mobile summary toggle — hidden on desktop */
+.order-summary__toggle { display: none; }
+
+.summary-items { display: flex; flex-direction: column; }
+
+.summary-item {
+  display: flex;
+  gap: 0.9rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(212,177,136,0.18);
+}
+.summary-item:last-child { margin-bottom: 0; border-bottom: none; }
+
+.summary-item__thumb {
+  width: 60px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+.summary-item__thumb.bg-brut  { background: var(--cuvee-brut); }
+.summary-item__thumb.bg-rose  { background: var(--cuvee-rose); }
+.summary-item__thumb.bg-blanc { background: var(--cuvee-blanc); }
+
+.summary-item__thumb img {
+  max-height: 88%;
+  width: auto;
+  object-fit: contain;
+}
+
+.summary-item__qty {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 18px; height: 18px;
+  background: var(--or);
+  color: var(--blanc);
+  border-radius: 50%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.58rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-item__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15rem;
+}
+.summary-item__name {
+  font-family: 'Begum', serif;
+  font-size: 0.88rem;
+  line-height: 1.25;
+  color: var(--encre);
+}
+.summary-item__variant {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.72rem;
+  color: var(--gris);
+}
+
+.summary-item__price {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.88rem;
+  color: var(--noir);
+  align-self: center;
+  flex-shrink: 0;
+}
+
+/* Totals */
+.summary-sep {
+  height: 1px;
+  background: rgba(212,177,136,0.25);
+  margin: 1rem 0;
+}
+.summary-sep--or { background: var(--or); margin: 1.2rem 0; }
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.summary-row__label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--noir-doux);
+}
+.summary-row__value {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--noir);
+}
+.summary-row__value.free { color: var(--almond-green); font-weight: 500; }
+
+.summary-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.summary-total-row__label {
+  font-family: 'Begum', serif;
+  font-size: 1.5rem;
+  color: var(--encre);
+}
+.summary-total-row__value {
+  font-family: 'Begum', serif;
+  font-size: 1.5rem;
+  color: var(--encre);
+}
+
+/* Secure badge */
+.secure-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(212,177,136,0.18);
+}
+.secure-badge svg { width: 13px; height: 13px; stroke: var(--or-sombre); flex-shrink: 0; }
+.secure-badge span {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.7rem;
+  color: var(--gris);
+  letter-spacing: 0.04em;
+}
+
+/* ============================================
+   RESPONSIVE — TABLET 900px
+   ============================================ */
+@media (max-width: 900px) {
+  .checkout-main {
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE — MOBILE 600px
+   ============================================ */
+@media (max-width: 600px) {
+  .checkout-main {
+    grid-template-columns: 1fr;
+    padding: 1.5rem 1rem 4rem;
+    gap: 0;
+  }
+
+  .order-summary {
+    order: -1;
+    position: static;
+    padding: 0;
+    background: transparent;
+    border: none;
+    margin-bottom: 1.5rem;
+  }
+
+  .order-summary__title { display: none; }
+
+  .order-summary__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 0.9rem 1rem;
+    background: var(--white-bloom);
+    border: 1px solid var(--gris-tres-clair);
+    width: 100%;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .order-summary__toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .order-summary__toggle-cart svg {
+    width: 16px; height: 16px;
+    stroke: var(--or-sombre);
+  }
+
+  .order-summary__toggle-text {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 0.82rem;
+    color: var(--noir);
+  }
+
+  .order-summary__toggle-chevron {
+    width: 12px; height: 12px;
+    stroke: var(--gris);
+    transition: transform var(--t-fast) var(--ease-soft);
+  }
+
+  .order-summary__toggle.open .order-summary__toggle-chevron {
+    transform: rotate(180deg);
+  }
+
+  .order-summary__toggle-total {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 0.88rem;
+    color: var(--noir);
+  }
+
+  .order-summary__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s var(--ease-luxe), padding 0.3s;
+    background: var(--white-bloom);
+    border: 1px solid var(--gris-tres-clair);
+    border-top: none;
+    padding: 0 1rem;
+  }
+  .order-summary__content.open {
+    max-height: 700px;
+    padding: 1.2rem 1rem;
+  }
+
+  .express-checkout__btns { flex-direction: column; }
+
+  .form-row { grid-template-columns: 1fr; }
+
+  .checkout-header__back span { display: none; }
+  .checkout-header__secure span { display: none; }
+
+  .progress-step__label { font-size: 0.58rem; }
+  .progress-step__dot { width: 26px; height: 26px; font-size: 0.62rem; }
+  .progress-connector { margin-top: 13px; }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================
+     CHECKOUT HEADER
+     ============================================ -->
+<header class="checkout-header">
+  <a href="cart-v2.html" class="checkout-header__back" aria-label="Retour à votre sélection">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    <span>Retour</span>
+  </a>
+
+  <a href="homepage-v2.html" class="checkout-header__logo">French Bloom</a>
+
+  <div class="checkout-header__secure">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+    <span>Paiement s&eacute;curis&eacute;</span>
+  </div>
+</header>
+
+<!-- ============================================
+     PROGRESS BAR
+     ============================================ -->
+<div class="progress-wrapper" id="progressWrapper">
+  <div class="progress-bar">
+    <div class="progress-step active" data-step="1">
+      <div class="progress-step__dot">1</div>
+      <div class="progress-step__label">Coordonn&eacute;es</div>
+    </div>
+
+    <div class="progress-connector" data-connector="1">
+      <div class="progress-connector__fill"></div>
+    </div>
+
+    <div class="progress-step" data-step="2">
+      <div class="progress-step__dot">2</div>
+      <div class="progress-step__label">Livraison</div>
+    </div>
+
+    <div class="progress-connector" data-connector="2">
+      <div class="progress-connector__fill"></div>
+    </div>
+
+    <div class="progress-step" data-step="3">
+      <div class="progress-step__dot">3</div>
+      <div class="progress-step__label">Paiement</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     MAIN LAYOUT
+     ============================================ -->
+<main class="checkout-main">
+
+  <!-- ========================
+       LEFT COLUMN
+       ======================== -->
+  <div class="checkout-form" id="checkoutForm">
+
+    <!-- EXPRESS CHECKOUT -->
+    <div class="express-checkout" id="expressCheckout">
+      <p class="express-checkout__label">Finaliser rapidement avec</p>
+      <div class="express-checkout__btns">
+        <button class="express-btn express-btn--apple" type="button" aria-label="Apple Pay">
+          <svg width="16" height="20" viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-27.1-46.9-42.3-83.5-45.7-35.1-3.3-73.4 20.7-87.5 20.7-14.9 0-49.1-19.7-74.4-19.7C63.1 140.2 0 184.3 0 273.5c0 26.3 4.8 53.6 14.4 81.8 12.8 37.3 59 128.6 107.1 127 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 75.1 17.9 48.5-.7 90.5-82.5 102.6-119.9-65.2-30.7-66.3-90.6-66.3-93.7zM261.3 67.2c24.9-29.7 23.2-56.9 22.5-66.2-22.4 1.3-48.4 15.3-63.3 32.6C206.7 49.5 192 73 194.4 99.7c24.5 1.9 47-11.7 66.9-32.5z"/></svg>
+          Apple Pay
+        </button>
+        <button class="express-btn express-btn--google" type="button" aria-label="Google Pay">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Google Pay
+        </button>
+        <button class="express-btn express-btn--paypal" type="button" aria-label="PayPal">
+          <svg width="20" height="22" viewBox="0 0 101 120" fill="none" aria-hidden="true"><path d="M86.7 27.5C90.2 5.3 71.3-10 42.9-10H16.6c-3.3 0-6.1 2.4-6.6 5.7L0 65c-.3 2.2 1.3 4.2 3.5 4.2h18l4.5-28.7c.4-2.8 2.8-4.8 5.6-4.8h3.5c22.9 0 40.8-9.3 46-36.2.3-1.5.5-2.8.6-4z" fill="#003087"/><path d="M39.8 27.2c.4-2.5 2-4.5 4.2-5.4 1-.4 2.1-.6 3.2-.6h24.5c2.9 0 5.6.2 8 .5 2.5.4 4.8 1.1 6.9 2 2.1.9 3.9 2.1 5.3 3.5-2.2-14.8-18.5-22.5-38.2-22.5H27.3c-3.3 0-6.2 2.4-6.7 5.7L10.4 73.3c-.4 2.2 1.2 4.2 3.4 4.2h18.1l4.5-28.7 3.4-21.6z" fill="#002F86"/><path d="M86.7 27.5c-.2.8-.4 1.6-.7 2.4-5.5 23.5-27.4 37.7-54.3 37.7h-3.5c-2.8 0-5.2 2-5.6 4.8L17.7 103c-.3 1.9 1.2 3.6 3.1 3.6h17c2.5 0 4.6-1.8 5-4.2l2.1-13.2 2.5-15.9c.4-2.8 2.8-4.8 5.6-4.8h3.5c22.9 0 40.8-9.3 46-36.2 1.9-9.7 1.1-17.8-3.7-23.5-1.5-1.7-3.3-3.1-5.4-4.3l.3 23z" fill="#009CDE"/></svg>
+          PayPal
+        </button>
+      </div>
+      <div class="express-divider">
+        <span class="express-divider__text">OU</span>
+      </div>
+    </div>
+
+    <!-- =====================================
+         STEP 1 — COORDONNÉES
+         ===================================== -->
+    <div class="checkout-step active" id="step1">
+      <h2 class="step-title">Coordonn&eacute;es</h2>
+
+      <!-- Contact -->
+      <div class="form-group" id="grp-email">
+        <input type="email" id="inp-email" autocomplete="email" required>
+        <label for="inp-email">Adresse e-mail</label>
+      </div>
+
+      <label class="custom-checkbox">
+        <input type="checkbox" id="chk-newsletter" checked>
+        <span class="custom-checkbox__box">
+          <svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 5.5 4 8.5 11 1.5"></polyline></svg>
+        </span>
+        <span class="custom-checkbox__text">M'inscrire &agrave; la newsletter French Bloom</span>
+      </label>
+
+      <!-- Adresse de livraison -->
+      <p class="section-label">Adresse de livraison</p>
+
+      <div class="form-row">
+        <div class="form-group" id="grp-prenom">
+          <input type="text" id="inp-prenom" autocomplete="given-name" required>
+          <label for="inp-prenom">Pr&eacute;nom</label>
+        </div>
+        <div class="form-group" id="grp-nom">
+          <input type="text" id="inp-nom" autocomplete="family-name" required>
+          <label for="inp-nom">Nom</label>
+        </div>
+      </div>
+
+      <div class="form-group" id="grp-adresse">
+        <input type="text" id="inp-adresse" autocomplete="address-line1" required>
+        <label for="inp-adresse">Adresse</label>
+      </div>
+
+      <div class="form-group" id="grp-complement">
+        <input type="text" id="inp-complement" autocomplete="address-line2">
+        <label for="inp-complement">Compl&eacute;ment d'adresse (optionnel)</label>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" id="grp-postal">
+          <input type="text" id="inp-postal" autocomplete="postal-code" inputmode="numeric" required>
+          <label for="inp-postal">Code postal</label>
+        </div>
+        <div class="form-group" id="grp-ville">
+          <input type="text" id="inp-ville" autocomplete="address-level2" required>
+          <label for="inp-ville">Ville</label>
+        </div>
+      </div>
+
+      <div class="form-group filled" id="grp-pays">
+        <select id="inp-pays" autocomplete="country-name" required>
+          <option value="France" selected>France</option>
+          <option value="Belgique">Belgique</option>
+          <option value="Suisse">Suisse</option>
+          <option value="Luxembourg">Luxembourg</option>
+          <option value="Monaco">Monaco</option>
+          <option value="Allemagne">Allemagne</option>
+          <option value="Italie">Italie</option>
+          <option value="Espagne">Espagne</option>
+          <option value="Royaume-Uni">Royaume-Uni</option>
+          <option value="Pays-Bas">Pays-Bas</option>
+        </select>
+        <label for="inp-pays">Pays</label>
+      </div>
+
+      <div class="form-group" id="grp-tel">
+        <input type="tel" id="inp-tel" autocomplete="tel" required>
+        <label for="inp-tel">T&eacute;l&eacute;phone</label>
+      </div>
+
+      <button class="btn-continue" type="button" id="btnStep1">
+        CONTINUER VERS LA LIVRAISON
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </div>
+
+    <!-- =====================================
+         STEP 2 — LIVRAISON
+         ===================================== -->
+    <div class="checkout-step" id="step2">
+      <h2 class="step-title">Mode de livraison</h2>
+
+      <!-- Recap contact + adresse -->
+      <div class="step-recap" id="recap-coordonnees">
+        <div class="step-recap__row">
+          <span class="step-recap__data" id="recap-email-text">—</span>
+          <button class="step-recap__edit" type="button" data-goto="1">Modifier</button>
+        </div>
+        <div class="step-recap__row">
+          <span class="step-recap__data" id="recap-adresse-text">—</span>
+        </div>
+      </div>
+
+      <!-- Options livraison -->
+      <div class="shipping-cards" id="shippingCards">
+
+        <label class="shipping-card selected" data-cost="0">
+          <input type="radio" name="shipping" value="standard" checked>
+          <div class="shipping-card__radio"></div>
+          <div class="shipping-card__info">
+            <div class="shipping-card__name">Livraison Standard</div>
+            <div class="shipping-card__desc">3–5 jours ouvr&eacute;s</div>
+          </div>
+          <div class="shipping-card__price free">Gratuite</div>
+        </label>
+
+        <label class="shipping-card" data-cost="9.90">
+          <input type="radio" name="shipping" value="express">
+          <div class="shipping-card__radio"></div>
+          <div class="shipping-card__info">
+            <div class="shipping-card__name">Livraison Express</div>
+            <div class="shipping-card__desc">1–2 jours ouvr&eacute;s</div>
+          </div>
+          <div class="shipping-card__price">9,90&nbsp;&euro;</div>
+        </label>
+
+        <label class="shipping-card" data-cost="0">
+          <input type="radio" name="shipping" value="relais">
+          <div class="shipping-card__radio"></div>
+          <div class="shipping-card__info">
+            <div class="shipping-card__name">Point Relais</div>
+            <div class="shipping-card__desc">4–6 jours ouvr&eacute;s</div>
+          </div>
+          <div class="shipping-card__price free">Gratuit</div>
+        </label>
+
+      </div>
+
+      <button class="btn-continue" type="button" id="btnStep2">
+        CONTINUER VERS LE PAIEMENT
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+
+      <button class="btn-back" type="button" data-goto="1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Retour aux coordonn&eacute;es
+      </button>
+    </div>
+
+    <!-- =====================================
+         STEP 3 — PAIEMENT
+         ===================================== -->
+    <div class="checkout-step" id="step3">
+      <h2 class="step-title">Paiement</h2>
+
+      <!-- Recap contact + adresse + livraison -->
+      <div class="step-recap" id="recap-all">
+        <div class="step-recap__row">
+          <span class="step-recap__data" id="recap-email-text2">—</span>
+          <button class="step-recap__edit" type="button" data-goto="1">Modifier</button>
+        </div>
+        <div class="step-recap__row">
+          <span class="step-recap__data" id="recap-adresse-text2">—</span>
+        </div>
+        <div class="step-recap__row">
+          <span class="step-recap__data" id="recap-shipping-text">Livraison Standard · Gratuite</span>
+          <button class="step-recap__edit" type="button" data-goto="2">Modifier</button>
+        </div>
+      </div>
+
+      <!-- Payment method tabs -->
+      <div class="payment-tabs">
+        <button class="payment-tab active" type="button" data-tab="card">
+          <svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="22" height="16" rx="2"></rect><line x1="1" y1="7" x2="23" y2="7"></line></svg>
+          Carte bancaire
+        </button>
+        <button class="payment-tab" type="button" data-tab="apple">
+          <svg width="12" height="15" viewBox="0 0 15 18" fill="currentColor" aria-hidden="true"><path d="M11.18 4.57c.72-.85 1.2-2.01 1.08-3.18-1.01.04-2.24.68-2.97 1.53-.65.75-1.22 1.96-1.07 3.11 1.13.09 2.28-.57 2.96-1.46zm1.1 1.73c-1.64-.1-3.04.93-3.82.93-.78 0-1.99-.91-3.28-.88-1.69.03-3.25.98-4.12 2.5-1.76 3.05-.45 7.56 1.27 10.04.84 1.22 1.84 2.59 3.16 2.54.93-.02 1.63-.82 2.64-.82h.09c1.01 0 1.65.82 2.64.8 1.35-.03 2.22-1.24 3.06-2.47.96-1.42 1.36-2.79 1.38-2.86-.03-.01-2.65-1.02-2.68-4.04-.03-2.53 2.07-3.74 2.16-3.8-1.18-1.74-3.01-1.94-3.5-1.94z"/></svg>
+          Apple Pay
+        </button>
+        <button class="payment-tab" type="button" data-tab="google">
+          <svg width="14" height="14" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Google Pay
+        </button>
+      </div>
+
+      <!-- Card form -->
+      <div id="paymentCard">
+        <div class="form-group form-group--icon" id="grp-card-number">
+          <input type="text" id="inp-card-number" inputmode="numeric" autocomplete="cc-number" placeholder=" " required>
+          <label for="inp-card-number">Num&eacute;ro de carte</label>
+          <span class="form-icon">
+            <svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="22" height="16" rx="2"></rect><line x1="1" y1="7" x2="23" y2="7"></line></svg>
+          </span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" id="grp-expiry">
+            <input type="text" id="inp-expiry" inputmode="numeric" autocomplete="cc-exp" placeholder=" " required>
+            <label for="inp-expiry">Date d'expiration (MM/AA)</label>
+          </div>
+          <div class="form-group" id="grp-cvc">
+            <input type="text" id="inp-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder=" " required>
+            <label for="inp-cvc">CVC</label>
+          </div>
+        </div>
+
+        <div class="form-group" id="grp-card-name">
+          <input type="text" id="inp-card-name" autocomplete="cc-name" placeholder=" " required>
+          <label for="inp-card-name">Nom sur la carte</label>
+        </div>
+      </div>
+
+      <label class="custom-checkbox" style="margin-top:1rem;">
+        <input type="checkbox" id="chk-save">
+        <span class="custom-checkbox__box">
+          <svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 5.5 4 8.5 11 1.5"></polyline></svg>
+        </span>
+        <span class="custom-checkbox__text">Sauvegarder mes informations pour la prochaine fois</span>
+      </label>
+
+      <button class="btn-pay" type="button" id="btnPay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        C&Eacute;L&Eacute;BRER &middot; 161,00&nbsp;&euro;
+      </button>
+
+      <div class="ssl-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span>Paiement chiffr&eacute; 256-bit SSL · Vos donn&eacute;es sont prot&eacute;g&eacute;es</span>
+      </div>
+
+      <button class="btn-back" type="button" data-goto="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Retour &agrave; la livraison
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================
+       RIGHT COLUMN — ORDER SUMMARY
+       ======================== -->
+  <aside class="order-summary">
+    <p class="order-summary__title">Votre Moment</p>
+
+    <!-- Mobile toggle (hidden on desktop) -->
+    <button class="order-summary__toggle" id="summaryToggle" type="button" aria-expanded="false">
+      <div class="order-summary__toggle-left">
+        <div class="order-summary__toggle-cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        </div>
+        <span class="order-summary__toggle-text">Votre Moment</span>
+        <svg class="order-summary__toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <span class="order-summary__toggle-total">161,00&nbsp;&euro;</span>
+    </button>
+
+    <div class="order-summary__content" id="summaryContent">
+      <!-- Items -->
+      <div class="summary-items">
+
+        <div class="summary-item">
+          <div class="summary-item__thumb bg-brut">
+            <img src="assets/images/bottle-extra-brut.png" alt="L'Extra Brut" onerror="this.style.display='none'">
+            <span class="summary-item__qty">2</span>
+          </div>
+          <div class="summary-item__info">
+            <div class="summary-item__name">L'Extra Brut</div>
+            <div class="summary-item__variant">75cl &times; 2</div>
+          </div>
+          <div class="summary-item__price">98,00&nbsp;&euro;</div>
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-item__thumb bg-rose">
+            <img src="assets/images/bottle-rose.png" alt="Le Ros&eacute;" onerror="this.style.display='none'">
+            <span class="summary-item__qty">1</span>
+          </div>
+          <div class="summary-item__info">
+            <div class="summary-item__name">Le Ros&eacute;</div>
+            <div class="summary-item__variant">75cl &times; 1</div>
+          </div>
+          <div class="summary-item__price">34,00&nbsp;&euro;</div>
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-item__thumb bg-blanc">
+            <img src="assets/images/bottle-blanc.png" alt="Le Blanc" onerror="this.style.display='none'">
+            <span class="summary-item__qty">1</span>
+          </div>
+          <div class="summary-item__info">
+            <div class="summary-item__name">Le Blanc</div>
+            <div class="summary-item__variant">75cl &times; 1</div>
+          </div>
+          <div class="summary-item__price">29,00&nbsp;&euro;</div>
+        </div>
+
+      </div>
+
+      <p style="font-size:0.75rem; font-style:italic; color:var(--or); margin-top:0.2rem;">Parfait pour une C&eacute;l&eacute;bration</p>
+
+      <div class="summary-sep"></div>
+
+      <!-- Totals -->
+      <div class="summary-row">
+        <span class="summary-row__label">Sous-total</span>
+        <span class="summary-row__value">161,00&nbsp;&euro;</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-row__label">Livraison</span>
+        <span class="summary-row__value free" id="summaryShipping">Offerte</span>
+      </div>
+
+      <div class="summary-sep summary-sep--or"></div>
+
+      <div class="summary-total-row">
+        <span class="summary-total-row__label">Total</span>
+        <span class="summary-total-row__value" id="summaryTotal">161,00&nbsp;&euro;</span>
+      </div>
+
+      <!-- Secure badge -->
+      <div class="secure-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span>Paiement 100% s&eacute;curis&eacute;</span>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ─────────────────────────────────────────
+     REDUCED MOTION GUARD
+  ───────────────────────────────────────── */
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ─────────────────────────────────────────
+     STATE
+  ───────────────────────────────────────── */
+  let currentStep = 1;
+
+  /* ─────────────────────────────────────────
+     FLOATING LABELS
+  ───────────────────────────────────────── */
+  function initFloatingLabels(container) {
+    const groups = container.querySelectorAll('.form-group');
+    groups.forEach(group => {
+      const input = group.querySelector('input, select, textarea');
+      if (!input) return;
+
+      function update() {
+        const hasValue = input.tagName === 'SELECT'
+          ? input.value !== ''
+          : input.value.trim() !== '';
+        group.classList.toggle('filled', hasValue);
+      }
+
+      input.addEventListener('focus', () => group.classList.add('focused'));
+      input.addEventListener('blur',  () => { group.classList.remove('focused'); update(); });
+      input.addEventListener('input', update);
+      update();
+    });
+  }
+
+  initFloatingLabels(document.body);
+
+  /* ─────────────────────────────────────────
+     PROGRESS BAR UPDATE
+  ───────────────────────────────────────── */
+  function updateProgress(toStep) {
+    const steps      = document.querySelectorAll('.progress-step');
+    const connectors = document.querySelectorAll('.progress-connector');
+
+    steps.forEach(s => {
+      const n = parseInt(s.dataset.step);
+      s.classList.remove('active', 'completed');
+      if (n === toStep) s.classList.add('active');
+      else if (n < toStep) s.classList.add('completed');
+    });
+
+    connectors.forEach(c => {
+      const n = parseInt(c.dataset.connector);
+      c.classList.toggle('completed', n < toStep);
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     GSAP STEP TRANSITION
+  ───────────────────────────────────────── */
+  function goToStep(toStep) {
+    if (toStep === currentStep) return;
+
+    const outEl = document.getElementById('step' + currentStep);
+    const inEl  = document.getElementById('step' + toStep);
+    const direction = toStep > currentStep ? 1 : -1;
+
+    updateProgress(toStep);
+
+    if (prefersReduced) {
+      outEl.classList.remove('active');
+      outEl.style.display = 'none';
+      inEl.classList.add('active');
+      inEl.style.opacity = 1;
+      currentStep = toStep;
+      window.scrollTo({ top: 0 });
+      return;
+    }
+
+    // slide out current
+    gsap.fromTo(outEl,
+      { opacity: 1, x: 0 },
+      {
+        opacity: 0,
+        x: -40 * direction,
+        duration: 0.32,
+        ease: 'power2.in',
+        onComplete: () => {
+          outEl.classList.remove('active');
+          outEl.style.display = 'none';
+
+          // slide in new
+          inEl.style.display = 'block';
+          inEl.classList.add('active');
+          gsap.fromTo(inEl,
+            { opacity: 0, x: 50 * direction },
+            { opacity: 1, x: 0, duration: 0.44, ease: 'power3.out' }
+          );
+        }
+      }
+    );
+
+    currentStep = toStep;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ─────────────────────────────────────────
+     RECAP HELPERS
+  ───────────────────────────────────────── */
+  function buildRecap() {
+    const email   = document.getElementById('inp-email').value.trim();
+    const prenom  = document.getElementById('inp-prenom').value.trim();
+    const nom     = document.getElementById('inp-nom').value.trim();
+    const adresse = document.getElementById('inp-adresse').value.trim();
+    const postal  = document.getElementById('inp-postal').value.trim();
+    const ville   = document.getElementById('inp-ville').value.trim();
+
+    const adresseStr = [prenom + ' ' + nom, adresse, postal + ' ' + ville]
+      .filter(Boolean).map(s => s.trim()).join(' · ');
+
+    ['recap-email-text', 'recap-email-text2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = email || '—';
+    });
+    ['recap-adresse-text', 'recap-adresse-text2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = adresseStr || '—';
+    });
+  }
+
+  function updateShippingRecap() {
+    const selected  = document.querySelector('.shipping-card.selected');
+    const nameEl    = selected ? selected.querySelector('.shipping-card__name') : null;
+    const priceEl   = selected ? selected.querySelector('.shipping-card__price') : null;
+    const name      = nameEl  ? nameEl.textContent  : 'Standard';
+    const price     = priceEl ? priceEl.textContent : 'Gratuite';
+    const recapEl   = document.getElementById('recap-shipping-text');
+    if (recapEl) recapEl.textContent = name + ' · ' + price;
+  }
+
+  /* ─────────────────────────────────────────
+     STEP BUTTONS
+  ───────────────────────────────────────── */
+  document.getElementById('btnStep1').addEventListener('click', () => {
+    buildRecap();
+    goToStep(2);
+  });
+
+  document.getElementById('btnStep2').addEventListener('click', () => {
+    updateShippingRecap();
+    buildRecap();
+    goToStep(3);
+  });
+
+  document.getElementById('btnPay').addEventListener('click', () => {
+    // Demo: visual confirmation
+    const btn = document.getElementById('btnPay');
+    btn.textContent = 'Votre moment arrive\u2026';
+    btn.style.background = 'var(--almond-green)';
+    btn.disabled = true;
+  });
+
+  /* ─────────────────────────────────────────
+     BACK BUTTONS (data-goto)
+  ───────────────────────────────────────── */
+  document.querySelectorAll('[data-goto]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = parseInt(btn.dataset.goto);
+      goToStep(target);
+    });
+  });
+
+  /* ─────────────────────────────────────────
+     SHIPPING CARD SELECTION
+  ───────────────────────────────────────── */
+  const shippingCards = document.querySelectorAll('.shipping-card');
+  shippingCards.forEach(card => {
+    card.addEventListener('click', () => {
+      shippingCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      card.querySelector('input[type="radio"]').checked = true;
+
+      // Update total in sidebar
+      const cost = parseFloat(card.dataset.cost || 0);
+      const base = 161;
+      const total = base + cost;
+      const shippingEl = document.getElementById('summaryShipping');
+      const totalEl    = document.getElementById('summaryTotal');
+      if (shippingEl) shippingEl.textContent = cost === 0 ? 'Offerte' : cost.toFixed(2).replace('.', ',') + '\u00a0€';
+      if (shippingEl) shippingEl.className = 'summary-row__value' + (cost === 0 ? ' free' : '');
+      if (totalEl)    totalEl.textContent = total.toFixed(2).replace('.', ',') + '\u00a0€';
+
+      // Update pay button
+      const payBtn = document.getElementById('btnPay');
+      if (payBtn && !payBtn.disabled) {
+        payBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>C\u00c9L\u00c9BRER \u00b7 ${total.toFixed(2).replace('.', ',')}\u00a0\u20ac`;
+      }
+    });
+  });
+
+  /* ─────────────────────────────────────────
+     PAYMENT TABS
+  ───────────────────────────────────────── */
+  const payTabs = document.querySelectorAll('.payment-tab');
+  const cardPanel = document.getElementById('paymentCard');
+
+  payTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      payTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      if (tab.dataset.tab === 'card') {
+        if (cardPanel) cardPanel.style.display = 'block';
+      } else {
+        if (cardPanel) cardPanel.style.display = 'none';
+      }
+    });
+  });
+
+  /* ─────────────────────────────────────────
+     CARD NUMBER FORMATTING
+  ───────────────────────────────────────── */
+  const cardInput = document.getElementById('inp-card-number');
+  if (cardInput) {
+    cardInput.addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '').substring(0, 16);
+      this.value = v.replace(/(.{4})/g, '$1 ').trim();
+    });
+  }
+
+  const expiryInput = document.getElementById('inp-expiry');
+  if (expiryInput) {
+    expiryInput.addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length >= 3) v = v.substring(0, 2) + '/' + v.substring(2);
+      this.value = v;
+    });
+  }
+
+  const cvcInput = document.getElementById('inp-cvc');
+  if (cvcInput) {
+    cvcInput.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '').substring(0, 4);
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     MOBILE SUMMARY TOGGLE
+  ───────────────────────────────────────── */
+  const summaryToggle  = document.getElementById('summaryToggle');
+  const summaryContent = document.getElementById('summaryContent');
+
+  if (summaryToggle && summaryContent) {
+    summaryToggle.addEventListener('click', () => {
+      const isOpen = summaryContent.classList.contains('open');
+      summaryContent.classList.toggle('open', !isOpen);
+      summaryToggle.classList.toggle('open', !isOpen);
+      summaryToggle.setAttribute('aria-expanded', !isOpen);
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     ENTRANCE ANIMATION (step 1 + sidebar)
+  ───────────────────────────────────────── */
+  if (!prefersReduced) {
+    const step1 = document.getElementById('step1');
+    const express = document.getElementById('expressCheckout');
+    const summary = document.querySelector('.order-summary');
+
+    gsap.fromTo([express, step1],
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12 }
+    );
+
+    gsap.fromTo(summary,
+      { opacity: 0, x: 20 },
+      { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out', delay: 0.2 }
+    );
+  } else {
+    document.getElementById('step1').style.opacity = 1;
+  }
+
+});
+</script>
+</body>
+</html>

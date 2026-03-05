@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Maison — French Bloom</title>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<style>
+/* @font-face — French Bloom Brand Typography */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & DESIGN TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white-bloom:     #FCF5ED;
+  --blanc:           #FFFFFF;
+  --noir:            #1A1A1A;
+  --noir-doux:       #3A3A3A;
+  --encre:           #2C2620;
+  --or:              #D4B188;
+  --or-pale:         #E2C9A6;
+  --or-sombre:       #B89A6E;
+  --or-glow:         rgba(212,177,136,0.15);
+  --coral:           #EA5438;
+  --coral-hover:     #D44828;
+  --almond-green:    #ACB99C;
+  --gris:            #8A8A8A;
+  --gris-clair:      #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose:            #D4A094;
+  --rose-pale:       #E8C4B8;
+
+  --ease-luxe:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft:    cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring:  cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --t-fast:       0.3s;
+  --t-medium:     0.5s;
+  --t-slow:       0.8s;
+  --t-cinematic:  1.2s;
+
+  --z-cursor:  9999;
+  --z-reveal:  9000;
+  --z-nav:     1000;
+  --z-mobile:  800;
+  --z-toast:   700;
+}
+
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: var(--noir);
+  background: var(--encre);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ============================================
+   PAGE REVEAL
+   ============================================ */
+.reveal-overlay {
+  position: fixed; inset: 0;
+  background: var(--encre);
+  z-index: var(--z-reveal);
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.reveal-overlay__text {
+  font-family: 'Begum', serif;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  letter-spacing: 0.3em;
+  color: var(--or);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   CUSTOM CURSOR (desktop only)
+   ============================================ */
+.cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: var(--z-cursor); mix-blend-mode: difference; }
+.cursor__outer { width: 40px; height: 40px; border: 1.5px solid var(--or); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.4s var(--ease-luxe), height 0.4s var(--ease-luxe), border-color 0.3s; }
+.cursor__dot { position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: var(--or); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: var(--z-cursor); }
+.cursor--hover .cursor__outer { width: 56px; height: 56px; border-color: var(--coral); }
+@media (pointer: coarse) { .cursor, .cursor__dot { display: none !important; } }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed; top: 0; left: 0; width: 100%; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  z-index: var(--z-nav);
+  transition: transform 0.5s var(--ease-luxe), background 0.4s;
+}
+.nav--hidden { transform: translateY(-100%); }
+.nav--frosted { background: rgba(44,38,32,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.nav__hamburger {
+  display: none; flex-direction: column; gap: 5px; width: 24px; cursor: pointer; order: -1;
+}
+.nav__hamburger span {
+  width: 100%; height: 1.5px; background: var(--blanc);
+  transition: transform var(--t-fast) var(--ease-luxe), opacity var(--t-fast);
+}
+.nav__hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.nav__hamburger.active span:nth-child(2) { opacity: 0; }
+.nav__hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+.nav__links { display: flex; gap: 2.5rem; list-style: none; }
+.nav__links a {
+  font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--blanc); opacity: 0.7; transition: opacity var(--t-fast);
+}
+.nav__links a:hover, .nav__links a.active { opacity: 1; }
+.nav__links a.active { border-bottom: 1.5px solid var(--or); padding-bottom: 2px; }
+.nav__logo {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-family: 'Begum', serif; font-size: 0.95rem; letter-spacing: 0.25em;
+  color: var(--blanc); text-transform: uppercase; white-space: nowrap;
+}
+.nav__right { display: flex; align-items: center; gap: 1.2rem; }
+.nav__icon { color: var(--blanc); opacity: 0.7; transition: opacity var(--t-fast); }
+.nav__icon:hover { opacity: 1; }
+.nav__cart { position: relative; }
+.nav__cart-count {
+  position: absolute; top: -5px; right: -8px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--coral); color: var(--blanc);
+  font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+.mobile-menu {
+  position: fixed; inset: 0; background: var(--encre);
+  z-index: calc(var(--z-nav) - 1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+  opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease-luxe);
+}
+.mobile-menu.open { opacity: 1; pointer-events: all; }
+.mobile-menu a {
+  font-family: 'Begum', serif; font-size: clamp(1.4rem, 4vw, 2rem);
+  color: var(--blanc); opacity: 0.8; transition: opacity var(--t-fast), color var(--t-fast);
+}
+.mobile-menu a:hover { opacity: 1; color: var(--or); }
+
+/* ============================================
+   SECTION 1 — HERO NARRATIF
+   ============================================ */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.hero__bg {
+  position: absolute; inset: 0;
+  background-image: url('assets/lifestyle/hero-sand.jpg');
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+.hero__overlay {
+  position: absolute; inset: 0;
+  background: rgba(44,38,32,0.45);
+}
+.hero__content {
+  position: relative; z-index: 2;
+  max-width: 780px;
+  padding: 0 2rem;
+}
+.hero__label {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 2rem;
+  font-variant: small-caps;
+  opacity: 0;
+}
+.hero__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(2.8rem, 6vw, 6rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--blanc);
+  margin-bottom: 1.6rem;
+  opacity: 0;
+}
+.hero__subtitle {
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  color: var(--or-pale);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.8;
+  opacity: 0;
+}
+.hero__scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  opacity: 0;
+  z-index: 2;
+}
+.hero__scroll-text {
+  font-size: 0.55rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--or);
+  opacity: 0.5;
+}
+.hero__scroll-line {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom, var(--or), transparent);
+  animation: scrollDrop 2s ease-in-out infinite;
+}
+@keyframes scrollDrop {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+}
+
+/* ============================================
+   SECTION 2 — TIMELINE SCROLL
+   ============================================ */
+.timeline {
+  position: relative;
+  height: 500vh;
+}
+.timeline__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.timeline__chapter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+.timeline__chapter:first-child { opacity: 1; }
+.timeline__chapter-bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+.timeline__chapter-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(44,38,32,0.65);
+}
+.timeline__chapter-year {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Begum', serif;
+  font-size: 20vw;
+  color: var(--or);
+  opacity: 0.08;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  line-height: 1;
+}
+.timeline__chapter-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  padding: 0 2rem;
+  text-align: center;
+}
+.timeline__chapter-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1.5rem;
+}
+.timeline__chapter-title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--blanc);
+  margin-bottom: 1.2rem;
+}
+.timeline__chapter-text {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--or-pale);
+  opacity: 0.8;
+}
+
+/* Timeline nav indicator */
+.timeline__indicator {
+  position: fixed;
+  left: clamp(1.5rem, 3vw, 3rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.timeline__indicator.visible { opacity: 1; }
+.timeline__indicator-line {
+  width: 1px;
+  height: 16px;
+  background: rgba(212,177,136,0.2);
+}
+.timeline__indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--or);
+  background: transparent;
+  transition: background var(--t-fast), transform var(--t-fast), border-color var(--t-fast);
+}
+.timeline__indicator-dot.active {
+  background: var(--or);
+  transform: scale(1.5);
+}
+
+/* ============================================
+   SECTION 3 — MANIFESTE (WORD REVEAL)
+   ============================================ */
+.manifeste {
+  position: relative;
+  height: 300vh;
+}
+.manifeste__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--encre);
+  color: var(--blanc);
+  padding: clamp(3rem, 6vh, 6rem) clamp(2rem, 8vw, 10rem);
+  text-align: center;
+  overflow: hidden;
+}
+.manifeste__quote {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  line-height: 1.4;
+  max-width: 900px;
+  position: relative;
+  z-index: 1;
+}
+.manifeste__word {
+  display: inline-block;
+  opacity: 0.15;
+  color: var(--gris);
+  margin-right: 0.2em;
+  will-change: opacity, color;
+  transition: color 0s;
+}
+
+/* ============================================
+   SECTION 4 — CHIFFRES CLES
+   ============================================ */
+.chiffres {
+  background: var(--white-bloom);
+  padding: clamp(5rem, 10vh, 9rem) clamp(2rem, 6vw, 5rem);
+}
+.chiffres__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+.chiffres__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+.chiffres__number {
+  font-family: 'Begum', serif;
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: 1;
+  color: var(--or);
+}
+.chiffres__label {
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  font-variant: small-caps;
+}
+
+/* ============================================
+   SECTION 5 — ENGAGEMENTS
+   ============================================ */
+.engagements {
+  background: var(--gris-tres-clair);
+  padding: clamp(5rem, 10vh, 9rem) clamp(2rem, 6vw, 5rem);
+}
+.engagements__header {
+  text-align: center;
+  margin-bottom: clamp(3rem, 6vh, 5rem);
+}
+.engagements__eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 1rem;
+}
+.engagements__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  line-height: 1.1;
+  color: var(--encre);
+}
+.engagements__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.engagement-card {
+  background: var(--blanc);
+  border-radius: 4px;
+  padding: clamp(2rem, 3vw, 3rem);
+  border-top: 3px solid var(--or);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  transition: transform var(--t-fast) var(--ease-luxe), box-shadow var(--t-fast);
+  text-align: center;
+}
+.engagement-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+}
+.engagement-card__icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1.5rem;
+  color: var(--or);
+}
+.engagement-card__icon svg {
+  width: 100%;
+  height: 100%;
+}
+.engagement-card__title {
+  font-family: 'Begum', serif;
+  font-size: 1.2rem;
+  color: var(--encre);
+  margin-bottom: 0.8rem;
+}
+.engagement-card__text {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--noir-doux);
+}
+
+/* ============================================
+   SECTION 6 — PRESSE & PARTENARIATS
+   ============================================ */
+.presse {
+  background: var(--encre);
+  overflow: hidden;
+}
+/* Marquee */
+.presse__marquee {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.presse__marquee::before,
+.presse__marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+.presse__marquee::before { left: 0; background: linear-gradient(to right, var(--encre), transparent); }
+.presse__marquee::after  { right: 0; background: linear-gradient(to left, var(--encre), transparent); }
+
+.presse__track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: marqueeScroll 30s linear infinite;
+  will-change: transform;
+}
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.presse__item {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--or);
+  opacity: 0.5;
+  padding: 0 2.5rem;
+}
+.presse__separator {
+  color: var(--or);
+  opacity: 0.3;
+  font-size: 0.5rem;
+}
+
+/* F1 Highlight */
+.presse__f1 {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: clamp(4rem, 8vh, 7rem) clamp(2rem, 6vw, 5rem);
+  text-align: center;
+}
+.presse__f1-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1.2rem;
+  opacity: 0.7;
+}
+.presse__f1-title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  line-height: 1.15;
+  color: var(--blanc);
+  margin-bottom: 1.2rem;
+}
+.presse__f1-text {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--or-pale);
+  opacity: 0.75;
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+}
+.presse__f1-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2.2rem;
+  border: 1.5px solid var(--or);
+  color: var(--or);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.presse__f1-cta:hover {
+  background: var(--or);
+  color: var(--encre);
+}
+
+/* ============================================
+   SECTION 7 — NEWSLETTER + FOOTER
+   ============================================ */
+.newsletter {
+  background: var(--encre);
+  padding: clamp(5rem, 10vh, 9rem) clamp(2rem, 8vw, 10rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.newsletter__crest {
+  width: 60px;
+  height: auto;
+  opacity: 0.6;
+  margin-bottom: 2rem;
+}
+.newsletter__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  line-height: 1.1;
+  color: var(--blanc);
+  margin-bottom: 1rem;
+}
+.newsletter__subtitle {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--or-pale);
+  opacity: 0.7;
+  max-width: 460px;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+}
+.newsletter__form {
+  display: flex;
+  max-width: 460px;
+  width: 100%;
+}
+.newsletter__input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: 1px solid rgba(212,177,136,0.3);
+  border-right: none;
+  border-radius: 50px 0 0 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  background: rgba(255,255,255,0.05);
+  outline: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  color: var(--blanc);
+}
+.newsletter__input:focus {
+  border-color: var(--or);
+  box-shadow: 0 0 0 3px var(--or-glow);
+}
+.newsletter__input::placeholder { color: var(--gris); }
+.newsletter__btn {
+  padding: 1rem 2rem;
+  background: var(--coral);
+  color: var(--blanc);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 0 50px 50px 0;
+  transition: background var(--t-fast);
+}
+.newsletter__btn:hover { background: var(--coral-hover); }
+
+/* Footer */
+.footer {
+  background: var(--encre); color: var(--blanc);
+  padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 6vw, 5rem) 2rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer__top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.footer__crest {
+  width: 40px;
+  height: auto;
+  opacity: 0.4;
+  margin-bottom: 1rem;
+}
+.footer__tagline {
+  font-size: 0.75rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--or-pale);
+  opacity: 0.5;
+}
+.footer__grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 2rem; margin-bottom: 3rem;
+}
+.footer__col-title {
+  font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--or); margin-bottom: 1rem;
+}
+.footer__col ul { list-style: none; }
+.footer__col li { margin-bottom: 0.6rem; }
+.footer__col a {
+  font-size: 0.8rem; font-weight: 300; color: var(--blanc); opacity: 0.5;
+  transition: opacity var(--t-fast);
+}
+.footer__col a:hover { opacity: 1; }
+.footer__badges {
+  font-size: 0.7rem; font-weight: 300;
+  color: var(--or-pale); opacity: 0.5;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.footer__bottom {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 1.5rem;
+  font-size: 0.7rem; font-weight: 300;
+  color: var(--blanc); opacity: 0.3;
+  text-align: center;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .nav__links { display: none; }
+  .nav__hamburger { display: flex; }
+  .nav__right { margin-left: auto; }
+
+  .hero__title { font-size: clamp(2.4rem, 8vw, 4rem); }
+  .hero__subtitle { font-size: 0.9rem; }
+
+  .timeline__chapter-year { font-size: 30vw; }
+  .timeline__indicator { display: none; }
+
+  .manifeste__quote { font-size: clamp(1.4rem, 5vw, 2rem); }
+
+  .chiffres__grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; }
+
+  .engagements__grid { grid-template-columns: 1fr; max-width: 480px; }
+
+  .presse__f1 { padding: 3rem 1.5rem; }
+
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .hero__title { font-size: clamp(2rem, 10vw, 3.5rem); }
+
+  .chiffres__grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .chiffres__number { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+
+  .newsletter__form { flex-direction: column; }
+  .newsletter__input { border-radius: 50px; border-right: 1px solid rgba(212,177,136,0.3); margin-bottom: 0.8rem; }
+  .newsletter__btn { border-radius: 50px; }
+
+  .footer__grid { grid-template-columns: 1fr; }
+
+  .presse__item { padding: 0 1.5rem; font-size: 0.55rem; }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .hero__scroll-line { animation: none; }
+  .presse__track { animation: none; }
+  .manifeste__word { opacity: 1 !important; color: var(--blanc) !important; }
+
+  /* Timeline: stack chapters vertically instead of overlapping */
+  .timeline { height: auto; }
+  .timeline__sticky {
+    position: relative;
+    height: auto;
+    flex-direction: column;
+  }
+  .timeline__chapter {
+    position: relative;
+    inset: auto;
+    opacity: 1;
+    min-height: 80vh;
+  }
+  .timeline__chapter-year {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Manifeste: no sticky, auto height */
+  .manifeste { height: auto; }
+  .manifeste__sticky { position: relative; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ========== PAGE REVEAL ========== -->
+<div class="reveal-overlay" aria-hidden="true">
+  <span class="reveal-overlay__text">La Maison</span>
+</div>
+
+<!-- ========== CUSTOM CURSOR ========== -->
+<div class="cursor" aria-hidden="true"><div class="cursor__outer"></div></div>
+<div class="cursor__dot" aria-hidden="true"></div>
+
+<!-- ========== NAVIGATION ========== -->
+<nav class="nav" role="navigation" aria-label="Navigation principale">
+  <button class="nav__hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav__links">
+    <li><a href="collection-v2.html">Nos Moments</a></li>
+    <li><a href="la-maison-v2.html" class="active">La Maison</a></li>
+    <li><a href="collection-v2.html">La Collection</a></li>
+  </ul>
+  <a href="homepage-v2.html" class="nav__logo" aria-label="French Bloom — Accueil">French Bloom</a>
+  <div class="nav__right">
+    <button class="nav__icon" aria-label="Rechercher">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="6"/><path d="M12 12l4.5 4.5"/></svg>
+    </button>
+    <a href="cart-v2.html" class="nav__icon nav__cart" aria-label="Panier">
+      <svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h18l-1.5 13H2.5L1 7z"/><path d="M7 7V4a3 3 0 0 1 6 0v3"/></svg>
+      <span class="nav__cart-count">3</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ========== MOBILE MENU ========== -->
+<div class="mobile-menu" aria-hidden="true">
+  <a href="homepage-v2.html">Accueil</a>
+  <a href="collection-v2.html">Les Moments</a>
+  <a href="la-maison-v2.html">La Maison</a>
+  <a href="collection-v2.html">La Collection</a>
+  <a href="cart-v2.html">Panier</a>
+</div>
+
+<!-- ========================================
+     SECTION 1 — HERO NARRATIF
+     ======================================== -->
+<section class="hero" aria-label="La Maison French Bloom">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__overlay" aria-hidden="true"></div>
+  <div class="hero__content">
+    <p class="hero__label">La Maison</p>
+    <h1 class="hero__title">L'Art de Celebrer Autrement</h1>
+    <p class="hero__subtitle">Depuis 2020, French Bloom reinvente l'effervescence. Sans alcool, sans compromis.</p>
+  </div>
+  <div class="hero__scroll" aria-hidden="true">
+    <span class="hero__scroll-text">Defiler</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- ========================================
+     SECTION 2 — TIMELINE SCROLL
+     ======================================== -->
+<section class="timeline" aria-label="Histoire de French Bloom">
+  <div class="timeline__sticky">
+
+    <!-- Chapter 1 — 2020 -->
+    <div class="timeline__chapter" data-chapter="0">
+      <div class="timeline__chapter-bg" style="background-image: url('assets/lifestyle/hero-mediterranean.jpg');" aria-hidden="true"></div>
+      <div class="timeline__chapter-year" aria-hidden="true">2020</div>
+      <div class="timeline__chapter-content">
+        <p class="timeline__chapter-label">2020 &middot; Limoux, le commencement</p>
+        <h2 class="timeline__chapter-title">Le commencement</h2>
+        <p class="timeline__chapter-text">Au coeur du vignoble de Limoux, une idee audacieuse prend forme : creer l'effervescence la plus noble, sans alcool.</p>
+      </div>
+    </div>
+
+    <!-- Chapter 2 — 2021 -->
+    <div class="timeline__chapter" data-chapter="1">
+      <div class="timeline__chapter-bg" style="background-image: url('assets/lifestyle/lifestyle-convivial.jpg');" aria-hidden="true"></div>
+      <div class="timeline__chapter-year" aria-hidden="true">2021</div>
+      <div class="timeline__chapter-content">
+        <p class="timeline__chapter-label">2021 &middot; La premiere cuvee</p>
+        <h2 class="timeline__chapter-title">La premiere cuvee</h2>
+        <p class="timeline__chapter-text">Le Blanc voit le jour. Methode traditionnelle, raisins bio, patience infinie. Un vin sans alcool qui ne transige sur rien.</p>
+      </div>
+    </div>
+
+    <!-- Chapter 3 — 2022 -->
+    <div class="timeline__chapter" data-chapter="2">
+      <div class="timeline__chapter-bg" style="background-image: url('assets/lifestyle/lifestyle-festive.jpg');" aria-hidden="true"></div>
+      <div class="timeline__chapter-year" aria-hidden="true">2022</div>
+      <div class="timeline__chapter-content">
+        <p class="timeline__chapter-label">2022 &middot; Cannes, la consecration</p>
+        <h2 class="timeline__chapter-title">Cannes, la consecration</h2>
+        <p class="timeline__chapter-text">Le Festival de Cannes adopte French Bloom. Les plus grandes tables suivent. L'effervescence sans alcool entre dans le luxe.</p>
+      </div>
+    </div>
+
+    <!-- Chapter 4 — 2023 -->
+    <div class="timeline__chapter" data-chapter="3">
+      <div class="timeline__chapter-bg" style="background-image: url('assets/lifestyle/lifestyle-service.jpg');" aria-hidden="true"></div>
+      <div class="timeline__chapter-year" aria-hidden="true">2023</div>
+      <div class="timeline__chapter-content">
+        <p class="timeline__chapter-label">2023 &middot; Formule 1, partenaire officiel</p>
+        <h2 class="timeline__chapter-title">Formule 1, partenaire officiel</h2>
+        <p class="timeline__chapter-text">French Bloom devient la premiere marque sans alcool a faire partie du monde de la F1. Sur le podium, les bulles sont les notres.</p>
+      </div>
+    </div>
+
+    <!-- Chapter 5 — 2024 -->
+    <div class="timeline__chapter" data-chapter="4">
+      <div class="timeline__chapter-bg" style="background-image: url('assets/lifestyle/editorial-large.jpg');" aria-hidden="true"></div>
+      <div class="timeline__chapter-year" aria-hidden="true">2024</div>
+      <div class="timeline__chapter-content">
+        <p class="timeline__chapter-label">2024 &middot; L'effervescence mondiale</p>
+        <h2 class="timeline__chapter-title">L'effervescence mondiale</h2>
+        <p class="timeline__chapter-text">Quatre cuvees, trente pays, un million de moments celebres. L'art de vivre French Bloom rayonne dans le monde entier.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Timeline indicator (fixed, left side) -->
+  <div class="timeline__indicator" id="timelineIndicator" aria-hidden="true">
+    <div class="timeline__indicator-dot active" data-dot="0"></div>
+    <div class="timeline__indicator-line"></div>
+    <div class="timeline__indicator-dot" data-dot="1"></div>
+    <div class="timeline__indicator-line"></div>
+    <div class="timeline__indicator-dot" data-dot="2"></div>
+    <div class="timeline__indicator-line"></div>
+    <div class="timeline__indicator-dot" data-dot="3"></div>
+    <div class="timeline__indicator-line"></div>
+    <div class="timeline__indicator-dot" data-dot="4"></div>
+  </div>
+</section>
+
+<!-- ========================================
+     SECTION 3 — MANIFESTE (WORD REVEAL)
+     ======================================== -->
+<section class="manifeste" aria-label="Notre manifeste">
+  <div class="manifeste__sticky">
+    <blockquote class="manifeste__quote">
+      Nous croyons que l'on peut celebrer chaque instant. Que l'elegance n'a pas besoin d'alcool. Que chaque bulle de French Bloom est une invitation a vivre pleinement.
+    </blockquote>
+  </div>
+</section>
+
+<!-- ========================================
+     SECTION 4 — CHIFFRES CLES
+     ======================================== -->
+<section class="chiffres" aria-label="Chiffres cles">
+  <div class="chiffres__grid">
+    <div class="chiffres__item">
+      <span class="chiffres__number" data-target="4" data-suffix="">0</span>
+      <span class="chiffres__label">Cuvees d'exception</span>
+    </div>
+    <div class="chiffres__item">
+      <span class="chiffres__number" data-target="30" data-suffix="+">0</span>
+      <span class="chiffres__label">Pays dans le monde</span>
+    </div>
+    <div class="chiffres__item">
+      <span class="chiffres__number" data-target="1" data-suffix="M+">0</span>
+      <span class="chiffres__label">Moments celebres</span>
+    </div>
+    <div class="chiffres__item">
+      <span class="chiffres__number" data-target="0" data-suffix=",0%" data-is-zero="true">0</span>
+      <span class="chiffres__label">Alcool, 100% plaisir</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     SECTION 5 — ENGAGEMENTS
+     ======================================== -->
+<section class="engagements" aria-label="Nos Engagements">
+  <div class="engagements__header">
+    <p class="engagements__eyebrow">Nos Valeurs</p>
+    <h2 class="engagements__title">Nos Engagements</h2>
+  </div>
+  <div class="engagements__grid">
+
+    <!-- Card 1 — Bio Certifie -->
+    <div class="engagement-card">
+      <div class="engagement-card__icon">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M24 44C24 44 6 32 6 18C6 10 14 4 24 4C34 4 42 10 42 18C42 32 24 44 24 44Z"/>
+          <path d="M24 4V44"/>
+          <path d="M12 18C16 14 20 16 24 20"/>
+          <path d="M36 18C32 14 28 16 24 20"/>
+          <path d="M14 28C18 24 22 26 24 30"/>
+          <path d="M34 28C30 24 26 26 24 30"/>
+        </svg>
+      </div>
+      <h3 class="engagement-card__title">Bio Certifie</h3>
+      <p class="engagement-card__text">Raisins issus de l'agriculture biologique certifiee, cultives avec respect.</p>
+    </div>
+
+    <!-- Card 2 — 100% Vegan -->
+    <div class="engagement-card">
+      <div class="engagement-card__icon">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M24 44V20"/>
+          <path d="M24 20C24 12 30 4 42 4C42 16 34 22 24 20Z"/>
+          <path d="M24 28C24 22 18 16 8 16C8 26 16 30 24 28Z"/>
+          <path d="M18 38C20 34 22 32 24 30"/>
+          <path d="M30 40C28 36 26 34 24 32"/>
+        </svg>
+      </div>
+      <h3 class="engagement-card__title">100% Vegan</h3>
+      <p class="engagement-card__text">Aucun produit d'origine animale dans notre processus de vinification.</p>
+    </div>
+
+    <!-- Card 3 — Eco-Responsable -->
+    <div class="engagement-card">
+      <div class="engagement-card__icon">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 8L8 20H18L12 36"/>
+          <path d="M32 8L24 20H34L28 36"/>
+          <path d="M24 36V44"/>
+          <path d="M16 44H32"/>
+          <circle cx="24" cy="24" r="20"/>
+        </svg>
+      </div>
+      <h3 class="engagement-card__title">Eco-Responsable</h3>
+      <p class="engagement-card__text">Bouteilles allegees, packaging recycle, empreinte carbone reduite.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================================
+     SECTION 6 — PRESSE & PARTENARIATS
+     ======================================== -->
+<section class="presse" aria-label="Presse et partenariats">
+
+  <!-- Marquee -->
+  <div class="presse__marquee" role="marquee" aria-hidden="true">
+    <div class="presse__track">
+      <span class="presse__item">Vogue</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Elle</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">GQ</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Forbes</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Monocle</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Wallpaper*</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Vogue</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Elle</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">GQ</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Forbes</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Monocle</span>
+      <span class="presse__separator">&middot;</span>
+      <span class="presse__item">Wallpaper*</span>
+      <span class="presse__separator">&middot;</span>
+    </div>
+  </div>
+
+  <!-- F1 Highlight -->
+  <div class="presse__f1">
+    <p class="presse__f1-label">Partenaire officiel</p>
+    <h2 class="presse__f1-title">French Bloom &times; Formule 1</h2>
+    <p class="presse__f1-text">Premiere marque sans alcool a celebrer les victoires sur les podiums de Formule 1. Une effervescence partagee avec le monde entier, a chaque Grand Prix.</p>
+    <a href="collection-v2.html" class="presse__f1-cta">Decouvrir le partenariat</a>
+  </div>
+
+</section>
+
+<!-- ========================================
+     SECTION 7 — NEWSLETTER + FOOTER
+     ======================================== -->
+<section class="newsletter" aria-label="Newsletter French Bloom">
+  <img
+    src="assets/logos/french-bloom-crest.png"
+    alt="French Bloom"
+    class="newsletter__crest"
+    loading="lazy"
+  >
+  <h2 class="newsletter__title">Rejoignez La Maison French Bloom</h2>
+  <p class="newsletter__subtitle">Accedez aux cuvees avant tout le monde, aux invitations privees et aux recits de la Maison.</p>
+  <form class="newsletter__form" onsubmit="event.preventDefault(); this.querySelector('.newsletter__btn').textContent = 'Merci';">
+    <input
+      type="email"
+      class="newsletter__input"
+      placeholder="Votre adresse e-mail"
+      required
+      aria-label="Adresse e-mail"
+    >
+    <button type="submit" class="newsletter__btn">Rejoindre</button>
+  </form>
+</section>
+
+<footer class="footer">
+  <div class="footer__top">
+    <img
+      src="assets/logos/french-bloom-crest.png"
+      alt="French Bloom"
+      class="footer__crest"
+      loading="lazy"
+    >
+    <p class="footer__tagline">L'effervescence reinventee</p>
+  </div>
+  <div class="footer__grid">
+    <div class="footer__col">
+      <p class="footer__col-title">Les Moments</p>
+      <ul>
+        <li><a href="collection-v2.html">Le Blanc</a></li>
+        <li><a href="collection-v2.html">Le Rose</a></li>
+        <li><a href="product-v2.html">L'Extra Brut</a></li>
+        <li><a href="collection-v2.html">La Cuvee Vintage</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">La Maison</p>
+      <ul>
+        <li><a href="la-maison-v2.html">Savoir-Faire</a></li>
+        <li><a href="la-maison-v2.html">Histoire</a></li>
+        <li><a href="la-maison-v2.html">Terroir</a></li>
+        <li><a href="la-maison-v2.html">Formule 1</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Aide</p>
+      <ul>
+        <li><a href="la-maison-v2.html">FAQ</a></li>
+        <li><a href="la-maison-v2.html">Livraison</a></li>
+        <li><a href="la-maison-v2.html">Contact</a></li>
+        <li><a href="la-maison-v2.html">CGV</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Suivez-nous</p>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer__badges">0,0% Alcool &middot; Bio &middot; Vegan &middot; Sans sulfite</p>
+  <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.06); margin-bottom: 1.5rem;">
+  <p class="footer__bottom">&copy; 2025 French Bloom &mdash; L'effervescence reinventee.</p>
+</footer>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Register ScrollTrigger plugin */
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ============================================
+     LENIS SMOOTH SCROLL
+     ============================================ */
+  const lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+  lenis.on('scroll', ScrollTrigger.update);
+
+  /* ============================================
+     PAGE REVEAL
+     ============================================ */
+  const overlay = document.querySelector('.reveal-overlay');
+  if (!prefersReducedMotion) {
+    gsap.fromTo(overlay,
+      { clipPath: 'inset(0 0 0 0)' },
+      { clipPath: 'inset(0 0 100% 0)', duration: 1.2, ease: 'power3.inOut', delay: 0.4,
+        onComplete: () => overlay.remove()
+      }
+    );
+  } else {
+    overlay.remove();
+  }
+
+  /* ============================================
+     CUSTOM CURSOR
+     ============================================ */
+  const cursor = document.querySelector('.cursor');
+  const cursorDot = document.querySelector('.cursor__dot');
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    gsap.ticker.add(() => {
+      cx += (tx - cx) * 0.15;
+      cy += (ty - cy) * 0.15;
+      gsap.set(cursor, { x: cx, y: cy });
+      gsap.set(cursorDot, { x: tx, y: ty });
+    });
+    document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
+    });
+  } else {
+    if (cursor) cursor.remove();
+    if (cursorDot) cursorDot.remove();
+  }
+
+  /* ============================================
+     NAV — AUTO-HIDE + FROSTED
+     ============================================ */
+  const nav = document.querySelector('.nav');
+  let lastY = 0;
+  lenis.on('scroll', ({ scroll }) => {
+    nav.classList.toggle('nav--frosted', scroll > 80);
+    if (scroll > 300) {
+      nav.classList.toggle('nav--hidden', scroll > lastY);
+    } else {
+      nav.classList.remove('nav--hidden');
+    }
+    lastY = scroll;
+  });
+
+  /* ============================================
+     MOBILE MENU
+     ============================================ */
+  const hamburger = document.querySelector('.nav__hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', String(open));
+    mobileMenu.setAttribute('aria-hidden', String(!open));
+    open ? lenis.stop() : lenis.start();
+  });
+
+  /* ============================================
+     SECTION 1 — HERO ENTRANCE
+     ============================================ */
+  if (!prefersReducedMotion) {
+    const heroTl = gsap.timeline({ delay: 0.9 });
+    heroTl
+      .fromTo('.hero__label',
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }
+      )
+      .fromTo('.hero__title',
+        { opacity: 0, y: 50, skewY: 3 },
+        { opacity: 1, y: 0, skewY: 0, duration: 1.1, ease: 'power3.out' },
+        '-=0.35'
+      )
+      .fromTo('.hero__subtitle',
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+        '-=0.45'
+      )
+      .fromTo('.hero__scroll',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.6 },
+        '-=0.2'
+      );
+
+    /* Hero BG parallax */
+    gsap.fromTo('.hero__bg',
+      { y: '0%' },
+      {
+        y: '-8%', ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true
+        }
+      }
+    );
+  }
+
+  /* ============================================
+     SECTION 2 — TIMELINE CHAPTERS (SCROLL-DRIVEN)
+     ============================================ */
+  (function setupTimeline() {
+    const chapters = document.querySelectorAll('.timeline__chapter');
+    const indicator = document.getElementById('timelineIndicator');
+    const dots = indicator ? indicator.querySelectorAll('.timeline__indicator-dot') : [];
+    const numChapters = chapters.length;
+
+    if (!numChapters || prefersReducedMotion) {
+      /* Reduced motion: show all chapters stacked or just the first */
+      chapters.forEach(ch => { ch.style.opacity = '1'; });
+      return;
+    }
+
+    /* Show/hide indicator based on timeline section visibility */
+    ScrollTrigger.create({
+      trigger: '.timeline',
+      start: 'top top',
+      end: 'bottom bottom',
+      onToggle: self => {
+        indicator.classList.toggle('visible', self.isActive);
+      }
+    });
+
+    /* Cross-fade each chapter */
+    chapters.forEach((chapter, i) => {
+      if (i === 0) {
+        /* First chapter: starts visible, fades out at end of its segment */
+        gsap.fromTo(chapter,
+          { opacity: 1 },
+          {
+            opacity: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.timeline',
+              start: () => `${(i + 0.7) / numChapters * 100}% top`,
+              end: () => `${(i + 1) / numChapters * 100}% top`,
+              scrub: true
+            }
+          }
+        );
+      } else if (i === numChapters - 1) {
+        /* Last chapter: fades in, stays visible */
+        gsap.fromTo(chapter,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.timeline',
+              start: () => `${i / numChapters * 100}% top`,
+              end: () => `${(i + 0.3) / numChapters * 100}% top`,
+              scrub: true
+            }
+          }
+        );
+      } else {
+        /* Middle chapters: fade in, hold, fade out */
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.timeline',
+            start: () => `${i / numChapters * 100}% top`,
+            end: () => `${(i + 1) / numChapters * 100}% top`,
+            scrub: true
+          }
+        });
+        tl.fromTo(chapter,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.3, ease: 'none' }
+        );
+        tl.fromTo(chapter,
+          { opacity: 1 },
+          { opacity: 0, duration: 0.3, ease: 'none' },
+          0.7
+        );
+      }
+    });
+
+    /* Update indicator dots based on scroll progress */
+    ScrollTrigger.create({
+      trigger: '.timeline',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: true,
+      onUpdate: self => {
+        const progress = self.progress;
+        const activeIndex = Math.min(numChapters - 1, Math.floor(progress * numChapters));
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === activeIndex);
+        });
+      }
+    });
+  })();
+
+  /* ============================================
+     SECTION 3 — MANIFESTE WORD REVEAL
+     ============================================ */
+  (function setupManifeste() {
+    const quoteEl = document.querySelector('.manifeste__quote');
+    if (!quoteEl) return;
+
+    /* Split raw text into word spans */
+    const raw = quoteEl.textContent.trim();
+    const words = raw.split(/\s+/);
+    quoteEl.innerHTML = words
+      .map(w => '<span class="manifeste__word">' + w + '</span>')
+      .join(' ');
+
+    const wordEls = quoteEl.querySelectorAll('.manifeste__word');
+
+    if (!prefersReducedMotion) {
+      gsap.fromTo(wordEls,
+        { opacity: 0.15, color: 'var(--gris)' },
+        {
+          opacity: 1,
+          color: 'var(--blanc)',
+          stagger: { amount: 1.8, from: 'start' },
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.manifeste',
+            start: 'top top',
+            end: '80% top',
+            scrub: 0.6
+          }
+        }
+      );
+    } else {
+      wordEls.forEach(w => { w.style.opacity = '1'; w.style.color = 'var(--blanc)'; });
+    }
+  })();
+
+  /* ============================================
+     SECTION 4 — CHIFFRES CLES (COUNTER ANIMATION)
+     ============================================ */
+  (function setupChiffres() {
+    const numbers = document.querySelectorAll('.chiffres__number');
+    if (!numbers.length) return;
+
+    numbers.forEach(el => {
+      const target = parseFloat(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      const isZero = el.dataset.isZero === 'true';
+
+      if (prefersReducedMotion) {
+        el.textContent = target + suffix;
+        return;
+      }
+
+      /* For the "0,0%" counter, show immediately on scroll */
+      if (isZero) {
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 85%',
+          once: true,
+          onEnter: () => {
+            el.textContent = '0' + suffix;
+          }
+        });
+        return;
+      }
+
+      const obj = { val: 0 };
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => {
+          gsap.fromTo(obj,
+            { val: 0 },
+            {
+              val: target,
+              duration: 2,
+              ease: 'power2.out',
+              snap: { val: 1 },
+              onUpdate: () => {
+                el.textContent = Math.round(obj.val) + suffix;
+              }
+            }
+          );
+        }
+      });
+    });
+
+    /* Stagger reveal for items */
+    if (!prefersReducedMotion) {
+      gsap.fromTo('.chiffres__item',
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out',
+          scrollTrigger: { trigger: '.chiffres', start: 'top 80%' }
+        }
+      );
+    }
+  })();
+
+  /* ============================================
+     SECTION 5 — ENGAGEMENTS STAGGER REVEAL
+     ============================================ */
+  if (!prefersReducedMotion) {
+    gsap.fromTo('.engagements__eyebrow',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8,
+        scrollTrigger: { trigger: '.engagements', start: 'top 80%' }
+      }
+    );
+    gsap.fromTo('.engagements__title',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: '.engagements', start: 'top 75%' }
+      }
+    );
+
+    const cards = document.querySelectorAll('.engagement-card');
+    cards.forEach((card, i) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1, y: 0, duration: 0.9, delay: i * 0.15, ease: 'power3.out',
+          scrollTrigger: { trigger: '.engagements__grid', start: 'top 80%' }
+        }
+      );
+    });
+  }
+
+  /* ============================================
+     SECTION 6 — PRESSE F1 REVEAL
+     ============================================ */
+  if (!prefersReducedMotion) {
+    gsap.fromTo('.presse__f1-label',
+      { opacity: 0, y: 20 },
+      { opacity: 0.7, y: 0, duration: 0.8,
+        scrollTrigger: { trigger: '.presse__f1', start: 'top 80%' }
+      }
+    );
+    gsap.fromTo('.presse__f1-title',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: '.presse__f1', start: 'top 75%' }
+      }
+    );
+    gsap.fromTo('.presse__f1-text',
+      { opacity: 0, y: 24 },
+      { opacity: 0.75, y: 0, duration: 0.8,
+        scrollTrigger: { trigger: '.presse__f1', start: 'top 70%' }
+      }
+    );
+    gsap.fromTo('.presse__f1-cta',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7,
+        scrollTrigger: { trigger: '.presse__f1', start: 'top 65%' }
+      }
+    );
+  }
+
+  /* ============================================
+     SECTION 7 — NEWSLETTER REVEAL
+     ============================================ */
+  if (!prefersReducedMotion) {
+    gsap.fromTo(
+      [
+        '.newsletter__crest',
+        '.newsletter__title',
+        '.newsletter__subtitle',
+        '.newsletter__form'
+      ],
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, stagger: 0.14, ease: 'power3.out',
+        scrollTrigger: { trigger: '.newsletter', start: 'top 75%' }
+      }
+    );
+  }
+
+}); /* End DOMContentLoaded */
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Collection — French Bloom</title>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<style>
+/* @font-face — French Bloom Brand Typography */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & DESIGN TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white-bloom:     #FCF5ED;
+  --blanc:           #FFFFFF;
+  --noir:            #1A1A1A;
+  --noir-doux:       #3A3A3A;
+  --encre:           #2C2620;
+  --or:              #D4B188;
+  --or-pale:         #E2C9A6;
+  --or-sombre:       #B89A6E;
+  --or-glow:         rgba(212,177,136,0.15);
+  --coral:           #EA5438;
+  --coral-hover:     #D44828;
+  --almond-green:    #ACB99C;
+  --gris:            #8A8A8A;
+  --gris-clair:      #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose:            #D4A094;
+  --rose-pale:       #E8C4B8;
+  --cuvee-blanc:     #F5EDD4;
+  --cuvee-rose:      #F2D5CC;
+  --cuvee-brut:      #E8E0D8;
+  --cuvee-vintage:   #2C2620;
+
+  --ease-luxe:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft:    cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring:  cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --t-fast:       0.3s;
+  --t-medium:     0.5s;
+  --t-slow:       0.8s;
+  --t-cinematic:  1.2s;
+
+  --z-cursor:  9999;
+  --z-reveal:  9000;
+  --z-nav:     1000;
+  --z-filter:  900;
+  --z-mobile:  800;
+  --z-toast:   700;
+}
+
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: var(--noir);
+  background: var(--white-bloom);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ============================================
+   PAGE REVEAL
+   ============================================ */
+.reveal-overlay {
+  position: fixed; inset: 0;
+  background: var(--encre);
+  z-index: var(--z-reveal);
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.reveal-overlay__text {
+  font-family: 'Begum', serif;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  letter-spacing: 0.3em;
+  color: var(--or);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   CUSTOM CURSOR (desktop only)
+   ============================================ */
+.cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: var(--z-cursor); mix-blend-mode: difference; }
+.cursor__outer { width: 40px; height: 40px; border: 1.5px solid var(--or); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.4s var(--ease-luxe), height 0.4s var(--ease-luxe), border-color 0.3s; }
+.cursor__dot { position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: var(--or); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: var(--z-cursor); }
+.cursor--hover .cursor__outer { width: 56px; height: 56px; border-color: var(--coral); }
+@media (pointer: coarse) { .cursor, .cursor__dot { display: none !important; } }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed; top: 0; left: 0; width: 100%; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  z-index: var(--z-nav);
+  transition: transform 0.5s var(--ease-luxe), background 0.4s;
+}
+.nav--hidden { transform: translateY(-100%); }
+.nav--frosted { background: rgba(44,38,32,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.nav__hamburger {
+  display: none; flex-direction: column; gap: 5px; width: 24px; cursor: pointer; order: -1;
+}
+.nav__hamburger span {
+  width: 100%; height: 1.5px; background: var(--blanc);
+  transition: transform var(--t-fast) var(--ease-luxe), opacity var(--t-fast);
+}
+.nav__hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.nav__hamburger.active span:nth-child(2) { opacity: 0; }
+.nav__hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+.nav__links { display: flex; gap: 2.5rem; list-style: none; }
+.nav__links a {
+  font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--blanc); opacity: 0.7; transition: opacity var(--t-fast);
+}
+.nav__links a:hover { opacity: 1; }
+.nav__links a.active { opacity: 1; border-bottom: 1.5px solid var(--or); padding-bottom: 2px; }
+.nav__logo {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-family: 'Begum', serif; font-size: 0.95rem; letter-spacing: 0.25em;
+  color: var(--blanc); text-transform: uppercase; white-space: nowrap;
+}
+.nav__right { display: flex; align-items: center; gap: 1.2rem; }
+.nav__icon { color: var(--blanc); opacity: 0.7; transition: opacity var(--t-fast); }
+.nav__icon:hover { opacity: 1; }
+.nav__cart { position: relative; }
+.nav__cart-count {
+  position: absolute; top: -5px; right: -8px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--coral); color: var(--blanc);
+  font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+.mobile-menu {
+  position: fixed; inset: 0; background: var(--encre);
+  z-index: calc(var(--z-nav) - 1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+  opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease-luxe);
+}
+.mobile-menu.open { opacity: 1; pointer-events: all; }
+.mobile-menu__section-label {
+  font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--or); opacity: 0.5; margin-bottom: -1.5rem;
+}
+.mobile-menu a {
+  font-family: 'Begum', serif; font-size: clamp(1.4rem, 4vw, 2rem);
+  color: var(--blanc); opacity: 0.8; transition: opacity var(--t-fast), color var(--t-fast);
+}
+.mobile-menu a:hover { opacity: 1; color: var(--or); }
+
+/* ============================================
+   SECTION 1 — HERO EDITORIAL (100vh)
+   ============================================ */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  color: var(--blanc);
+}
+.hero__bg {
+  position: absolute; inset: 0;
+  background: url('assets/lifestyle/editorial-large.jpg') center/cover no-repeat;
+  z-index: 0;
+}
+.hero__overlay {
+  position: absolute; inset: 0;
+  background: rgba(44,38,32,0.5);
+  z-index: 1;
+}
+.hero__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0 2rem;
+}
+.hero__label {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1.5rem;
+}
+.hero__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(3rem, 8vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: var(--blanc);
+  margin-bottom: 1.5rem;
+}
+.hero__subtitle {
+  font-weight: 300;
+  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+  color: var(--or-pale);
+  opacity: 0.8;
+  max-width: 520px;
+  line-height: 1.7;
+}
+.hero__scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.hero__scroll-text {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--or);
+  opacity: 0.5;
+}
+.hero__scroll-line {
+  width: 1px; height: 40px;
+  background: var(--or); opacity: 0.3;
+  animation: scrollPulse 2s ease infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 0.3; }
+  50% { transform: scaleY(0.5); opacity: 0.6; }
+}
+
+/* ============================================
+   SECTION 2 — FILTER BAR (sticky)
+   ============================================ */
+.filter-bar {
+  position: sticky;
+  top: 64px;
+  z-index: var(--z-filter);
+  background: rgba(44,38,32,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(212,177,136,0.1);
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  height: 48px;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-bar__item {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blanc);
+  opacity: 0.4;
+  padding: 0.8rem 0;
+  position: relative;
+  transition: opacity var(--t-fast), color var(--t-fast);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.filter-bar__item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--or);
+  transform: scaleX(0);
+  transition: transform 0.4s var(--ease-luxe);
+}
+.filter-bar__item:hover { opacity: 0.7; }
+.filter-bar__item.active { opacity: 1; color: var(--or); }
+.filter-bar__item.active::after { transform: scaleX(1); }
+
+/* ============================================
+   SECTION 3 — MAGAZINE LAYOUT
+   ============================================ */
+
+/* --- Magazine Row (common) --- */
+.mag-row {
+  transition: opacity 0.5s var(--ease-soft), max-height 0.6s var(--ease-soft);
+  overflow: hidden;
+  opacity: 1;
+}
+.mag-row.hidden {
+  opacity: 0;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  pointer-events: none;
+}
+
+/* --- Row Split (A/B/D layout) --- */
+.mag-split {
+  display: grid;
+  grid-template-columns: 70fr 30fr;
+  min-height: 80vh;
+  background: var(--white-bloom);
+}
+.mag-split--reverse {
+  grid-template-columns: 30fr 70fr;
+}
+
+/* --- Lifestyle Image Container --- */
+.mag-image {
+  position: relative;
+  overflow: hidden;
+  min-height: 500px;
+}
+.mag-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease-luxe);
+}
+.mag-image:hover img {
+  transform: scale(1.03);
+}
+
+/* --- Micro-bubbles on hover --- */
+.mag-image .bubble {
+  position: absolute;
+  bottom: -20px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--or);
+  opacity: 0;
+  pointer-events: none;
+}
+.mag-image:hover .bubble {
+  animation: bubbleFloat 2s var(--ease-soft) forwards;
+}
+.mag-image .bubble:nth-child(2) { left: 20%; width: 6px; height: 6px; animation-delay: 0.15s; }
+.mag-image .bubble:nth-child(3) { left: 40%; width: 10px; height: 10px; animation-delay: 0.3s; }
+.mag-image .bubble:nth-child(4) { left: 55%; width: 5px; height: 5px; animation-delay: 0.1s; }
+.mag-image .bubble:nth-child(5) { left: 70%; width: 7px; height: 7px; animation-delay: 0.25s; }
+.mag-image .bubble:nth-child(6) { left: 85%; width: 9px; height: 9px; animation-delay: 0.4s; }
+.mag-image:hover .bubble:nth-child(2) { animation: bubbleFloat 1.8s var(--ease-soft) 0.15s forwards; }
+.mag-image:hover .bubble:nth-child(3) { animation: bubbleFloat 2.2s var(--ease-soft) 0.3s forwards; }
+.mag-image:hover .bubble:nth-child(4) { animation: bubbleFloat 1.6s var(--ease-soft) 0.1s forwards; }
+.mag-image:hover .bubble:nth-child(5) { animation: bubbleFloat 2s var(--ease-soft) 0.25s forwards; }
+.mag-image:hover .bubble:nth-child(6) { animation: bubbleFloat 2.4s var(--ease-soft) 0.4s forwards; }
+
+@keyframes bubbleFloat {
+  0% { opacity: 0; transform: translateY(0) scale(0.4); }
+  20% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-350px) scale(1); }
+}
+
+/* --- Product Card --- */
+.mag-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 4vw, 4rem);
+  position: relative;
+  text-align: center;
+  background: var(--white-bloom);
+}
+.mag-card__number {
+  font-family: 'Begum', serif;
+  font-size: clamp(4rem, 8vw, 7rem);
+  line-height: 1;
+  color: var(--or);
+  opacity: 0.12;
+  margin-bottom: -1rem;
+  user-select: none;
+}
+.mag-card__bottle {
+  height: clamp(250px, 40vh, 350px);
+  object-fit: contain;
+  filter: drop-shadow(0 20px 50px rgba(0,0,0,0.1));
+  margin-bottom: 1.5rem;
+  transition: transform 0.6s var(--ease-luxe);
+}
+.mag-card:hover .mag-card__bottle {
+  transform: translateY(-8px);
+}
+.mag-card__name {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+.mag-card__tagline {
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  color: var(--noir-doux);
+  margin-bottom: 1.2rem;
+}
+.mag-card__price {
+  font-family: 'Begum', serif;
+  font-size: 1.2rem;
+  color: var(--noir);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.4s var(--ease-soft), max-height 0.4s var(--ease-soft), margin 0.4s;
+  margin-bottom: 0;
+}
+.mag-card:hover .mag-card__price {
+  opacity: 1;
+  max-height: 3rem;
+  margin-bottom: 1rem;
+}
+.mag-card__badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  border: 1px solid var(--or);
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  margin-bottom: 0.8rem;
+}
+.mag-card__cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  border: 1.5px solid var(--encre);
+  color: var(--encre);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  transition: background var(--t-fast), color var(--t-fast), transform 0.2s;
+}
+.mag-card__cta:hover {
+  background: var(--encre);
+  color: var(--blanc);
+  transform: scale(1.03);
+}
+
+/* --- Interlude (editorial divider) --- */
+.interlude {
+  background: var(--white-bloom);
+  padding: clamp(4rem, 8vh, 7rem) clamp(1.5rem, 6vw, 5rem);
+  text-align: center;
+  position: relative;
+}
+.interlude__line {
+  width: 40px;
+  height: 1px;
+  background: var(--or);
+  margin: 0 auto 2rem;
+  opacity: 0.5;
+}
+.interlude__quote {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  color: var(--noir-doux);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.interlude__line--bottom {
+  width: 40px;
+  height: 1px;
+  background: var(--or);
+  margin: 2rem auto 0;
+  opacity: 0.5;
+}
+
+/* --- Row C — Prestige (full-width centered, dark) --- */
+.mag-prestige {
+  position: relative;
+  background: var(--encre);
+  color: var(--blanc);
+  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 6vw, 5rem);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  min-height: 100vh;
+  justify-content: center;
+}
+.mag-prestige__watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Begum', serif;
+  font-size: clamp(6rem, 20vw, 18rem);
+  letter-spacing: 0.06em;
+  color: var(--or);
+  opacity: 0.05;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+.mag-prestige__label {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+}
+.mag-prestige__number {
+  font-family: 'Begum', serif;
+  font-size: clamp(4rem, 8vw, 7rem);
+  line-height: 1;
+  color: var(--or);
+  opacity: 0.2;
+  margin-bottom: -0.5rem;
+  user-select: none;
+  position: relative;
+  z-index: 2;
+}
+.mag-prestige__bottle-wrap {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 2rem;
+}
+.mag-prestige__bottle {
+  height: clamp(300px, 50vh, 500px);
+  object-fit: contain;
+  filter: drop-shadow(0 20px 60px rgba(212,177,136,0.15));
+  position: relative;
+  z-index: 2;
+}
+.mag-prestige__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: var(--or);
+  filter: blur(100px);
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Golden floating bubbles behind bottle */
+.mag-prestige__bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--or);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  animation: prestigeBubble 5s var(--ease-soft) infinite;
+}
+.mag-prestige__bubble:nth-child(1) { width: 6px; height: 6px; left: 35%; bottom: 10%; animation-delay: 0s; }
+.mag-prestige__bubble:nth-child(2) { width: 4px; height: 4px; left: 55%; bottom: 15%; animation-delay: 1s; }
+.mag-prestige__bubble:nth-child(3) { width: 8px; height: 8px; left: 45%; bottom: 5%; animation-delay: 2s; }
+.mag-prestige__bubble:nth-child(4) { width: 5px; height: 5px; left: 60%; bottom: 20%; animation-delay: 0.5s; }
+.mag-prestige__bubble:nth-child(5) { width: 7px; height: 7px; left: 38%; bottom: 25%; animation-delay: 3s; }
+
+@keyframes prestigeBubble {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  15% { opacity: 0.4; }
+  60% { opacity: 0.15; }
+  100% { opacity: 0; transform: translateY(-300px) scale(1.2); }
+}
+
+.mag-prestige__name {
+  font-family: 'Begum', serif;
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  line-height: 1.05;
+  margin-bottom: 0.6rem;
+  position: relative;
+  z-index: 2;
+}
+.mag-prestige__tagline {
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  color: var(--or-pale);
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+.mag-prestige__price {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  color: var(--or);
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+}
+.mag-prestige__cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2.8rem;
+  border: 1.5px solid var(--or);
+  color: var(--or);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  transition: background var(--t-fast), color var(--t-fast), transform 0.2s;
+  position: relative;
+  z-index: 2;
+}
+.mag-prestige__cta:hover {
+  background: var(--or);
+  color: var(--encre);
+  transform: scale(1.03);
+}
+
+/* ============================================
+   SECTION 4 — NEWSLETTER CRM
+   ============================================ */
+.newsletter {
+  background: var(--encre);
+  color: var(--blanc);
+  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 6vw, 5rem);
+  text-align: center;
+  position: relative;
+}
+.newsletter__crest {
+  width: 60px;
+  height: auto;
+  margin: 0 auto 2rem;
+  opacity: 0.6;
+}
+.newsletter__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+  margin-bottom: 0.8rem;
+}
+.newsletter__subtitle {
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--or-pale);
+  opacity: 0.7;
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+.newsletter__form {
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.newsletter__input {
+  flex: 1;
+  padding: 0.9rem 1.2rem;
+  border: 1px solid rgba(212,177,136,0.25);
+  border-right: none;
+  border-radius: 50px 0 0 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  background: rgba(255,255,255,0.05);
+  color: var(--blanc);
+  outline: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.newsletter__input:focus {
+  border-color: var(--or);
+  box-shadow: 0 0 20px rgba(212,177,136,0.15);
+}
+.newsletter__input::placeholder {
+  color: rgba(255,255,255,0.3);
+}
+.newsletter__btn {
+  padding: 0.9rem 1.8rem;
+  background: var(--coral);
+  color: var(--blanc);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 0 50px 50px 0;
+  transition: background var(--t-fast);
+}
+.newsletter__btn:hover {
+  background: var(--coral-hover);
+}
+
+/* ============================================
+   FOOTER LUXE
+   ============================================ */
+.footer {
+  background: var(--encre);
+  color: var(--blanc);
+  padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 6vw, 5rem) 2rem;
+  border-top: 1px solid rgba(212,177,136,0.08);
+}
+.footer__crest {
+  display: block;
+  width: 50px;
+  height: auto;
+  margin: 0 auto 1.5rem;
+  opacity: 0.5;
+}
+.footer__tagline {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--or-pale);
+  opacity: 0.5;
+  margin-bottom: 3rem;
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+.footer__col-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1rem;
+}
+.footer__col ul { list-style: none; }
+.footer__col li { margin-bottom: 0.6rem; }
+.footer__col a {
+  font-size: 0.8rem; font-weight: 300;
+  color: var(--blanc); opacity: 0.5;
+  transition: opacity var(--t-fast);
+}
+.footer__col a:hover { opacity: 1; }
+.footer__bottom {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 1.5rem;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: var(--blanc);
+  opacity: 0.3;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .nav__links { display: none; }
+  .nav__hamburger { display: flex; }
+  .nav__right { margin-left: auto; }
+
+  .mag-split,
+  .mag-split--reverse {
+    grid-template-columns: 1fr;
+  }
+  .mag-split .mag-card { order: 2; }
+  .mag-split .mag-image { order: 1; min-height: 50vh; }
+  .mag-split--reverse .mag-card { order: 2; }
+  .mag-split--reverse .mag-image { order: 1; min-height: 50vh; }
+
+  .mag-card__price {
+    opacity: 1;
+    max-height: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .filter-bar { gap: 1rem; justify-content: flex-start; padding-left: 1.5rem; }
+  .filter-bar__item { font-size: 0.55rem; letter-spacing: 0.15em; }
+}
+@media (max-width: 600px) {
+  .mag-image { min-height: 40vh; }
+  .mag-card__number { font-size: clamp(3rem, 12vw, 5rem); }
+  .mag-card__bottle { height: clamp(200px, 35vh, 280px); }
+  .mag-prestige__bottle { height: clamp(220px, 40vh, 350px); }
+  .newsletter__form { flex-direction: column; }
+  .newsletter__input {
+    border-radius: 50px;
+    border-right: 1px solid rgba(212,177,136,0.25);
+    margin-bottom: 0.8rem;
+  }
+  .newsletter__btn { border-radius: 50px; }
+  .footer__grid { grid-template-columns: 1fr; }
+  .interlude__quote { font-size: clamp(0.95rem, 3.5vw, 1.2rem); }
+  .filter-bar { height: 42px; gap: 0.8rem; }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .hero__scroll-line { animation: none; }
+  .mag-prestige__bubble { animation: none; }
+  .mag-image .bubble { animation: none !important; }
+  .mag-card__price {
+    opacity: 1;
+    max-height: 3rem;
+    margin-bottom: 1rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ========== PAGE REVEAL ========== -->
+<div class="reveal-overlay" aria-hidden="true">
+  <span class="reveal-overlay__text">La Collection</span>
+</div>
+
+<!-- ========== CUSTOM CURSOR ========== -->
+<div class="cursor" aria-hidden="true"><div class="cursor__outer"></div></div>
+<div class="cursor__dot" aria-hidden="true"></div>
+
+<!-- ========== NAVIGATION ========== -->
+<nav class="nav" role="navigation" aria-label="Navigation principale">
+  <button class="nav__hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav__links">
+    <li><a href="collection-v2.html">Nos Moments</a></li>
+    <li><a href="la-maison-v2.html">La Maison</a></li>
+    <li><a href="collection-v2.html" class="active">La Collection</a></li>
+  </ul>
+  <a href="homepage-v2.html" class="nav__logo" aria-label="French Bloom — Accueil">French Bloom</a>
+  <div class="nav__right">
+    <button class="nav__icon" aria-label="Rechercher">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="6"/><path d="M12 12l4.5 4.5"/></svg>
+    </button>
+    <a href="cart-v2.html" class="nav__icon nav__cart" aria-label="Panier">
+      <svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h18l-1.5 13H2.5L1 7z"/><path d="M7 7V4a3 3 0 0 1 6 0v3"/></svg>
+      <span class="nav__cart-count">3</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ========== MOBILE MENU ========== -->
+<div class="mobile-menu" aria-hidden="true">
+  <span class="mobile-menu__section-label">Les Moments</span>
+  <a href="collection-v2.html">La Collection</a>
+  <a href="la-maison-v2.html">La Maison</a>
+  <a href="product-v2.html">L'Extra Brut</a>
+  <a href="homepage-v2.html">Accueil</a>
+  <a href="cart-v2.html">Panier</a>
+</div>
+
+<!-- ========================================
+     SECTION 1 — HERO EDITORIAL
+     ======================================== -->
+<section class="hero" aria-label="La Collection French Bloom">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__overlay" aria-hidden="true"></div>
+  <div class="hero__content">
+    <p class="hero__label">La Collection</p>
+    <h1 class="hero__title">La Collection</h1>
+    <p class="hero__subtitle">Quatre cuvées d'exception, quatre façons de célébrer.</p>
+  </div>
+  <div class="hero__scroll" aria-hidden="true">
+    <span class="hero__scroll-text">Défiler</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- ========================================
+     SECTION 2 — FILTER BAR
+     ======================================== -->
+<div class="filter-bar" role="navigation" aria-label="Filtres par moment">
+  <button class="filter-bar__item active" data-filter="tous">Tous</button>
+  <button class="filter-bar__item" data-filter="apero">Apéro</button>
+  <button class="filter-bar__item" data-filter="celebration">Célébration</button>
+  <button class="filter-bar__item" data-filter="brunch">Brunch</button>
+  <button class="filter-bar__item" data-filter="cadeau">Cadeau</button>
+</div>
+
+<!-- ========================================
+     SECTION 3 — MAGAZINE LAYOUT
+     ======================================== -->
+
+<!-- ===== ROW A — LE BLANC ===== -->
+<div class="mag-row" data-moments="apero,brunch">
+  <div class="mag-split">
+    <div class="mag-image">
+      <img src="assets/lifestyle/hero-poolside.jpg" alt="L'art de l'apéro — French Bloom Le Blanc" loading="lazy">
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+    </div>
+    <div class="mag-card">
+      <div class="mag-card__number" aria-hidden="true">01</div>
+      <img src="assets/bottles/le-blanc.png" alt="Le Blanc — Effervescent sans alcool" class="mag-card__bottle" loading="lazy">
+      <h2 class="mag-card__name">Le Blanc</h2>
+      <p class="mag-card__tagline">La fraîcheur lumineuse</p>
+      <p class="mag-card__price">29,00 €</p>
+      <a href="product-v2.html" class="mag-card__cta">Découvrir</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INTERLUDE 1 ===== -->
+<div class="mag-row interlude" data-moments="apero,brunch,celebration,cadeau">
+  <div class="interlude__line" aria-hidden="true"></div>
+  <p class="interlude__quote">L'effervescence est un art de vivre</p>
+  <div class="interlude__line--bottom" aria-hidden="true"></div>
+</div>
+
+<!-- ===== ROW B — LE ROSE ===== -->
+<div class="mag-row" data-moments="apero,celebration">
+  <div class="mag-split mag-split--reverse">
+    <div class="mag-card">
+      <div class="mag-card__number" aria-hidden="true">02</div>
+      <img src="assets/bottles/le-rose.png" alt="Le Rosé — Effervescent sans alcool" class="mag-card__bottle" loading="lazy">
+      <h2 class="mag-card__name">Le Rosé</h2>
+      <p class="mag-card__tagline">L'élégance incarnée</p>
+      <p class="mag-card__price">34,00 €</p>
+      <a href="product-v2.html" class="mag-card__cta">Découvrir</a>
+    </div>
+    <div class="mag-image">
+      <img src="assets/lifestyle/lifestyle-festive.jpg" alt="Célébrer avec French Bloom Le Rosé" loading="lazy">
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INTERLUDE 2 ===== -->
+<div class="mag-row interlude" data-moments="apero,brunch,celebration,cadeau">
+  <div class="interlude__line" aria-hidden="true"></div>
+  <p class="interlude__quote">Chaque bulle est une promesse de célébration</p>
+  <div class="interlude__line--bottom" aria-hidden="true"></div>
+</div>
+
+<!-- ===== ROW C — L'EXTRA BRUT (PRESTIGE) ===== -->
+<div class="mag-row" data-moments="celebration,brunch,cadeau">
+  <div class="mag-prestige">
+    <div class="mag-prestige__watermark" aria-hidden="true">03</div>
+    <p class="mag-prestige__label">Cuvée Prestige</p>
+    <div class="mag-prestige__number" aria-hidden="true">03</div>
+    <div class="mag-prestige__bottle-wrap">
+      <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut — Cuvée Prestige sans alcool" class="mag-prestige__bottle" loading="lazy">
+      <div class="mag-prestige__glow" aria-hidden="true"></div>
+      <span class="mag-prestige__bubble" aria-hidden="true"></span>
+      <span class="mag-prestige__bubble" aria-hidden="true"></span>
+      <span class="mag-prestige__bubble" aria-hidden="true"></span>
+      <span class="mag-prestige__bubble" aria-hidden="true"></span>
+      <span class="mag-prestige__bubble" aria-hidden="true"></span>
+    </div>
+    <h2 class="mag-prestige__name">L'Extra Brut</h2>
+    <p class="mag-prestige__tagline">L'élégance de la précision</p>
+    <p class="mag-prestige__price">49,00 €</p>
+    <a href="product-v2.html" class="mag-prestige__cta">Découvrir cette cuvée</a>
+  </div>
+</div>
+
+<!-- ===== INTERLUDE 3 ===== -->
+<div class="mag-row interlude" data-moments="apero,brunch,celebration,cadeau">
+  <div class="interlude__line" aria-hidden="true"></div>
+  <p class="interlude__quote">Le temps du compromis est révolu</p>
+  <div class="interlude__line--bottom" aria-hidden="true"></div>
+</div>
+
+<!-- ===== ROW D — LA CUVEE VINTAGE ===== -->
+<div class="mag-row" data-moments="celebration,cadeau">
+  <div class="mag-split">
+    <div class="mag-image">
+      <img src="assets/lifestyle/lifestyle-dinner.jpg" alt="Un dîner d'exception — French Bloom La Cuvée" loading="lazy">
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+      <span class="bubble" aria-hidden="true"></span>
+    </div>
+    <div class="mag-card">
+      <div class="mag-card__number" aria-hidden="true">04</div>
+      <span class="mag-card__badge">Édition Limitée</span>
+      <img src="assets/bottles/la-cuvee.png" alt="La Cuvée Vintage 2023 — Blanc de Blancs sans alcool" class="mag-card__bottle" loading="lazy">
+      <h2 class="mag-card__name">La Cuvée Vintage 2023</h2>
+      <p class="mag-card__tagline">L'exception absolue</p>
+      <p class="mag-card__price">89,00 €</p>
+      <a href="product-v2.html" class="mag-card__cta">Découvrir</a>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SECTION 4 — NEWSLETTER CRM
+     ======================================== -->
+<section class="newsletter" aria-label="Newsletter French Bloom">
+  <img src="assets/logos/french-bloom-crest.png" alt="" class="newsletter__crest" aria-hidden="true">
+  <h2 class="newsletter__title">Rejoignez La Maison French Bloom</h2>
+  <p class="newsletter__subtitle">Accédez aux cuvées avant tout le monde, aux invitations privées et aux récits de la Maison.</p>
+  <form class="newsletter__form" onsubmit="event.preventDefault(); this.querySelector('.newsletter__btn').textContent = 'Merci ✓';">
+    <input
+      type="email"
+      class="newsletter__input"
+      placeholder="Votre adresse e-mail"
+      required
+      aria-label="Adresse e-mail"
+    >
+    <button type="submit" class="newsletter__btn">Rejoindre</button>
+  </form>
+</section>
+
+<!-- ========== FOOTER LUXE ========== -->
+<footer class="footer">
+  <img src="assets/logos/french-bloom-crest.png" alt="" class="footer__crest" aria-hidden="true">
+  <p class="footer__tagline">L'effervescence réinventée</p>
+  <div class="footer__grid">
+    <div class="footer__col">
+      <p class="footer__col-title">Les Moments</p>
+      <ul>
+        <li><a href="collection-v2.html">L'Apéro</a></li>
+        <li><a href="collection-v2.html">La Célébration</a></li>
+        <li><a href="collection-v2.html">Le Brunch</a></li>
+        <li><a href="collection-v2.html">Le Cadeau</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">La Maison</p>
+      <ul>
+        <li><a href="la-maison-v2.html">Savoir-Faire</a></li>
+        <li><a href="la-maison-v2.html">Histoire</a></li>
+        <li><a href="la-maison-v2.html">Terroir</a></li>
+        <li><a href="la-maison-v2.html">Formule 1</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Aide</p>
+      <ul>
+        <li><a href="la-maison-v2.html">FAQ</a></li>
+        <li><a href="la-maison-v2.html">Livraison</a></li>
+        <li><a href="la-maison-v2.html">Contact</a></li>
+        <li><a href="la-maison-v2.html">CGV</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Suivez-nous</p>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer__bottom">&copy; 2025 French Bloom &mdash; L'effervescence réinventée.</p>
+</footer>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Register ScrollTrigger plugin */
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ============================================
+     LENIS SMOOTH SCROLL
+     ============================================ */
+  const lenis = new Lenis({
+    duration: 1.4,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+  });
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+  lenis.on('scroll', ScrollTrigger.update);
+
+  /* ============================================
+     PAGE REVEAL
+     ============================================ */
+  const overlay = document.querySelector('.reveal-overlay');
+  if (!prefersReducedMotion) {
+    gsap.fromTo(overlay,
+      { clipPath: 'inset(0 0 0 0)' },
+      {
+        clipPath: 'inset(0 0 100% 0)',
+        duration: 1.2,
+        ease: 'power3.inOut',
+        delay: 0.5,
+        onComplete: () => overlay.remove()
+      }
+    );
+  } else {
+    overlay.remove();
+  }
+
+  /* ============================================
+     CUSTOM CURSOR
+     ============================================ */
+  const cursor = document.querySelector('.cursor');
+  const cursorDot = document.querySelector('.cursor__dot');
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    gsap.ticker.add(() => {
+      cx += (tx - cx) * 0.15;
+      cy += (ty - cy) * 0.15;
+      gsap.set(cursor, { x: cx, y: cy });
+      gsap.set(cursorDot, { x: tx, y: ty });
+    });
+    const attachHover = () => {
+      document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
+      });
+    };
+    attachHover();
+  } else {
+    if (cursor) cursor.remove();
+    if (cursorDot) cursorDot.remove();
+  }
+
+  /* ============================================
+     NAV — AUTO-HIDE + FROSTED
+     ============================================ */
+  const nav = document.querySelector('.nav');
+  let lastY = 0;
+  lenis.on('scroll', ({ scroll }) => {
+    nav.classList.toggle('nav--frosted', scroll > 80);
+    if (scroll > 300) {
+      nav.classList.toggle('nav--hidden', scroll > lastY);
+    } else {
+      nav.classList.remove('nav--hidden');
+    }
+    lastY = scroll;
+  });
+
+  /* ============================================
+     MOBILE MENU
+     ============================================ */
+  const hamburger = document.querySelector('.nav__hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', String(open));
+    mobileMenu.setAttribute('aria-hidden', String(!open));
+    open ? lenis.stop() : lenis.start();
+  });
+
+  /* ============================================
+     FILTER BAR — MOMENT FILTERING
+     ============================================ */
+  const filterItems = document.querySelectorAll('.filter-bar__item');
+  const magRows = document.querySelectorAll('.mag-row');
+
+  filterItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const filter = item.dataset.filter;
+
+      /* Update active state */
+      filterItems.forEach(fi => fi.classList.remove('active'));
+      item.classList.add('active');
+
+      /* Show/hide rows */
+      magRows.forEach(row => {
+        const moments = row.dataset.moments || '';
+        if (filter === 'tous' || moments.includes(filter)) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+
+      /* Refresh ScrollTrigger after layout change */
+      setTimeout(() => ScrollTrigger.refresh(), 600);
+    });
+  });
+
+  /* ============================================
+     ANIMATIONS — ONLY IF MOTION ALLOWED
+     ============================================ */
+  if (!prefersReducedMotion) {
+
+    /* ---- Hero entrance stagger ---- */
+    const heroTl = gsap.timeline({ delay: 1 });
+    heroTl
+      .fromTo('.hero__label',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+      )
+      .fromTo('.hero__title',
+        { opacity: 0, y: 50, skewY: 2 },
+        { opacity: 1, y: 0, skewY: 0, duration: 1.1, ease: 'power3.out' },
+        '-=0.4'
+      )
+      .fromTo('.hero__subtitle',
+        { opacity: 0, y: 25 },
+        { opacity: 0.8, y: 0, duration: 0.8, ease: 'power3.out' },
+        '-=0.4'
+      )
+      .fromTo('.hero__scroll',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.6 },
+        '-=0.2'
+      );
+
+    /* ---- Hero background parallax ---- */
+    gsap.fromTo('.hero__bg',
+      { y: '0%' },
+      {
+        y: '-8%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true
+        }
+      }
+    );
+
+    /* ---- Magazine Row A (Le Blanc) ---- */
+    const rowA = document.querySelector('[data-moments="apero,brunch"] .mag-split');
+    if (rowA) {
+      const imgA = rowA.querySelector('.mag-image');
+      const cardA = rowA.querySelector('.mag-card');
+      if (imgA) {
+        gsap.fromTo(imgA,
+          { clipPath: 'inset(0 100% 0 0)' },
+          {
+            clipPath: 'inset(0 0% 0 0)',
+            duration: 1.2,
+            ease: 'power3.inOut',
+            scrollTrigger: { trigger: rowA, start: 'top 70%' }
+          }
+        );
+      }
+      if (cardA) {
+        const cardChildren = cardA.children;
+        gsap.fromTo(cardChildren,
+          { y: 40, opacity: 0 },
+          {
+            y: 0, opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: rowA, start: 'top 65%' }
+          }
+        );
+      }
+    }
+
+    /* ---- Interlude reveals ---- */
+    document.querySelectorAll('.interlude').forEach(interlude => {
+      const els = interlude.querySelectorAll('.interlude__line, .interlude__quote, .interlude__line--bottom');
+      gsap.fromTo(els,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1, y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: interlude, start: 'top 78%' }
+        }
+      );
+    });
+
+    /* ---- Magazine Row B (Le Rose) ---- */
+    const rowB = document.querySelector('[data-moments="apero,celebration"] .mag-split--reverse');
+    if (rowB) {
+      const imgB = rowB.querySelector('.mag-image');
+      const cardB = rowB.querySelector('.mag-card');
+      if (imgB) {
+        gsap.fromTo(imgB,
+          { clipPath: 'inset(0 0 0 100%)' },
+          {
+            clipPath: 'inset(0 0 0 0%)',
+            duration: 1.2,
+            ease: 'power3.inOut',
+            scrollTrigger: { trigger: rowB, start: 'top 70%' }
+          }
+        );
+      }
+      if (cardB) {
+        const cardChildren = cardB.children;
+        gsap.fromTo(cardChildren,
+          { y: 40, opacity: 0 },
+          {
+            y: 0, opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: rowB, start: 'top 65%' }
+          }
+        );
+      }
+    }
+
+    /* ---- Magazine Row C (Prestige — L'Extra Brut) ---- */
+    const prestige = document.querySelector('.mag-prestige');
+    if (prestige) {
+      gsap.fromTo(prestige.querySelector('.mag-prestige__label'),
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1, y: 0, duration: 0.8,
+          scrollTrigger: { trigger: prestige, start: 'top 70%' }
+        }
+      );
+      gsap.fromTo(prestige.querySelector('.mag-prestige__bottle'),
+        { y: 100, scale: 0.9, opacity: 0 },
+        {
+          y: 0, scale: 1, opacity: 1,
+          duration: 1.3,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: prestige, start: 'top 65%' }
+        }
+      );
+      gsap.fromTo(prestige.querySelector('.mag-prestige__name'),
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0, duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: prestige, start: 'top 55%' }
+        }
+      );
+      gsap.fromTo(prestige.querySelector('.mag-prestige__tagline'),
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1, y: 0, duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: prestige, start: 'top 50%' }
+        }
+      );
+      gsap.fromTo(prestige.querySelector('.mag-prestige__price'),
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1, y: 0, duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: prestige, start: 'top 48%' }
+        }
+      );
+      gsap.fromTo(prestige.querySelector('.mag-prestige__cta'),
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1, y: 0, duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: prestige, start: 'top 45%' }
+        }
+      );
+      /* Watermark parallax */
+      gsap.fromTo(prestige.querySelector('.mag-prestige__watermark'),
+        { y: 60 },
+        {
+          y: -60,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: prestige,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+          }
+        }
+      );
+      /* Bottle parallax */
+      gsap.fromTo(prestige.querySelector('.mag-prestige__bottle'),
+        { y: 0 },
+        {
+          y: -30,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: prestige,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+          }
+        }
+      );
+    }
+
+    /* ---- Magazine Row D (La Cuvee Vintage) ---- */
+    const rowD = document.querySelector('[data-moments="celebration,cadeau"] .mag-split');
+    if (rowD) {
+      const imgD = rowD.querySelector('.mag-image');
+      const cardD = rowD.querySelector('.mag-card');
+      if (imgD) {
+        gsap.fromTo(imgD,
+          { clipPath: 'inset(0 100% 0 0)' },
+          {
+            clipPath: 'inset(0 0% 0 0)',
+            duration: 1.2,
+            ease: 'power3.inOut',
+            scrollTrigger: { trigger: rowD, start: 'top 70%' }
+          }
+        );
+      }
+      if (cardD) {
+        const cardChildren = cardD.children;
+        gsap.fromTo(cardChildren,
+          { y: 40, opacity: 0 },
+          {
+            y: 0, opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: rowD, start: 'top 65%' }
+          }
+        );
+      }
+    }
+
+    /* ---- Lifestyle image parallax (all mag-image) ---- */
+    document.querySelectorAll('.mag-image img').forEach(img => {
+      gsap.fromTo(img,
+        { y: '0%' },
+        {
+          y: '-6%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: img.parentElement,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+          }
+        }
+      );
+    });
+
+    /* ---- Newsletter reveal ---- */
+    gsap.fromTo(
+      [
+        '.newsletter__crest',
+        '.newsletter__title',
+        '.newsletter__subtitle',
+        '.newsletter__form'
+      ],
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1, y: 0,
+        duration: 0.8,
+        stagger: 0.14,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.newsletter', start: 'top 75%' }
+      }
+    );
+
+    /* ---- Footer reveal ---- */
+    gsap.fromTo('.footer__crest',
+      { opacity: 0, y: 20 },
+      {
+        opacity: 0.5, y: 0,
+        duration: 0.8,
+        scrollTrigger: { trigger: '.footer', start: 'top 85%' }
+      }
+    );
+
+  } /* End reduced motion guard */
+
+}); /* End DOMContentLoaded */
+</script>
+
+</body>
+</html>
