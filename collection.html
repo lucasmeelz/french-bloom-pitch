@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>French Bloom — La Collection</title>
+
+<!-- French Bloom Brand Typography (local @font-face) -->
+
+<!-- GSAP 3 + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Lenis Smooth Scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<style>
+/* @font-face — French Bloom Brand Typography */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & DESIGN TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white-bloom:   #FCF5ED;
+  --blanc:         #FFFFFF;
+  --noir:          #1A1A1A;
+  --noir-doux:     #3A3A3A;
+  --or:            #D4B188;
+  --or-pale:       #E2C9A6;
+  --or-sombre:     #B89A6E;
+  --coral:         #EA5438;
+  --almond-green:  #ACB99C;
+  --gris:          #8A8A8A;
+  --gris-clair:    #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose:          #D4A094;
+  --rose-pale:     #E8C4B8;
+  --ease-luxe:     cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth:   cubic-bezier(0.25, 0.1, 0.25, 1);
+  --duration-slow: 1.2s;
+  --duration-med:  0.7s;
+  --duration-fast: 0.35s;
+}
+
+html { font-size: 16px; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--white-bloom);
+  color: var(--noir);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: none;
+}
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+.cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--noir);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.35s var(--ease-luxe), height 0.35s var(--ease-luxe), background 0.3s, border 0.3s;
+}
+.cursor.hover {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1.5px solid var(--noir);
+}
+.cursor__label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--noir);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+.cursor.hover .cursor__label { opacity: 1; }
+
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor { display: none; }
+}
+
+/* ============================================
+   PAGE LOAD REVEAL
+   ============================================ */
+.page-reveal {
+  position: fixed;
+  inset: 0;
+  background: var(--blanc);
+  z-index: 10000;
+  transform-origin: bottom;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, h2, h3, h4 {
+  font-family: 'Begum', serif;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.subtitle, .quote, blockquote {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+}
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+a { color: inherit; text-decoration: none; }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 0 clamp(1.5rem, 3vw, 3rem);
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.5s var(--ease-smooth), height 0.5s var(--ease-smooth), border-color 0.5s, border-radius 0.5s var(--ease-smooth);
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  height: 60px;
+  border-bottom-color: var(--gris-clair);
+  border-radius: 0;
+}
+.nav__links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  flex: 1;
+}
+.nav__links--right { justify-content: flex-end; }
+.nav__links a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--noir);
+  opacity: 0.55;
+  transition: opacity 0.4s;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--or);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s var(--ease-luxe);
+}
+.nav__links a:hover { opacity: 1; }
+.nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav__links a.active { opacity: 1; }
+.nav__search {
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: var(--noir); opacity: 0.6; transition: opacity 0.4s;
+}
+.nav__search:hover { opacity: 1; }
+.nav__cart {
+  position: relative; display: inline-flex; align-items: center;
+  color: var(--noir); opacity: 0.6; transition: opacity 0.4s;
+}
+.nav__cart:hover { opacity: 1; }
+.nav__cart-count {
+  position: absolute; top: -4px; right: -10px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--noir); color: var(--blanc);
+  font-family: 'Montserrat', sans-serif; font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.nav__links a.active::after { transform: scaleX(1); }
+.nav__logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0 2rem;
+  color: var(--noir);
+  transition: color 0.4s;
+}
+.nav__logo svg {
+  height: 14px;
+  width: auto;
+  fill: currentColor;
+}
+.nav__desktop-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav__desktop-links a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  transition: color 0.4s;
+  text-decoration: none;
+}
+.nav__desktop-links a:hover {
+  color: var(--noir);
+}
+.nav__mobile-icons {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+}
+.nav__mobile-icons .nav__cart--mobile {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--noir);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+.nav__mobile-icons .nav__cart--mobile:hover { opacity: 1; }
+.nav__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+}
+.nav__hamburger span {
+  width: 22px;
+  height: 1px;
+  background: var(--noir);
+  transition: transform 0.3s, opacity 0.3s;
+}
+.nav__hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav__hamburger.open span:nth-child(2) { opacity: 0; }
+.nav__hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ============================================
+   HERO COLLECTION
+   ============================================ */
+.hero-col {
+  position: relative;
+  height: 60vh;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  border-radius: 0;
+}
+.hero-col__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  will-change: transform;
+}
+.hero-col__bg img { width: 100%; height: 120%; object-position: center 40%; }
+.hero-col__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(252,245,237,0.92) 0%, rgba(252,245,237,0.5) 40%, rgba(252,245,237,0.65) 100%);
+  z-index: 1;
+}
+.hero-col__content {
+  position: relative;
+  z-index: 2;
+  padding: 0 2rem;
+  max-width: 700px;
+}
+.hero-col__title {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--noir);
+  line-height: 0.95;
+  margin-bottom: 0.5em;
+  opacity: 0;
+}
+.hero-col__subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  color: var(--or-sombre);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.hero-col__intro {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.82rem, 1.1vw, 0.95rem);
+  line-height: 1.8;
+  color: var(--noir-doux);
+  opacity: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   FILTERS BAR
+   ============================================ */
+.filters {
+  background: var(--blanc);
+  border-bottom: 1px solid var(--gris-clair);
+  padding: 0 clamp(1.5rem, 5vw, 5rem);
+  position: sticky;
+  top: 60px;
+  z-index: 90;
+  transition: top 0.5s var(--ease-smooth);
+}
+.filters__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.filters__tabs {
+  display: flex;
+  gap: 0;
+  list-style: none;
+  position: relative;
+}
+.filters__tab {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gris);
+  padding: 1.2rem 1.5rem;
+  cursor: pointer;
+  transition: color 0.4s, background 0.3s;
+  white-space: nowrap;
+  position: relative;
+  background: none;
+  border: none;
+}
+.filters__tab:hover { color: var(--noir); background: none; }
+.filters__tab.active { color: var(--noir); border-bottom: 2px solid var(--noir); }
+.filters__tab .count {
+  font-size: 0.55rem;
+  opacity: 0.5;
+  margin-left: 0.3em;
+}
+.filters__indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--noir);
+  transition: left 0.5s var(--ease-luxe), width 0.5s var(--ease-luxe);
+}
+.filters__sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding: 1rem 0;
+}
+.filters__sort-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gris);
+  white-space: nowrap;
+}
+.filters__sort-select {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--noir);
+  background: transparent;
+  border: 1px solid var(--gris-clair);
+  border-radius: 0;
+  padding: 0.5rem 2rem 0.5rem 0.8rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23D4B188' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  outline: none;
+}
+.filters__sort-select option {
+  background: var(--blanc);
+  color: var(--noir);
+}
+
+/* ============================================
+   PRODUCT GRID SECTIONS
+   ============================================ */
+.grid-section {
+  padding: clamp(75px, 10vw, 125px) clamp(1.5rem, 5vw, 5rem) clamp(50px, 6vw, 75px);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.grid-section__overline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--noir);
+  margin-bottom: 2.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--gris-clair);
+  opacity: 0;
+  position: relative;
+}
+.grid-section__overline::before {
+  display: none;
+}
+.grid-section__overline::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--or);
+}
+
+/* Large cards (2-col) */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Small cards (4-col) */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+/* ============================================
+   PRODUCT CARD — LARGE
+   ============================================ */
+.pcard {
+  position: relative;
+  padding: 1.25rem 1rem 1.25rem;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid var(--gris-clair);
+  border-radius: 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+.pcard--light { background: var(--blanc); }
+.pcard--rose  { background: var(--blanc); }
+.pcard--dark  { background: var(--blanc); }
+.pcard--small { padding: 1rem 0.75rem 1rem; }
+
+.pcard:hover { transform: translateY(-8px); box-shadow: 0 12px 40px rgba(212,177,136,0.15); }
+
+/* Badge */
+.pcard__badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  font-weight: 500;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 0;
+}
+.pcard__badge--rose { color: var(--or-sombre); background: none; }
+.pcard__badge--limit { color: var(--or-sombre); background: none; }
+
+/* Product image */
+.pcard__image {
+  position: relative;
+  aspect-ratio: 4/5;
+  width: 100%;
+  max-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border-radius: 0;
+  background: var(--blanc);
+  padding: 2rem 1rem;
+}
+.pcard__image img {
+  width: auto;
+  height: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pcard:hover .pcard__image img { transform: scale(1.04); }
+
+/* Text */
+.pcard__name {
+  font-family: 'Begum', serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--noir);
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+.pcard--small .pcard__name { font-size: 0.95rem; }
+
+.pcard__desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--gris);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  max-width: 320px;
+  opacity: 0.7;
+  transition: opacity 0.4s ease;
+}
+.pcard:hover .pcard__desc {
+  opacity: 1;
+}
+.pcard__pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.pcard__pill {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--gris-clair);
+  border-radius: 50px;
+  background: var(--gris-tres-clair);
+}
+.pcard__price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--noir);
+  margin-bottom: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+.pcard--small .pcard__price { font-size: 0.85rem; }
+
+.pcard__volume {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  color: var(--gris);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+
+/* ============================================
+   REASSURANCE BANNER
+   ============================================ */
+.reassurance {
+  background: var(--blanc);
+  border-top: 1px solid var(--gris-clair);
+  border-bottom: 1px solid var(--gris-clair);
+  padding: clamp(2.5rem, 5vw, 4.5rem) clamp(1.5rem, 5vw, 5rem);
+}
+.reassurance__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+.reassurance__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+  background: transparent;
+  border-radius: 0;
+  padding: 1.5rem 1rem;
+}
+.reassurance__icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reassurance__icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: var(--or);
+  stroke-width: 1.2;
+  fill: none;
+}
+.reassurance__text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  line-height: 1.5;
+}
+.reassurance__text strong {
+  display: block;
+  font-weight: 500;
+  color: var(--noir);
+  margin-bottom: 0.15rem;
+}
+
+/* ============================================
+   EDITORIAL — COMMENT CHOISIR
+   ============================================ */
+.editorial {
+  padding: clamp(100px, 12vw, 200px) clamp(1.5rem, 5vw, 5rem);
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--gris-tres-clair);
+  border-radius: 0;
+}
+.editorial__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: center;
+}
+.editorial__image {
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  opacity: 0;
+  border-radius: 0;
+}
+.editorial__image img {
+  transition: transform 8s var(--ease-smooth);
+}
+.editorial__image:hover img { transform: scale(1.03); }
+.editorial__text { opacity: 0; }
+.editorial__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 1.5rem;
+}
+.editorial__title {
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  color: var(--noir);
+  margin-bottom: 2.5rem;
+  line-height: 1.2;
+}
+.editorial__pairings { list-style: none; }
+.editorial__pairing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--gris-clair);
+  transition: padding-left 0.4s var(--ease-luxe);
+}
+.editorial__pairing:first-child { border-top: 1px solid var(--gris-clair); }
+.editorial__pairing:hover { padding-left: 0.5rem; }
+.editorial__pairing-occasion {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--noir-doux);
+  opacity: 0.8;
+}
+.editorial__pairing-arrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  color: var(--gris);
+  margin: 0 1rem;
+  flex-shrink: 0;
+}
+.editorial__pairing-cuvee {
+  font-family: 'Begum', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--or-sombre);
+  white-space: nowrap;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  padding: clamp(75px, 10vw, 125px) clamp(1.5rem, 5vw, 5rem) 2rem;
+  background: var(--noir);
+  border-top: 1px solid var(--gris-clair);
+}
+.footer__logo {
+  text-align: center;
+  font-family: 'Begum', serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 3.5rem;
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+}
+.footer__col-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1.2rem;
+}
+.footer__col ul { list-style: none; }
+.footer__col li { margin-bottom: 0.6rem; }
+.footer__col a {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--blanc);
+  opacity: 0.5;
+  transition: opacity 0.4s;
+}
+.footer__col a:hover { opacity: 1; }
+.footer__badges {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--or);
+  margin-bottom: 2rem;
+}
+.footer__sep {
+  max-width: 1000px;
+  margin: 0 auto 1.5rem;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.footer__copy {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--gris);
+  letter-spacing: 0.04em;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .editorial__grid { grid-template-columns: 1fr; gap: 3rem; }
+  .reassurance__grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* Mobile menu overlay */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--blanc);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-smooth);
+}
+.mobile-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mobile-menu a {
+  font-family: 'Begum', serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  transition: color 0.3s;
+}
+.mobile-menu a:hover {
+  color: var(--or);
+}
+
+@media (max-width: 768px) {
+  .nav__links { display: none; }
+  .nav__desktop-links { display: none; }
+  .nav__mobile-icons { display: flex; }
+  .nav__hamburger { display: flex; }
+  .nav__logo svg { height: 12px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .editorial__image { order: -1; }
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .reassurance__grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .filters__sort { display: none; }
+  .filters { top: 60px; }
+  .pcard__image { max-height: 280px; }
+}
+@media (max-width: 480px) {
+  .grid-4 { grid-template-columns: 1fr; }
+  .reassurance__grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor"><span class="cursor__label">Voir</span></div>
+
+<!-- Page Reveal -->
+<div class="page-reveal"></div>
+
+<!-- ============================================
+     NAVIGATION
+     ============================================ -->
+<nav class="nav">
+  <ul class="nav__links">
+    <li><a href="collection.html" class="active">COLLECTION</a></li>
+    <li><a href="la-maison.html">LA MAISON</a></li>
+    <li><a href="#">SAVOIR-FAIRE</a></li>
+  </ul>
+  <a href="homepage.html" class="nav__logo" aria-label="French Bloom">
+    <svg viewBox="0 0 646.2 67.7" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M20.9 34.7 20.9 45.1C20.9 46.8 21.2 48.1 21.8 48.7 22.4 49.4 23.6 49.7 25.5 49.7L26.3 49.7 26.3 52.8 5.8 52.8 5.8 49.7 6.4 49.7C8.3 49.7 9.5 49.3 10.1 48.6 10.7 47.9 11 46.7 11 45L11 22.3C11 20.6 10.7 19.3 10.1 18.7 9.5 18 8.3 17.7 6.4 17.7L5.7 17.7 5.7 14.6 37.7 14.6 38 24.7 34.8 24.7C34.3 23 33.7 21.6 33 20.5 32.3 19.4 31.5 18.7 30.7 18.4 29.9 18.1 28.7 17.9 27.1 17.9L20.9 17.9 20.9 31.1 23.9 31.1C25.3 31.1 26.3 30.8 26.9 30.2 27.5 29.6 27.8 28.3 27.9 26.4L31.1 26.4 31.1 39.5 27.9 39.5C27.9 37.5 27.5 36.1 26.9 35.5 26.3 34.9 25.3 34.5 23.8 34.5L20.8 34.5Z"/><path d="M67.3 36 67.3 45C67.3 46.7 67.6 48 68.2 48.6 68.8 49.3 70 49.6 71.9 49.6L72.6 49.6 72.6 52.7 52 52.7 52 49.6 52.8 49.6C54.7 49.6 56 49.3 56.5 48.5 57.1 47.8 57.4 46.6 57.4 44.9L57.4 22.3C57.4 20.6 57.1 19.3 56.5 18.6 55.9 17.9 54.7 17.6 52.8 17.6L52 17.6 52 14.5 70.7 14.5C74.1 14.5 76.6 14.6 78.1 14.8 79.7 15 81.2 15.6 82.7 16.4 84.2 17.3 85.4 18.4 86.3 19.9 87.2 21.4 87.6 23 87.6 24.7 87.6 29.2 85 32.4 79.9 34 81.3 34.9 83.4 37.6 86.3 42.1 88.6 45.6 90.2 47.7 91.1 48.5 92.1 49.2 93.1 49.6 94.3 49.6L94.3 52.7 82.4 52.7C81.3 51.4 79.3 48.1 76.3 42.8 74.8 40.1 73.8 38.4 73.2 37.6 72.6 36.8 72 36.3 71.4 36.1 70.8 35.9 69.4 35.8 67.3 35.8M67.3 32.6C70.5 32.6 72.6 32.4 73.7 32 74.8 31.6 75.7 30.8 76.3 29.7 76.9 28.6 77.3 27.1 77.3 25.2 77.3 22.5 76.7 20.7 75.4 19.6 74.1 18.5 71.9 18.1 68.8 18.1 65.7 18.1 67.9 18.1 67.3 18.1L67.3 32.5Z"/><path d="M123.6 34.6 123.6 44C123.6 45.8 123.6 47 123.9 47.5 124.1 48.1 124.7 48.5 125.6 48.9 126.5 49.3 127.9 49.5 129.7 49.5 131.5 49.5 134 49.2 135.2 48.6 136.4 48 137.4 46.9 138.4 45.3 139.3 43.7 140 42.1 140.4 40.3L143.6 40.3 143.3 52.8 108.4 52.8 108.4 49.7 109.1 49.7C111 49.7 112.2 49.3 112.8 48.6 113.4 47.9 113.7 46.7 113.7 45L113.7 22.3C113.7 20.6 113.4 19.3 112.8 18.7 112.2 18 111 17.7 109.1 17.7L108.4 17.7 108.4 14.6 141 14.6 141.6 24.5 138.4 24.5C137.8 22.8 137.2 21.4 136.5 20.4 135.8 19.4 135.1 18.7 134.4 18.4 133.7 18.1 132.5 18 130.8 18L123.7 18 123.7 31.2 127.3 31.2C129 31.2 130.1 30.9 130.7 30.2 131.3 29.6 131.6 28.3 131.6 26.4L134.8 26.4 134.8 39.4 131.6 39.4 131.6 38.9C131.6 37.8 131.4 36.8 130.9 35.9 130.4 35 129.3 34.6 127.4 34.6L123.6 34.6Z"/><path d="M168.8 25.6 168.8 43.2C168.8 46 169.3 47.8 170.3 48.6 171.3 49.4 172.6 49.8 174.2 49.8L174.2 52.9 159.9 52.9 159.9 49.8C161.1 49.8 162.2 49.5 163.1 48.9 164 48.3 164.6 47.6 164.8 46.8 165 46 165.2 44.8 165.2 43.1L165.2 23.6C165.2 19.7 163.4 17.8 159.7 17.8L159.7 14.7 172.6 14.7 193.5 38.1 193.5 24.1C193.5 19.9 191.7 17.8 188.2 17.8L188.2 14.7 201.9 14.7 201.9 17.8C200.9 17.8 200 18.1 199.2 18.6 198.4 19.1 197.8 19.8 197.5 20.6 197.2 21.4 197.1 22.6 197.1 24.2L197.1 53.5 193.5 53.5 168.7 25.5Z"/><path d="M255.9 38.2 255.9 52.5 252.8 52.5C252.4 51 251.9 49.8 251.2 48.8 248 52 243.8 53.6 238.6 53.6 233.4 53.6 227.9 51.7 224.4 47.8 220.8 43.9 219.1 39.3 219.1 34 219.1 28.7 220.9 24.1 224.4 20 227.9 15.9 232.8 13.9 239 13.9 245.2 13.9 247.6 15.4 250.8 18.5 251.2 17.5 251.6 16.4 252 15.1L255.1 15.1 255.5 29.2 252.4 29.2C251.5 25.4 250 22.5 247.9 20.5 245.8 18.5 243.3 17.6 240.4 17.6 237.5 17.6 234.6 18.9 232.9 21.5 231.2 24.1 230.4 28.1 230.4 33.6 230.4 39.1 230.7 40.5 231.3 42.8 231.9 45.1 233.1 46.8 234.9 48 236.7 49.2 238.6 49.8 240.7 49.8 242.8 49.8 246 48.8 248.1 46.9 250.3 45 251.8 42 252.8 38.1L255.9 38.1Z"/><path d="M289.1 34.6 289.1 45.1C289.1 46.9 289.4 48.1 290 48.8 290.6 49.5 292 49.8 294 49.8L294 52.9 274.1 52.9 274.1 49.8C276.1 49.8 277.4 49.5 278.1 48.9 278.8 48.3 279.1 47 279.1 45.2L279.1 22.6C279.1 20.8 278.8 19.6 278.2 18.9 277.6 18.2 276.2 17.9 274.1 17.9L274.1 14.8 294 14.8 294 17.9C292 17.9 290.7 18.2 290 18.9 289.4 19.6 289 20.8 289 22.6L289 31.2 304.7 31.2 304.7 22.6C304.7 20.8 304.4 19.6 303.8 18.9 303.2 18.2 301.9 17.9 299.9 17.9L299.9 14.8 319.8 14.8 319.8 17.9C317.8 17.9 316.4 18.2 315.8 18.8 315.1 19.4 314.8 20.7 314.8 22.6L314.8 45.2C314.8 47 315.1 48.3 315.8 48.9 316.4 49.5 317.8 49.9 319.9 49.9L319.9 53 300 53 300 49.9C302 49.9 303.3 49.6 303.9 48.9 304.5 48.2 304.8 47 304.8 45.2L304.8 34.7 289.1 34.7Z"/><path d="M387.2 32.6C391 33.3 393.8 34.5 395.7 36.2 397.6 37.9 398.5 40.2 398.5 42.9 398.5 45.6 397.3 48.4 394.9 50.2 392.5 52 388.5 52.9 382.9 52.9L362.9 52.9 362.9 49.8C364.9 49.8 366.2 49.5 366.9 48.9 367.6 48.3 367.9 47 367.9 45.2L367.9 22.8C367.9 21 367.6 19.8 367 19.1 366.4 18.4 365 18.1 362.9 18.1L362.9 15 377.6 14.6 379.7 14.6C386.3 14.6 390.8 15.4 393.2 17.1 395.6 18.7 396.8 21 396.8 23.8 396.8 26.6 396 27.8 394.4 29.2 392.8 30.7 390.4 31.8 387.2 32.7M377.8 30.9 379.7 30.9C381.8 30.9 383.3 30.4 384.3 29.4 385.3 28.4 385.8 26.8 385.8 24.4 385.8 22 385.5 21.2 384.8 20.2 384.2 19.2 383.3 18.5 382.3 18.2 381.3 17.9 379.7 17.7 377.7 17.7L377.7 30.9ZM377.8 34.4 377.8 45.2C377.8 46.3 377.9 47.1 378.1 47.6 378.3 48.1 378.7 48.6 379.4 49 380 49.4 380.9 49.6 382.1 49.6 383.9 49.6 385.2 49 386.1 47.7 387 46.4 387.4 44.6 387.4 42 387.4 39.4 387.1 38.4 386.5 37.3 385.9 36.2 385.1 35.4 384.1 35 383.1 34.6 381.6 34.4 379.6 34.4L377.8 34.4Z"/><path d="M450.2 40.2 450 52.9 415.2 52.9 415.2 49.8 415.8 49.8C417.7 49.8 419 49.4 419.5 48.7 420.1 48 420.4 46.8 420.4 45.1L420.4 22.5C420.4 20.8 420.1 19.5 419.5 18.8 418.9 18.1 417.7 17.8 415.8 17.8L415.2 17.8 415.2 14.7 435.7 14.7 435.7 17.8 434.9 17.8C433 17.8 431.7 18.2 431.2 18.9 430.6 19.6 430.3 20.8 430.3 22.5L430.3 44.3C430.3 45.9 430.3 47 430.6 47.5 430.8 48 431.3 48.5 432.1 48.9 432.9 49.3 434.3 49.5 436.3 49.5 439.6 49.5 442.1 48.7 443.8 47 445.5 45.3 446.6 43.1 447.2 40.2L450.2 40.2Z"/><path d="M465.6 33.7C465.6 30.3 466.6 26.9 468.5 23.6 470.4 20.3 473 17.9 476.3 16.3 479.6 14.7 483.1 13.9 486.8 13.9 493.5 13.9 498.8 15.8 502.6 19.7 506.4 23.6 508.3 28.3 508.3 34 508.3 39.7 506.4 44 502.6 47.8 498.8 51.6 493.6 53.6 487 53.6 480.4 53.6 478.5 52.7 475.1 50.8 471.6 48.9 469.2 46.3 467.7 43.1 466.2 39.9 465.5 36.7 465.5 33.6M477.3 33.4C477.3 39.3 478.1 43.5 479.7 46.1 481.3 48.7 483.6 50 486.7 50 489.8 50 492.4 48.8 494.1 46.4 495.8 44 496.6 39.9 496.6 33.9 496.6 27.9 495.8 24.4 494.3 21.7 492.8 19 490.3 17.7 486.9 17.7 483.5 17.7 481.3 19 479.7 21.4 478.1 23.9 477.3 27.9 477.3 33.3"/><path d="M526.5 33.7C526.5 30.3 527.5 26.9 529.4 23.6 531.3 20.3 533.9 17.9 537.2 16.3 540.5 14.7 544 13.9 547.7 13.9 554.4 13.9 559.7 15.8 563.5 19.7 567.3 23.6 569.2 28.3 569.2 34 569.2 39.7 567.3 44 563.5 47.8 559.7 51.6 554.5 53.6 547.9 53.6 541.3 53.6 539.4 52.7 536 50.8 532.5 48.9 530.1 46.3 528.6 43.1 527.1 39.9 526.4 36.7 526.4 33.6M538.3 33.4C538.3 39.3 539.1 43.5 540.7 46.1 542.3 48.7 544.6 50 547.7 50 550.8 50 553.4 48.8 555.1 46.4 556.8 44 557.6 39.9 557.6 33.9 557.6 27.9 556.8 24.4 555.3 21.7 553.8 19 551.3 17.7 547.9 17.7 544.5 17.7 542.3 19 540.7 21.4 539.1 23.9 538.3 27.9 538.3 33.3"/><path d="M608.7 52.9 594.5 23.1 594.5 42.9C594.5 44.7 594.5 46 594.9 46.8 595.3 47.6 595.7 48.3 596.6 48.9 597.5 49.5 598.6 49.8 599.9 49.8L599.9 52.9 586.1 52.9 586.1 49.8C587.3 49.8 588.3 49.5 589.2 48.9 590.1 48.3 590.6 47.5 590.8 46.7 591 45.9 591.1 44.6 591.1 42.8L591.1 22.7C591.1 20.8 590.8 19.5 590.1 18.9 589.4 18.2 588.1 17.9 586.1 17.9L586.1 14.8 601.4 14.8 613.2 39.9 625.1 14.8 640.5 14.8 640.5 17.9 639.7 17.9C637.8 17.9 636.5 18.2 636 19 635.4 19.7 635.1 20.9 635.1 22.6L635.1 45.2C635.1 46.9 635.4 48.2 636 48.9 636.6 49.6 637.8 49.9 639.7 49.9L640.6 49.9 640.6 53 619.8 53 619.8 49.9 620.6 49.9C622.5 49.9 623.7 49.5 624.3 48.8 624.9 48.1 625.2 46.9 625.2 45.2L625.2 22.7 611.1 53 608.7 53Z"/></svg>
+  </a>
+  <ul class="nav__links nav__links--right">
+    <li><a href="#">NOTRE HISTOIRE</a></li>
+    <li><button class="nav__search" aria-label="Rechercher"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="6"/><path d="M12 12l4.5 4.5"/></svg></button></li>
+    <li><a href="cart.html" class="nav__cart" aria-label="Panier"><svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h18l-1.5 13H2.5L1 7z"/><path d="M7 7V4a3 3 0 0 1 6 0v3"/></svg><span class="nav__cart-count">3</span></a></li>
+  </ul>
+  <div class="nav__mobile-icons">
+    <a href="cart.html" class="nav__cart nav__cart--mobile" aria-label="Panier">
+      <svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M1 7h18l-1.5 13H2.5L1 7z"/>
+        <path d="M7 7V4a3 3 0 0 1 6 0v3"/>
+      </svg>
+      <span class="nav__cart-count">3</span>
+    </a>
+  </div>
+  <div class="nav__hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="collection.html">COLLECTION</a>
+  <a href="la-maison.html">LA MAISON</a>
+  <a href="#">SAVOIR-FAIRE</a>
+  <a href="#">NOTRE HISTOIRE</a>
+  <a href="cart.html">PANIER</a>
+</div>
+
+<!-- ============================================
+     HERO COLLECTION
+     ============================================ -->
+<section class="hero-col">
+  <div class="hero-col__bg">
+    <img src="assets/lifestyle/hero-mediterranean.jpg"
+         alt="French Bloom — La Collection" loading="eager">
+  </div>
+  <div class="hero-col__overlay"></div>
+  <div class="hero-col__content">
+    <h1 class="hero-col__title">La Collection</h1>
+    <p class="hero-col__subtitle">Quatre cuvees, une meme exigence</p>
+    <p class="hero-col__intro">Elaborees a partir de Chardonnay et Pinot Noir biologiques de Limoux, nos cuvees effervescentes sont desalcoolisees a 0.0%. Chaque bouteille est un acte de precision et de patience.</p>
+  </div>
+</section>
+
+<!-- ============================================
+     FILTERS BAR
+     ============================================ -->
+<div class="filters">
+  <div class="filters__inner">
+    <ul class="filters__tabs" id="filterTabs">
+      <li><button class="filters__tab active" data-filter="all">Toutes <span class="count">(8)</span></button></li>
+      <li><button class="filters__tab" data-filter="classiques">Cuvees Classiques</button></li>
+      <li><button class="filters__tab" data-filter="prestige">Prestige</button></li>
+      <li><button class="filters__tab" data-filter="coffrets">Coffrets & Formats</button></li>
+      <div class="filters__indicator" id="filterIndicator"></div>
+    </ul>
+    <div class="filters__sort">
+      <span class="filters__sort-label">Trier par :</span>
+      <select class="filters__sort-select">
+        <option>Recommandes</option>
+        <option>Prix croissant</option>
+        <option>Prix decroissant</option>
+        <option>Nouveautes</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     ROW 1 — LES ESSENTIELLES
+     ============================================ -->
+<section class="grid-section" data-category="classiques">
+  <p class="grid-section__overline">Les Essentielles</p>
+  <div class="grid-2">
+
+    <!-- LE BLANC -->
+    <a href="product.html" class="pcard pcard--light" data-cursor="Voir" style="text-decoration:none;">
+      <span class="pcard__badge">Best-Seller</span>
+      <div class="pcard__image">
+        <img src="assets/bottles/le-blanc.png" alt="Le Blanc — Chardonnay bio desalcoolise" loading="lazy">
+      </div>
+      <h3 class="pcard__name">Le Blanc</h3>
+      <p class="pcard__desc">Frais, elegant, vibrant. Chardonnay bio desalcoolise.</p>
+      <div class="pcard__pills">
+        <span class="pcard__pill">0.0%</span>
+        <span class="pcard__pill">Bio</span>
+        <span class="pcard__pill">Vegan</span>
+        <span class="pcard__pill">Sans sulfite</span>
+      </div>
+      <p class="pcard__price">29,00 &euro;</p>
+    </a>
+
+    <!-- LE ROSE -->
+    <a href="product.html" class="pcard pcard--rose" data-cursor="Voir" style="text-decoration:none;">
+      <span class="pcard__badge pcard__badge--rose">Meilleur au monde 2025</span>
+      <div class="pcard__image">
+        <img src="assets/bottles/le-rose.png" alt="Le Rose — Pinot Noir bio desalcoolise" loading="lazy">
+      </div>
+      <h3 class="pcard__name">Le Rose</h3>
+      <p class="pcard__desc">Delicat, floral, lumineux. Pinot Noir bio desalcoolise.</p>
+      <div class="pcard__pills">
+        <span class="pcard__pill">0.0%</span>
+        <span class="pcard__pill">Bio</span>
+        <span class="pcard__pill">Vegan</span>
+        <span class="pcard__pill">Sans sulfite</span>
+      </div>
+      <p class="pcard__price">34,00 &euro;</p>
+    </a>
+
+  </div>
+</section>
+
+<!-- ============================================
+     ROW 2 — PRESTIGE
+     ============================================ -->
+<section class="grid-section" data-category="prestige">
+  <p class="grid-section__overline">Prestige</p>
+  <div class="grid-2">
+
+    <!-- L'EXTRA BRUT -->
+    <a href="product.html" class="pcard pcard--dark" data-cursor="Voir" style="text-decoration:none;">
+      <span class="pcard__badge">Gastronomique</span>
+      <div class="pcard__image">
+        <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut — Assemblage Chardonnay-Pinot Noir" loading="lazy">
+      </div>
+      <h3 class="pcard__name">L'Extra Brut</h3>
+      <p class="pcard__desc">Sec, mineral, incisif. Assemblage Chardonnay-Pinot Noir.</p>
+      <div class="pcard__pills">
+        <span class="pcard__pill">0.0%</span>
+        <span class="pcard__pill">Bio</span>
+        <span class="pcard__pill">Vegan</span>
+        <span class="pcard__pill">Sans sulfite</span>
+      </div>
+      <p class="pcard__price">49,00 &euro;</p>
+    </a>
+
+    <!-- LA CUVEE VINTAGE 2023 -->
+    <a href="product.html" class="pcard pcard--dark" data-cursor="Voir" style="text-decoration:none;">
+      <span class="pcard__badge pcard__badge--limit">Edition limitee &middot; Numerotee</span>
+      <div class="pcard__image">
+        <img src="assets/bottles/la-cuvee.png" alt="La Cuvee Vintage 2023 — Blanc de Blancs d'exception" loading="lazy">
+      </div>
+      <h3 class="pcard__name">La Cuvee Vintage 2023</h3>
+      <p class="pcard__desc">Blanc de Blancs d'exception. Complexe, profond, unique.</p>
+      <div class="pcard__pills">
+        <span class="pcard__pill">0.0%</span>
+        <span class="pcard__pill">Bio</span>
+        <span class="pcard__pill">Millesime</span>
+        <span class="pcard__pill">Numerotee</span>
+      </div>
+      <p class="pcard__price">109,00 &euro;</p>
+    </a>
+
+  </div>
+</section>
+
+<!-- ============================================
+     ROW 3 — FORMATS & COFFRETS
+     ============================================ -->
+<section class="grid-section" data-category="coffrets">
+  <p class="grid-section__overline">Formats & Coffrets</p>
+  <div class="grid-4">
+
+    <!-- LE MAGNUM -->
+    <a href="product.html" class="pcard pcard--dark pcard--small" data-cursor="Voir" style="text-decoration:none;">
+      <div class="pcard__image">
+        <img src="assets/bottles/le-blanc.png" alt="Le Magnum — Format 1500ml" loading="lazy">
+      </div>
+      <h3 class="pcard__name">Le Magnum</h3>
+      <p class="pcard__volume">1500 ml</p>
+      <p class="pcard__price">64,00 &euro;</p>
+    </a>
+
+    <!-- BABY BLOOM BOX -->
+    <a href="product.html" class="pcard pcard--dark pcard--small" data-cursor="Voir" style="text-decoration:none;">
+      <div class="pcard__image">
+        <img src="assets/bottles/le-rose.png" alt="Baby Bloom Box — Coffret 2x375ml" loading="lazy">
+      </div>
+      <h3 class="pcard__name">Baby Bloom Box</h3>
+      <p class="pcard__volume">2 &times; 375 ml</p>
+      <p class="pcard__price">49,00 &euro;</p>
+    </a>
+
+    <!-- DUO LE BLANC & LE ROSE -->
+    <a href="product.html" class="pcard pcard--dark pcard--small" data-cursor="Voir" style="text-decoration:none;">
+      <div class="pcard__image">
+        <img src="assets/bottles/le-blanc.png" alt="Duo Le Blanc et Le Rose" loading="lazy">
+      </div>
+      <h3 class="pcard__name">Duo Le Blanc & Le Rose</h3>
+      <p class="pcard__volume">2 &times; 750 ml</p>
+      <p class="pcard__price">180,00 &euro;</p>
+    </a>
+
+    <!-- BABY BLOOM DUO -->
+    <a href="product.html" class="pcard pcard--dark pcard--small" data-cursor="Voir" style="text-decoration:none;">
+      <div class="pcard__image">
+        <img src="assets/bottles/extra-brut.png" alt="Baby Bloom Duo — Mini format" loading="lazy">
+      </div>
+      <h3 class="pcard__name">Baby Bloom Duo</h3>
+      <p class="pcard__volume">2 &times; 200 ml</p>
+      <p class="pcard__price">19,00 &euro;</p>
+    </a>
+
+  </div>
+</section>
+
+<!-- ============================================
+     REASSURANCE BANNER
+     ============================================ -->
+<section class="reassurance">
+  <div class="reassurance__grid">
+
+    <div class="reassurance__item">
+      <div class="reassurance__icon">
+        <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="14" width="22" height="14" rx="2"/>
+          <path d="M24 18h6l4 5v5h-10v-10z"/>
+          <circle cx="9" cy="30" r="3"/>
+          <circle cx="27" cy="30" r="3"/>
+          <line x1="12" y1="28" x2="24" y2="28"/>
+        </svg>
+      </div>
+      <p class="reassurance__text"><strong>Livraison offerte</strong> dès 60&euro;</p>
+    </div>
+
+    <div class="reassurance__item">
+      <div class="reassurance__icon">
+        <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="6" width="28" height="24" rx="2"/>
+          <line x1="4" y1="12" x2="32" y2="12"/>
+          <line x1="4" y1="18" x2="32" y2="18"/>
+          <path d="M14 24h8"/>
+          <path d="M18 2v4"/>
+        </svg>
+      </div>
+      <p class="reassurance__text"><strong>Expedition 48h</strong>Soignee et protegee</p>
+    </div>
+
+    <div class="reassurance__item">
+      <div class="reassurance__icon">
+        <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 4c-2 6-8 10-14 12 4 8 10 14 14 16 4-2 10-8 14-16-6-2-12-6-14-12z"/>
+          <path d="M18 14v8M15 18h6"/>
+        </svg>
+      </div>
+      <p class="reassurance__text"><strong>100% biologique</strong>Certifie AB & EU</p>
+    </div>
+
+    <div class="reassurance__item">
+      <div class="reassurance__icon">
+        <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 4l4 8h8l-6 5 2 9-8-5-8 5 2-9-6-5h8z"/>
+        </svg>
+      </div>
+      <p class="reassurance__text"><strong>Meilleur au monde</strong>3 annees consecutives</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================
+     EDITORIAL — COMMENT CHOISIR
+     ============================================ -->
+<section class="editorial">
+  <div class="editorial__grid">
+    <div class="editorial__image">
+      <img src="assets/lifestyle/lifestyle-convivial.jpg"
+           alt="Table dressee elegante — Comment choisir votre cuvee" loading="lazy">
+    </div>
+    <div class="editorial__text">
+      <p class="editorial__label">Comment choisir</p>
+      <h2 class="editorial__title">Quelle cuvee pour vous ?</h2>
+      <ul class="editorial__pairings">
+        <li class="editorial__pairing">
+          <span class="editorial__pairing-occasion">L'aperitif entre amis</span>
+          <span class="editorial__pairing-arrow">&rarr;</span>
+          <span class="editorial__pairing-cuvee">Le Blanc</span>
+        </li>
+        <li class="editorial__pairing">
+          <span class="editorial__pairing-occasion">Le diner romantique</span>
+          <span class="editorial__pairing-arrow">&rarr;</span>
+          <span class="editorial__pairing-cuvee">Le Rose</span>
+        </li>
+        <li class="editorial__pairing">
+          <span class="editorial__pairing-occasion">La table gastronomique</span>
+          <span class="editorial__pairing-arrow">&rarr;</span>
+          <span class="editorial__pairing-cuvee">L'Extra Brut</span>
+        </li>
+        <li class="editorial__pairing">
+          <span class="editorial__pairing-occasion">L'occasion d'exception</span>
+          <span class="editorial__pairing-arrow">&rarr;</span>
+          <span class="editorial__pairing-cuvee">La Cuvee Vintage</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <div class="footer__logo">French Bloom</div>
+  <div class="footer__grid">
+    <div class="footer__col">
+      <p class="footer__col-title">Boutique</p>
+      <ul>
+        <li><a href="#">Le Blanc</a></li>
+        <li><a href="#">Le Rose</a></li>
+        <li><a href="product.html">L'Extra Brut</a></li>
+        <li><a href="#">La Cuvee Vintage</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">La Maison</p>
+      <ul>
+        <li><a href="#">Savoir-Faire</a></li>
+        <li><a href="#">Histoire</a></li>
+        <li><a href="#">Terroir</a></li>
+        <li><a href="#">Formule 1</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Aide</p>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Livraison</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">CGV</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Suivez-nous</p>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer__badges">0.0% Alcool &middot; Bio &middot; Vegan &middot; Sans sulfite</p>
+  <hr class="footer__sep">
+  <p class="footer__copy">&copy; 2025 French Bloom &mdash; L'effervescence reinventee.</p>
+</footer>
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ---- Lenis Smooth Scroll ---- */
+  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+
+  /* ---- Page reveal ---- */
+  gsap.to('.page-reveal', { scaleY: 0, transformOrigin: 'top', duration: 1, ease: 'power4.inOut', delay: 0.2 });
+
+  /* ---- Nav scroll ---- */
+  ScrollTrigger.create({ start: 'top -80', end: 99999, toggleClass: { targets: '.nav', className: 'scrolled' } });
+
+  /* ---- Custom cursor ---- */
+  const cursor = document.querySelector('.cursor');
+  const cursorLabel = cursor?.querySelector('.cursor__label');
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    gsap.ticker.add(() => {
+      cx += (tx - cx) * 0.15;
+      cy += (ty - cy) * 0.15;
+      gsap.set(cursor, { x: cx, y: cy });
+    });
+    document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.classList.add('hover');
+        const label = el.getAttribute('data-cursor');
+        if (label && cursorLabel) cursorLabel.textContent = label;
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hover');
+        if (cursorLabel) cursorLabel.textContent = 'Voir';
+      });
+    });
+  } else if (cursor) { cursor.style.display = 'none'; document.body.style.cursor = 'auto'; }
+
+  /* ---- HERO ---- */
+  const heroTl = gsap.timeline({ delay: 0.6 });
+  gsap.set('.hero-col__title', { y: 60 });
+  gsap.set('.hero-col__subtitle', { y: 30 });
+  gsap.set('.hero-col__intro', { y: 20 });
+  heroTl
+    .to('.hero-col__title', { opacity: 1, y: 0, duration: 1, ease: 'power4.out' })
+    .to('.hero-col__subtitle', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+    .to('.hero-col__intro', { opacity: 0.8, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.4');
+
+  // Hero parallax
+  gsap.to('.hero-col__bg', { y: '15%', ease: 'none', scrollTrigger: { trigger: '.hero-col', start: 'top top', end: 'bottom top', scrub: true } });
+
+  /* ---- FILTER TABS — animated indicator ---- */
+  const tabs = document.querySelectorAll('.filters__tab');
+  const indicator = document.getElementById('filterIndicator');
+  const sections = document.querySelectorAll('.grid-section');
+
+  function moveIndicator(tab) {
+    const rect = tab.getBoundingClientRect();
+    const parentRect = tab.closest('.filters__tabs').getBoundingClientRect();
+    indicator.style.width = rect.width + 'px';
+    indicator.style.left = (rect.left - parentRect.left) + 'px';
+  }
+
+  // Set initial indicator
+  const activeTab = document.querySelector('.filters__tab.active');
+  if (activeTab) {
+    requestAnimationFrame(() => moveIndicator(activeTab));
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      moveIndicator(tab);
+
+      const filter = tab.getAttribute('data-filter');
+      sections.forEach(sec => {
+        if (filter === 'all' || sec.getAttribute('data-category') === filter) {
+          gsap.to(sec, { opacity: 1, height: 'auto', duration: 0.5, ease: 'power2.out', onStart: () => { sec.style.overflow = 'visible'; sec.style.display = 'block'; } });
+        } else {
+          gsap.to(sec, { opacity: 0, height: 0, duration: 0.4, ease: 'power2.in', onComplete: () => { sec.style.overflow = 'hidden'; } });
+        }
+      });
+    });
+  });
+
+  // Recalculate indicator on resize
+  window.addEventListener('resize', () => {
+    const current = document.querySelector('.filters__tab.active');
+    if (current) moveIndicator(current);
+  });
+
+  /* ---- GRID SECTION OVERLINES ---- */
+  gsap.utils.toArray('.grid-section__overline').forEach(overline => {
+    gsap.set(overline, { y: 30 });
+    gsap.to(overline, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: overline, start: 'top 80%' } });
+  });
+
+  /* ---- PRODUCT CARDS — stagger reveal ---- */
+  gsap.utils.toArray('.pcard').forEach((card, i) => {
+    gsap.set(card, { y: 60 });
+    gsap.to(card, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      delay: (i % 4) * 0.12,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: card, start: 'top 85%' }
+    });
+  });
+
+  /* ---- REASSURANCE — stagger ---- */
+  gsap.utils.toArray('.reassurance__item').forEach((item, i) => {
+    gsap.set(item, { y: 30 });
+    gsap.to(item, { opacity: 1, y: 0, duration: 0.7, delay: i * 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.reassurance', start: 'top 75%' } });
+  });
+
+  /* ---- EDITORIAL ---- */
+  gsap.set('.editorial__image', { x: -40 });
+  gsap.set('.editorial__text', { x: 40, y: 40 });
+  gsap.to('.editorial__image', { opacity: 1, x: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.editorial', start: 'top 60%' } });
+  gsap.to('.editorial__text', { opacity: 1, x: 0, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.editorial', start: 'top 60%' } });
+
+  /* ---- MOBILE MENU TOGGLE ---- */
+  const hamburger = document.getElementById('navHamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Extra Brut — French Bloom</title>
+
+<!-- French Bloom Brand Typography (local @font-face) -->
+
+<!-- GSAP 3 + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Lenis Smooth Scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<style>
+/* @font-face — French Bloom Brand Typography */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & DESIGN TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white-bloom:   #FCF5ED;  /* Main bg — warm cream */
+  --blanc:         #FFFFFF;
+  --noir:          #1A1A1A;  /* Text/logos only */
+  --noir-doux:     #3A3A3A;  /* Body text */
+  --or:            #D4B188;  /* Brand gold — warmer */
+  --or-pale:       #E2C9A6;
+  --or-sombre:     #B89A6E;
+  --coral:         #EA5438;  /* Secondary accent — CTAs */
+  --almond-green:  #ACB99C;  /* Secondary accent — tags */
+  --gris:          #8A8A8A;
+  --gris-clair:    #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose:          #D4A094;
+  --rose-pale:     #E8C4B8;
+  --ease-luxe:     cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth:   cubic-bezier(0.25, 0.1, 0.25, 1);
+  --duration-slow: 1.2s;
+  --duration-med:  0.7s;
+  --duration-fast: 0.35s;
+}
+
+html { font-size: 16px; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--white-bloom);
+  color: var(--noir);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: none;
+}
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+.cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--noir);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.35s var(--ease-luxe), height 0.35s var(--ease-luxe), background 0.3s, border 0.3s;
+}
+.cursor.hover {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1.5px solid var(--noir);
+}
+.cursor__label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--noir);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+.cursor.hover .cursor__label { opacity: 1; }
+
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor { display: none; }
+}
+
+/* ============================================
+   PAGE LOAD REVEAL
+   ============================================ */
+.page-reveal {
+  position: fixed;
+  inset: 0;
+  background: var(--blanc);
+  z-index: 10000;
+  transform-origin: bottom;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, h2, h3, h4 {
+  font-family: 'Begum', serif;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--noir);
+  text-transform: uppercase;
+}
+.subtitle, .quote, blockquote {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+}
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+a { color: inherit; text-decoration: none; }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 0 clamp(1.5rem, 3vw, 3rem);
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.5s var(--ease-smooth), height 0.5s var(--ease-smooth), border-color 0.5s;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  height: 60px;
+  border-bottom-color: var(--gris-clair);
+  border-radius: 0;
+}
+.nav__links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  flex: 1;
+}
+.nav__links--right { justify-content: flex-end; }
+.nav__links a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  opacity: 0.7;
+  transition: opacity 0.4s;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--or);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s var(--ease-luxe);
+}
+.nav__links a:hover { opacity: 1; }
+.nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav__search {
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: var(--noir); opacity: 0.6; transition: opacity 0.4s;
+}
+.nav__search:hover { opacity: 1; }
+.nav__cart {
+  position: relative; display: inline-flex; align-items: center;
+  color: var(--noir); opacity: 0.6; transition: opacity 0.4s;
+}
+.nav__cart:hover { opacity: 1; }
+.nav__cart-count {
+  position: absolute; top: -4px; right: -10px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--noir); color: var(--blanc);
+  font-family: 'Montserrat', sans-serif; font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.nav__logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0 2rem;
+  color: var(--noir);
+  transition: color 0.4s;
+}
+.nav__logo svg {
+  height: 14px;
+  width: auto;
+  fill: currentColor;
+}
+.nav__desktop-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  align-items: center;
+}
+.nav__desktop-links a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  transition: color 0.4s;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav__desktop-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--or);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s var(--ease-luxe);
+}
+.nav__desktop-links a:hover { color: var(--noir); }
+.nav__desktop-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav__mobile-icons {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+}
+.nav__mobile-icons .nav__cart--mobile {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--noir);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+.nav__mobile-icons .nav__cart--mobile:hover { opacity: 1; }
+.nav__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 101;
+}
+.nav__hamburger span {
+  width: 22px;
+  height: 1px;
+  background: var(--noir);
+  transition: transform 0.3s, opacity 0.3s;
+}
+.nav__hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.nav__hamburger.active span:nth-child(2) { opacity: 0; }
+.nav__hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+/* Mobile Menu Overlay */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--blanc);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-luxe);
+}
+.mobile-menu.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-menu a {
+  font-family: 'Begum', serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  opacity: 0.7;
+  transition: opacity 0.4s, color 0.4s;
+  text-decoration: none;
+}
+.mobile-menu a:hover {
+  opacity: 1;
+  color: var(--or-sombre);
+}
+
+/* ============================================
+   PRODUCT HERO (2-column)
+   ============================================ */
+.pdp {
+  padding-top: 100px;
+  padding-bottom: clamp(60px, 8vw, 120px);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: clamp(1.5rem, 3vw, 4rem);
+  padding-right: clamp(1.5rem, 3vw, 4rem);
+  background: var(--white-bloom);
+}
+.pdp__grid {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+/* Gallery */
+.pdp__gallery { position: sticky; top: 100px; align-self: start; }
+.pdp__main-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: var(--blanc);
+  margin-bottom: 1rem;
+  border-radius: 0;
+}
+.pdp__main-image img,
+.pdp__main-image .pdp__bottle-hero {
+  transition: transform 0.8s var(--ease-luxe), opacity 0.5s ease;
+}
+.pdp__main-image:hover img,
+.pdp__main-image:hover .pdp__bottle-hero {
+  transform: scale(1.04);
+}
+.pdp__bottle-hero {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blanc);
+  padding: 0;
+  border-radius: 0;
+}
+.pdp__bottle-hero img {
+  object-fit: contain;
+}
+.pdp__thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+.pdp__thumb {
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid var(--gris-clair);
+  transition: border-color 0.3s;
+  position: relative;
+  border-radius: 0;
+}
+.pdp__thumb.active { border-color: var(--or); }
+.pdp__thumb:hover { border-color: var(--or-pale); }
+.pdp__thumb img { transition: transform 0.5s var(--ease-luxe); }
+.pdp__thumb:hover img { transform: scale(1.08); }
+
+/* Product Info */
+.pdp__info {
+  position: static;
+  opacity: 0;
+  background: var(--white-bloom);
+}
+.no-js .pdp__info { opacity: 1; }
+.pdp__breadcrumb {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--noir-doux);
+  margin-bottom: 1.5rem;
+}
+.pdp__breadcrumb a {
+  color: var(--noir-doux);
+  transition: color 0.3s;
+}
+.pdp__breadcrumb a:hover { color: var(--or); }
+.pdp__breadcrumb .sep { margin: 0 0.5rem; color: var(--or); }
+.pdp__badge {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  font-weight: 500;
+  padding: 0;
+  border: none;
+  background: none;
+  margin-bottom: 1.25rem;
+  border-radius: 0;
+}
+.pdp__name {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  color: var(--noir);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  line-height: 1.05;
+}
+.pdp__type {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--gris);
+  margin-bottom: 1.5rem;
+}
+.pdp__price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--noir);
+  margin-bottom: 1.5rem;
+}
+.pdp__installment {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--gris);
+  margin-top: 0.3rem;
+}
+.pdp__desc {
+  font-size: 0.88rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--noir-doux);
+  opacity: 0.85;
+  margin-bottom: 2rem;
+  max-width: 440px;
+}
+
+/* Quantity selector */
+.pdp__qty {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 1.5rem;
+}
+.pdp__qty-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-right: 1.25rem;
+}
+.pdp__qty-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--gris-clair);
+  background: var(--blanc);
+  color: var(--noir-doux);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdp__qty-btn:hover {
+  background: var(--gris-tres-clair);
+  color: var(--noir);
+  border-color: var(--gris);
+}
+#qtyMinus { border-radius: 0; }
+#qtyPlus  { border-radius: 0; }
+.pdp__qty-val {
+  width: 54px;
+  height: 44px;
+  border-top: 1px solid var(--gris-clair);
+  border-bottom: 1px solid var(--gris-clair);
+  background: var(--blanc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  color: var(--noir);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Buttons */
+.pdp__atc {
+  width: 100%;
+  padding: 1.3rem 2.5rem;
+  background: var(--noir);
+  border: 1px solid var(--noir);
+  color: var(--blanc);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.5s var(--ease-luxe), color 0.5s, transform 0.3s, border-color 0.5s;
+  margin-bottom: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+}
+.pdp__atc:hover {
+  background: var(--noir-doux);
+  border-color: var(--noir-doux);
+  color: var(--blanc);
+  box-shadow: 0 4px 16px rgba(26,26,26,0.15);
+}
+.pdp__atc.added {
+  background: var(--almond-green);
+  border-color: var(--almond-green);
+  color: var(--noir);
+}
+@keyframes atcPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.pdp__buy {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: transparent;
+  border: 1px solid var(--gris-clair);
+  color: var(--noir-doux);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.5s var(--ease-luxe), color 0.5s, border-color 0.5s;
+  margin-bottom: 1.5rem;
+  border-radius: 0;
+}
+.pdp__buy:hover {
+  background: var(--noir);
+  border-color: var(--noir);
+  color: var(--blanc);
+}
+.pdp__payments {
+  font-size: 0.65rem;
+  color: var(--gris);
+  letter-spacing: 0.04em;
+  margin-bottom: 1.75rem;
+  text-align: center;
+}
+.pdp__reassurance {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: var(--gris-tres-clair);
+  padding: 1rem 1.25rem;
+  border-radius: 0;
+}
+.pdp__reassurance li {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--noir-doux);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.pdp__reassurance li svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--or);
+  fill: none;
+  stroke-width: 2.5;
+  flex-shrink: 0;
+}
+
+/* Accordions */
+.pdp__accordions { margin-top: 2rem; border-top: 1px solid var(--gris-tres-clair); }
+.pdp__accordion-trigger { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0; border: none; border-bottom: 1px solid var(--gris-tres-clair); background: none; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--noir); transition: color 0.3s; }
+.pdp__accordion-trigger:hover { color: var(--or-sombre); }
+.pdp__accordion-trigger svg { transition: transform 0.4s var(--ease-luxe); flex-shrink: 0; }
+.pdp__accordion.open .pdp__accordion-trigger svg { transform: rotate(45deg); }
+.pdp__accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s var(--ease-luxe), padding 0.5s; padding: 0; }
+.pdp__accordion.open .pdp__accordion-content { max-height: 300px; padding: 0 0 1.2rem; }
+.pdp__accordion-content p { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 300; line-height: 1.7; color: var(--noir-doux); }
+
+/* Social Proof */
+.pdp__social-proof { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.2rem; }
+.pdp__stars { display: flex; gap: 2px; }
+.pdp__reviews-count { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 300; color: var(--gris); letter-spacing: 0.03em; }
+
+/* Credentials inline (above the fold) */
+.pdp__credentials-inline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0.8rem;
+}
+.pdp__credential-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--or-sombre);
+  letter-spacing: 0.02em;
+}
+.pdp__credential-sep {
+  color: var(--gris-clair);
+  font-size: 0.6rem;
+}
+
+/* Pills (0.0%, Bio, Vegan, Sans sulfite) */
+.pdp__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+.pdp__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--or-pale);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--or-sombre);
+  text-transform: uppercase;
+  border-radius: 50px;
+}
+
+/* ============================================
+   TASTING NOTES
+   ============================================ */
+.tasting {
+  padding: clamp(100px, 12vw, 180px) clamp(1.5rem, 5vw, 5rem);
+  background: var(--blanc);
+}
+.tasting__title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--noir);
+  text-align: center;
+  letter-spacing: 0.06em;
+  margin-bottom: clamp(3rem, 5vw, 5rem);
+  opacity: 0;
+}
+.tasting__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.tasting__card {
+  text-align: center;
+  padding: 2rem 1rem 1.5rem;
+  position: relative;
+  opacity: 0;
+  border-radius: 0;
+  background: var(--white-bloom);
+}
+.tasting__card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 25%;
+  right: 25%;
+  height: 3px;
+  background: var(--or);
+  border-radius: 0;
+}
+.tasting__icon {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 1.25rem;
+  stroke: var(--or);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tasting__card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 1rem;
+}
+.tasting__card-body {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--noir-doux);
+}
+.tasting__color-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--or);
+  margin: 0 auto 0.75rem;
+  box-shadow: 0 2px 12px rgba(212,177,136,0.3);
+}
+
+/* ============================================
+   WELLNESS FIGURES
+   ============================================ */
+.wellness {
+  padding: clamp(100px, 12vw, 180px) clamp(1.5rem, 5vw, 5rem);
+  background: var(--white-bloom);
+}
+.wellness__header {
+  text-align: center;
+  margin-bottom: clamp(3rem, 5vw, 5rem);
+}
+.wellness__title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--noir);
+  letter-spacing: 0.08em;
+  opacity: 0;
+}
+.wellness__grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.wellness__item {
+  flex: 1 1 0;
+  min-width: 160px;
+  text-align: center;
+  padding: 2rem 1rem;
+  position: relative;
+  opacity: 0;
+  background: var(--blanc);
+  border-radius: 0;
+  margin: 0.25rem;
+}
+.wellness__item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: var(--or);
+  opacity: 0.3;
+}
+.wellness__value {
+  font-family: 'Begum', serif;
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 300;
+  color: var(--or);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.wellness__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--noir-doux);
+  opacity: 0.7;
+}
+
+/* ============================================
+   TERROIR (parallax) — darker treatment for visual rhythm
+   ============================================ */
+.terroir {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 7.5rem 2rem;
+}
+.terroir__bg {
+  position: absolute;
+  inset: -15% 0;
+  z-index: 0;
+  will-change: transform;
+}
+.terroir__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(44,38,32,0.65);
+  z-index: 1;
+}
+.terroir__content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+.terroir__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.terroir__title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--blanc);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.terroir__body {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.85);
+  opacity: 0;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.terroir__quote {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  color: var(--or-pale);
+  line-height: 1.6;
+  opacity: 0;
+}
+.terroir__quote-author {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.5);
+  margin-top: 0.75rem;
+}
+
+/* ============================================
+   FOOD PAIRING
+   ============================================ */
+.pairing {
+  padding: clamp(100px, 12vw, 180px) clamp(1.5rem, 5vw, 5rem);
+  background: var(--blanc);
+}
+.pairing__header {
+  text-align: center;
+  margin-bottom: clamp(3rem, 5vw, 4.5rem);
+}
+.pairing__title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--noir);
+  letter-spacing: 0.08em;
+  opacity: 0;
+}
+.pairing__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto 2.5rem;
+}
+.pairing__card {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+  border-radius: 0;
+  box-shadow: 0 4px 20px rgba(26,26,26,0.08);
+}
+.pairing__card img { transition: transform 0.8s var(--ease-luxe); }
+.pairing__card:hover img { transform: scale(1.08); }
+.pairing__card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(26,26,26,0.15);
+  transition: background 0.5s;
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5rem;
+}
+.pairing__card:hover .pairing__card-overlay { background: rgba(26,26,26,0.5); }
+.pairing__card-name {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+  color: var(--blanc);
+  transform: translateY(10px);
+  transition: transform 0.5s var(--ease-luxe);
+}
+.pairing__card:hover .pairing__card-name { transform: translateY(0); }
+.pairing__sub {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  color: var(--noir-doux);
+  opacity: 0;
+  max-width: 550px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ============================================
+   PRESS QUOTE
+   ============================================ */
+.press-quote {
+  padding: clamp(100px, 12vw, 200px) clamp(1.5rem, 5vw, 5rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--gris-tres-clair);
+  border-radius: 0;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+.press-quote__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  font-family: 'Begum', serif;
+  font-size: 20rem;
+  color: var(--or);
+  opacity: 0.08;
+  line-height: 1;
+  pointer-events: none;
+}
+.press-quote__content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.press-quote__text {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: var(--noir);
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+.press-quote__source {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  opacity: 0;
+}
+
+/* ============================================
+   CROSS-SELL
+   ============================================ */
+.cross-sell {
+  padding: clamp(100px, 12vw, 180px) clamp(1.5rem, 5vw, 5rem);
+  background: var(--white-bloom);
+  text-align: center;
+}
+.cross-sell__title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--noir);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: clamp(3rem, 5vw, 4rem);
+  opacity: 0;
+}
+.cross-sell__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+/* Reuse product card from homepage */
+.product-card {
+  position: relative;
+  text-align: center;
+  padding: 2.5rem 1.5rem 2rem;
+  background: var(--blanc);
+  border: 1px solid var(--gris-tres-clair);
+  transition: background 0.6s, box-shadow 0.6s, transform 0.5s var(--ease-luxe);
+  opacity: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
+.product-card:hover {
+  background: var(--blanc);
+  box-shadow: 0 8px 30px rgba(26,26,26,0.08);
+  transform: translateY(-4px);
+}
+.product-card__badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  font-weight: 500;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 0;
+}
+.product-card__image {
+  position: relative;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.product-card__image img {
+  width: auto;
+  height: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  transition: transform 0.8s var(--ease-luxe);
+}
+.product-card:hover .product-card__image img { transform: scale(1.05); }
+.product-card__name {
+  font-family: 'Begum', serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--noir);
+  margin-bottom: 0.35rem;
+}
+.product-card__type {
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: var(--gris);
+  margin-bottom: 0.75rem;
+}
+.product-card__price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--noir);
+  margin-bottom: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+.product-card__cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  padding: 0.7rem 1.5rem;
+  border: 1px solid var(--noir);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.5s, color 0.5s, border-color 0.5s, opacity 0.5s;
+  opacity: 0;
+  border-radius: 0;
+}
+.product-card:hover .product-card__cta {
+  opacity: 1;
+}
+.product-card__cta:hover {
+  background: var(--noir);
+  color: var(--blanc);
+  border-color: var(--noir);
+}
+
+/* ============================================
+   WHY FRENCH BLOOM
+   ============================================ */
+.why {
+  padding: clamp(100px, 12vw, 180px) clamp(1.5rem, 5vw, 5rem);
+  background: var(--blanc);
+}
+.why__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.why__card {
+  text-align: center;
+  padding: 2rem 1.25rem;
+  opacity: 0;
+  border-radius: 0;
+  background: var(--gris-tres-clair);
+}
+.why__icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 1.25rem;
+  stroke: var(--or);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.why__card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 0.75rem;
+}
+.why__card-body {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--noir-doux);
+}
+
+/* ============================================
+   FOOTER — Dark for contrast
+   ============================================ */
+.footer {
+  padding: clamp(60px, 8vw, 100px) clamp(1.5rem, 5vw, 5rem) 2rem;
+  background: var(--noir);
+  border-top: 1px solid rgba(212,177,136,0.15);
+}
+.footer__logo {
+  text-align: center;
+  font-family: 'Begum', serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 3.5rem;
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+}
+.footer__col-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1.2rem;
+}
+.footer__col ul { list-style: none; }
+.footer__col li { margin-bottom: 0.6rem; }
+.footer__col a {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--blanc);
+  opacity: 0.5;
+  transition: opacity 0.4s;
+}
+.footer__col a:hover { opacity: 1; }
+.footer__badges {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--gris);
+  margin-bottom: 2rem;
+}
+.footer__sep {
+  max-width: 1000px;
+  margin: 0 auto 1.5rem;
+  border: none;
+  border-top: 1px solid rgba(212,177,136,0.12);
+}
+.footer__copy {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--gris);
+  letter-spacing: 0.04em;
+}
+
+/* ============================================
+   CREDENTIALS
+   ============================================ */
+.credentials { padding: clamp(40px, 5vw, 60px) clamp(1.5rem, 5vw, 5rem); background: var(--blanc); border-top: 1px solid var(--gris-tres-clair); border-bottom: 1px solid var(--gris-tres-clair); }
+.credentials__inner { display: flex; justify-content: center; align-items: center; gap: 3rem; max-width: 1000px; margin: 0 auto 2rem; flex-wrap: wrap; }
+.credentials__item { text-align: center; }
+.credentials__icon { display: block; margin-bottom: 0.5rem; }
+.credentials__text { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--noir); display: block; }
+.credentials__source { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--or-sombre); letter-spacing: 0.08em; display: block; margin-top: 0.25rem; }
+.credentials__divider { width: 1px; height: 40px; background: var(--or); opacity: 0.3; }
+.credentials__press { text-align: center; padding-top: 1.5rem; }
+.credentials__press-label { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); display: block; margin-bottom: 1rem; }
+.credentials__logos { display: flex; justify-content: center; align-items: center; gap: 3rem; flex-wrap: wrap; }
+.credentials__logos span { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gris); opacity: 0.5; transition: opacity 0.4s; }
+.credentials__logos span:hover { opacity: 1; }
+
+/* ============================================
+   LIGHTBOX
+   ============================================ */
+.pdp__lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(252,245,237,0.97); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease-luxe); cursor: zoom-out; }
+.pdp__lightbox.active { opacity: 1; pointer-events: all; }
+.pdp__lightbox img { max-width: 70vw; max-height: 85vh; object-fit: contain; }
+.pdp__lightbox-close { position: absolute; top: 2rem; right: 2rem; background: none; border: none; cursor: pointer; color: var(--noir); opacity: 0.5; transition: opacity 0.3s; }
+.pdp__lightbox-close:hover { opacity: 1; }
+
+/* ============================================
+   AMBIENT BUBBLES
+   ============================================ */
+.ambient-bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
+.ambient-bubbles .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(212,177,136,0.08) 0%, rgba(212,177,136,0.02) 50%, transparent 70%); border: 0.5px solid rgba(212,177,136,0.05); }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .pdp__grid { grid-template-columns: 1fr; gap: 2rem; }
+  .pdp__gallery { position: static; }
+  .pdp__info { position: static; }
+  .tasting__grid { grid-template-columns: repeat(2, 1fr); }
+  .pairing__grid { grid-template-columns: repeat(2, 1fr); }
+  .cross-sell__grid { grid-template-columns: repeat(3, 1fr); }
+  .why__grid { grid-template-columns: repeat(2, 1fr); }
+  .wellness__item:nth-child(even)::after { display: none; }
+}
+@media (max-width: 768px) {
+  .nav__links { display: none; }
+  .nav__desktop-links { display: none; }
+  .nav__mobile-icons { display: flex; }
+  .nav__hamburger { display: flex; }
+  .nav__logo svg { height: 10px; }
+  .pdp__grid { grid-template-columns: 1fr; }
+  .pdp__info { position: static; }
+  .cross-sell__grid { grid-template-columns: 1fr 1fr; }
+  .product-card__cta { opacity: 1; }
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .wellness__grid { flex-direction: column; }
+  .wellness__item::after { display: none !important; }
+  .wellness__item { min-width: auto; width: 100%; padding: 1.5rem 1rem; }
+  .press-quote { margin-left: 0; margin-right: 0; }
+}
+@media (max-width: 480px) {
+  .tasting__grid { grid-template-columns: 1fr; }
+  .pairing__grid { grid-template-columns: 1fr; }
+  .cross-sell__grid { grid-template-columns: 1fr; }
+  .why__grid { grid-template-columns: 1fr; }
+  .pdp__thumbs { grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+}
+/* ============================================
+   STICKY ATC BAR (Mobile)
+   ============================================ */
+.pdp__sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--blanc);
+  border-top: 1px solid var(--or-pale);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pdp__sticky-bar.visible { transform: translateY(0); }
+.pdp__sticky-bar__inner {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.pdp__sticky-bar__info { display: flex; flex-direction: column; gap: 0.15rem; }
+.pdp__sticky-bar__name { font-family: 'Begum', serif; font-size: 0.9rem; font-weight: 400; color: var(--noir); }
+.pdp__sticky-bar__price { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 400; color: var(--noir-doux); }
+.pdp__sticky-bar__btn {
+  background: var(--noir);
+  color: var(--blanc);
+  border: none;
+  border-radius: 0;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.3s;
+}
+.pdp__sticky-bar__btn:hover { background: var(--noir-doux); }
+@media (min-width: 769px) { .pdp__sticky-bar { display: none !important; } }
+
+</style>
+</head>
+<body>
+
+<div class="ambient-bubbles" aria-hidden="true"></div>
+
+<!-- Custom Cursor -->
+<div class="cursor"><span class="cursor__label">Voir</span></div>
+
+<!-- Page Reveal -->
+<div class="page-reveal"></div>
+
+<!-- ============================================
+     NAVIGATION
+     ============================================ -->
+<nav class="nav">
+  <ul class="nav__links">
+    <li><a href="collection.html">COLLECTION</a></li>
+    <li><a href="#">SAVOIR-FAIRE</a></li>
+    <li><a href="la-maison.html">LA MAISON</a></li>
+  </ul>
+  <a href="homepage.html" class="nav__logo" aria-label="French Bloom">
+    <svg viewBox="0 0 646.2 67.7" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M20.9 34.7 20.9 45.1C20.9 46.8 21.2 48.1 21.8 48.7 22.4 49.4 23.6 49.7 25.5 49.7L26.3 49.7 26.3 52.8 5.8 52.8 5.8 49.7 6.4 49.7C8.3 49.7 9.5 49.3 10.1 48.6 10.7 47.9 11 46.7 11 45L11 22.3C11 20.6 10.7 19.3 10.1 18.7 9.5 18 8.3 17.7 6.4 17.7L5.7 17.7 5.7 14.6 37.7 14.6 38 24.7 34.8 24.7C34.3 23 33.7 21.6 33 20.5 32.3 19.4 31.5 18.7 30.7 18.4 29.9 18.1 28.7 17.9 27.1 17.9L20.9 17.9 20.9 31.1 23.9 31.1C25.3 31.1 26.3 30.8 26.9 30.2 27.5 29.6 27.8 28.3 27.9 26.4L31.1 26.4 31.1 39.5 27.9 39.5C27.9 37.5 27.5 36.1 26.9 35.5 26.3 34.9 25.3 34.5 23.8 34.5L20.8 34.5Z"/><path d="M67.3 36 67.3 45C67.3 46.7 67.6 48 68.2 48.6 68.8 49.3 70 49.6 71.9 49.6L72.6 49.6 72.6 52.7 52 52.7 52 49.6 52.8 49.6C54.7 49.6 56 49.3 56.5 48.5 57.1 47.8 57.4 46.6 57.4 44.9L57.4 22.3C57.4 20.6 57.1 19.3 56.5 18.6 55.9 17.9 54.7 17.6 52.8 17.6L52 17.6 52 14.5 70.7 14.5C74.1 14.5 76.6 14.6 78.1 14.8 79.7 15 81.2 15.6 82.7 16.4 84.2 17.3 85.4 18.4 86.3 19.9 87.2 21.4 87.6 23 87.6 24.7 87.6 29.2 85 32.4 79.9 34 81.3 34.9 83.4 37.6 86.3 42.1 88.6 45.6 90.2 47.7 91.1 48.5 92.1 49.2 93.1 49.6 94.3 49.6L94.3 52.7 82.4 52.7C81.3 51.4 79.3 48.1 76.3 42.8 74.8 40.1 73.8 38.4 73.2 37.6 72.6 36.8 72 36.3 71.4 36.1 70.8 35.9 69.4 35.8 67.3 35.8M67.3 32.6C70.5 32.6 72.6 32.4 73.7 32 74.8 31.6 75.7 30.8 76.3 29.7 76.9 28.6 77.3 27.1 77.3 25.2 77.3 22.5 76.7 20.7 75.4 19.6 74.1 18.5 71.9 18.1 68.8 18.1 65.7 18.1 67.9 18.1 67.3 18.1L67.3 32.5Z"/><path d="M123.6 34.6 123.6 44C123.6 45.8 123.6 47 123.9 47.5 124.1 48.1 124.7 48.5 125.6 48.9 126.5 49.3 127.9 49.5 129.7 49.5 131.5 49.5 134 49.2 135.2 48.6 136.4 48 137.4 46.9 138.4 45.3 139.3 43.7 140 42.1 140.4 40.3L143.6 40.3 143.3 52.8 108.4 52.8 108.4 49.7 109.1 49.7C111 49.7 112.2 49.3 112.8 48.6 113.4 47.9 113.7 46.7 113.7 45L113.7 22.3C113.7 20.6 113.4 19.3 112.8 18.7 112.2 18 111 17.7 109.1 17.7L108.4 17.7 108.4 14.6 141 14.6 141.6 24.5 138.4 24.5C137.8 22.8 137.2 21.4 136.5 20.4 135.8 19.4 135.1 18.7 134.4 18.4 133.7 18.1 132.5 18 130.8 18L123.7 18 123.7 31.2 127.3 31.2C129 31.2 130.1 30.9 130.7 30.2 131.3 29.6 131.6 28.3 131.6 26.4L134.8 26.4 134.8 39.4 131.6 39.4 131.6 38.9C131.6 37.8 131.4 36.8 130.9 35.9 130.4 35 129.3 34.6 127.4 34.6L123.6 34.6Z"/><path d="M168.8 25.6 168.8 43.2C168.8 46 169.3 47.8 170.3 48.6 171.3 49.4 172.6 49.8 174.2 49.8L174.2 52.9 159.9 52.9 159.9 49.8C161.1 49.8 162.2 49.5 163.1 48.9 164 48.3 164.6 47.6 164.8 46.8 165 46 165.2 44.8 165.2 43.1L165.2 23.6C165.2 19.7 163.4 17.8 159.7 17.8L159.7 14.7 172.6 14.7 193.5 38.1 193.5 24.1C193.5 19.9 191.7 17.8 188.2 17.8L188.2 14.7 201.9 14.7 201.9 17.8C200.9 17.8 200 18.1 199.2 18.6 198.4 19.1 197.8 19.8 197.5 20.6 197.2 21.4 197.1 22.6 197.1 24.2L197.1 53.5 193.5 53.5 168.7 25.5Z"/><path d="M255.9 38.2 255.9 52.5 252.8 52.5C252.4 51 251.9 49.8 251.2 48.8 248 52 243.8 53.6 238.6 53.6 233.4 53.6 227.9 51.7 224.4 47.8 220.8 43.9 219.1 39.3 219.1 34 219.1 28.7 220.9 24.1 224.4 20 227.9 15.9 232.8 13.9 239 13.9 245.2 13.9 247.6 15.4 250.8 18.5 251.2 17.5 251.6 16.4 252 15.1L255.1 15.1 255.5 29.2 252.4 29.2C251.5 25.4 250 22.5 247.9 20.5 245.8 18.5 243.3 17.6 240.4 17.6 237.5 17.6 234.6 18.9 232.9 21.5 231.2 24.1 230.4 28.1 230.4 33.6 230.4 39.1 230.7 40.5 231.3 42.8 231.9 45.1 233.1 46.8 234.9 48 236.7 49.2 238.6 49.8 240.7 49.8 242.8 49.8 246 48.8 248.1 46.9 250.3 45 251.8 42 252.8 38.1L255.9 38.1Z"/><path d="M289.1 34.6 289.1 45.1C289.1 46.9 289.4 48.1 290 48.8 290.6 49.5 292 49.8 294 49.8L294 52.9 274.1 52.9 274.1 49.8C276.1 49.8 277.4 49.5 278.1 48.9 278.8 48.3 279.1 47 279.1 45.2L279.1 22.6C279.1 20.8 278.8 19.6 278.2 18.9 277.6 18.2 276.2 17.9 274.1 17.9L274.1 14.8 294 14.8 294 17.9C292 17.9 290.7 18.2 290 18.9 289.4 19.6 289 20.8 289 22.6L289 31.2 304.7 31.2 304.7 22.6C304.7 20.8 304.4 19.6 303.8 18.9 303.2 18.2 301.9 17.9 299.9 17.9L299.9 14.8 319.8 14.8 319.8 17.9C317.8 17.9 316.4 18.2 315.8 18.8 315.1 19.4 314.8 20.7 314.8 22.6L314.8 45.2C314.8 47 315.1 48.3 315.8 48.9 316.4 49.5 317.8 49.9 319.9 49.9L319.9 53 300 53 300 49.9C302 49.9 303.3 49.6 303.9 48.9 304.5 48.2 304.8 47 304.8 45.2L304.8 34.7 289.1 34.7Z"/><path d="M387.2 32.6C391 33.3 393.8 34.5 395.7 36.2 397.6 37.9 398.5 40.2 398.5 42.9 398.5 45.6 397.3 48.4 394.9 50.2 392.5 52 388.5 52.9 382.9 52.9L362.9 52.9 362.9 49.8C364.9 49.8 366.2 49.5 366.9 48.9 367.6 48.3 367.9 47 367.9 45.2L367.9 22.8C367.9 21 367.6 19.8 367 19.1 366.4 18.4 365 18.1 362.9 18.1L362.9 15 377.6 14.6 379.7 14.6C386.3 14.6 390.8 15.4 393.2 17.1 395.6 18.7 396.8 21 396.8 23.8 396.8 26.6 396 27.8 394.4 29.2 392.8 30.7 390.4 31.8 387.2 32.7M377.8 30.9 379.7 30.9C381.8 30.9 383.3 30.4 384.3 29.4 385.3 28.4 385.8 26.8 385.8 24.4 385.8 22 385.5 21.2 384.8 20.2 384.2 19.2 383.3 18.5 382.3 18.2 381.3 17.9 379.7 17.7 377.7 17.7L377.7 30.9ZM377.8 34.4 377.8 45.2C377.8 46.3 377.9 47.1 378.1 47.6 378.3 48.1 378.7 48.6 379.4 49 380 49.4 380.9 49.6 382.1 49.6 383.9 49.6 385.2 49 386.1 47.7 387 46.4 387.4 44.6 387.4 42 387.4 39.4 387.1 38.4 386.5 37.3 385.9 36.2 385.1 35.4 384.1 35 383.1 34.6 381.6 34.4 379.6 34.4L377.8 34.4Z"/><path d="M450.2 40.2 450 52.9 415.2 52.9 415.2 49.8 415.8 49.8C417.7 49.8 419 49.4 419.5 48.7 420.1 48 420.4 46.8 420.4 45.1L420.4 22.5C420.4 20.8 420.1 19.5 419.5 18.8 418.9 18.1 417.7 17.8 415.8 17.8L415.2 17.8 415.2 14.7 435.7 14.7 435.7 17.8 434.9 17.8C433 17.8 431.7 18.2 431.2 18.9 430.6 19.6 430.3 20.8 430.3 22.5L430.3 44.3C430.3 45.9 430.3 47 430.6 47.5 430.8 48 431.3 48.5 432.1 48.9 432.9 49.3 434.3 49.5 436.3 49.5 439.6 49.5 442.1 48.7 443.8 47 445.5 45.3 446.6 43.1 447.2 40.2L450.2 40.2Z"/><path d="M465.6 33.7C465.6 30.3 466.6 26.9 468.5 23.6 470.4 20.3 473 17.9 476.3 16.3 479.6 14.7 483.1 13.9 486.8 13.9 493.5 13.9 498.8 15.8 502.6 19.7 506.4 23.6 508.3 28.3 508.3 34 508.3 39.7 506.4 44 502.6 47.8 498.8 51.6 493.6 53.6 487 53.6 480.4 53.6 478.5 52.7 475.1 50.8 471.6 48.9 469.2 46.3 467.7 43.1 466.2 39.9 465.5 36.7 465.5 33.6M477.3 33.4C477.3 39.3 478.1 43.5 479.7 46.1 481.3 48.7 483.6 50 486.7 50 489.8 50 492.4 48.8 494.1 46.4 495.8 44 496.6 39.9 496.6 33.9 496.6 27.9 495.8 24.4 494.3 21.7 492.8 19 490.3 17.7 486.9 17.7 483.5 17.7 481.3 19 479.7 21.4 478.1 23.9 477.3 27.9 477.3 33.3"/><path d="M526.5 33.7C526.5 30.3 527.5 26.9 529.4 23.6 531.3 20.3 533.9 17.9 537.2 16.3 540.5 14.7 544 13.9 547.7 13.9 554.4 13.9 559.7 15.8 563.5 19.7 567.3 23.6 569.2 28.3 569.2 34 569.2 39.7 567.3 44 563.5 47.8 559.7 51.6 554.5 53.6 547.9 53.6 541.3 53.6 539.4 52.7 536 50.8 532.5 48.9 530.1 46.3 528.6 43.1 527.1 39.9 526.4 36.7 526.4 33.6M538.3 33.4C538.3 39.3 539.1 43.5 540.7 46.1 542.3 48.7 544.6 50 547.7 50 550.8 50 553.4 48.8 555.1 46.4 556.8 44 557.6 39.9 557.6 33.9 557.6 27.9 556.8 24.4 555.3 21.7 553.8 19 551.3 17.7 547.9 17.7 544.5 17.7 542.3 19 540.7 21.4 539.1 23.9 538.3 27.9 538.3 33.3"/><path d="M608.7 52.9 594.5 23.1 594.5 42.9C594.5 44.7 594.5 46 594.9 46.8 595.3 47.6 595.7 48.3 596.6 48.9 597.5 49.5 598.6 49.8 599.9 49.8L599.9 52.9 586.1 52.9 586.1 49.8C587.3 49.8 588.3 49.5 589.2 48.9 590.1 48.3 590.6 47.5 590.8 46.7 591 45.9 591.1 44.6 591.1 42.8L591.1 22.7C591.1 20.8 590.8 19.5 590.1 18.9 589.4 18.2 588.1 17.9 586.1 17.9L586.1 14.8 601.4 14.8 613.2 39.9 625.1 14.8 640.5 14.8 640.5 17.9 639.7 17.9C637.8 17.9 636.5 18.2 636 19 635.4 19.7 635.1 20.9 635.1 22.6L635.1 45.2C635.1 46.9 635.4 48.2 636 48.9 636.6 49.6 637.8 49.9 639.7 49.9L640.6 49.9 640.6 53 619.8 53 619.8 49.9 620.6 49.9C622.5 49.9 623.7 49.5 624.3 48.8 624.9 48.1 625.2 46.9 625.2 45.2L625.2 22.7 611.1 53 608.7 53Z"/></svg>
+  </a>
+  <ul class="nav__links nav__links--right">
+    <li><a href="#">NOTRE HISTOIRE</a></li>
+    <li><button class="nav__search" aria-label="Rechercher"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="6"/><path d="M12 12l4.5 4.5"/></svg></button></li>
+    <li><a href="cart.html" class="nav__cart" aria-label="Panier"><svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h18l-1.5 13H2.5L1 7z"/><path d="M7 7V4a3 3 0 0 1 6 0v3"/></svg><span class="nav__cart-count">3</span></a></li>
+  </ul>
+  <div class="nav__mobile-icons">
+    <a href="cart.html" class="nav__cart nav__cart--mobile" aria-label="Panier">
+      <svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M1 7h18l-1.5 13H2.5L1 7z"/>
+        <path d="M7 7V4a3 3 0 0 1 6 0v3"/>
+      </svg>
+      <span class="nav__cart-count">3</span>
+    </a>
+  </div>
+  <div class="nav__hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('active');this.classList.toggle('active')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu">
+  <a href="collection.html">COLLECTION</a>
+  <a href="la-maison.html">LA MAISON</a>
+  <a href="#">SAVOIR-FAIRE</a>
+  <a href="#">NOTRE HISTOIRE</a>
+  <a href="cart.html">PANIER</a>
+</div>
+
+<!-- ============================================
+     MAIN PRODUCT
+     ============================================ -->
+<section class="pdp">
+  <div class="pdp__grid">
+
+    <!-- Left: Gallery -->
+    <div class="pdp__gallery">
+      <div class="pdp__main-image" data-cursor="Zoom">
+        <div class="pdp__bottle-hero" id="mainImage">
+          <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut — French Bloom" style="width:100%;height:100%;object-fit:contain;padding:2rem;">
+        </div>
+      </div>
+      <div class="pdp__thumbs">
+        <div class="pdp__thumb active" data-index="0">
+          <img src="assets/bottles/extra-brut.png"
+               alt="L'Extra Brut packshot" loading="lazy" style="object-fit:contain;padding:0.5rem;background:var(--blanc);">
+        </div>
+        <div class="pdp__thumb" data-index="1">
+          <img src="assets/lifestyle/lifestyle-dining.jpg"
+               alt="Lifestyle dining" loading="lazy">
+        </div>
+        <div class="pdp__thumb" data-index="2">
+          <img src="assets/lifestyle/lifestyle-service.jpg"
+               alt="Service" loading="lazy">
+        </div>
+        <div class="pdp__thumb" data-index="3">
+          <img src="assets/lifestyle/lifestyle-convivial.jpg"
+               alt="Convivial" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Product Info -->
+    <div class="pdp__info">
+      <p class="pdp__breadcrumb">
+        <a href="collection.html">Collection</a>
+        <span class="sep">/</span>
+        <span>Extra Brut</span>
+      </p>
+      <span class="pdp__badge">Gastronomique</span>
+      <h1 class="pdp__name">L'EXTRA BRUT</h1>
+      <p class="pdp__type">Effervescent sans alcool 0.0%</p>
+      <div class="pdp__pills">
+        <span class="pdp__pill">0.0% Alcool</span>
+        <span class="pdp__pill">Bio</span>
+        <span class="pdp__pill">Vegan</span>
+        <span class="pdp__pill">Sans sulfite</span>
+      </div>
+      <div class="pdp__social-proof">
+        <div class="pdp__stars">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--or)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--or)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--or)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--or)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--or)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span class="pdp__reviews-count">4.8/5 — 142 avis</span>
+      </div>
+      <div class="pdp__credentials-inline">
+        <span class="pdp__credential-tag">Meilleur Effervescent 2024</span>
+        <span class="pdp__credential-sep">·</span>
+        <span class="pdp__credential-tag">Partenaire Officiel F1®</span>
+        <span class="pdp__credential-sep">·</span>
+        <span class="pdp__credential-tag">Soutenu par LVMH</span>
+      </div>
+      <p class="pdp__price">49,00 &euro;</p>
+      <p class="pdp__installment">ou 3 × 16,33 € sans frais avec <span style="font-weight:600;">Alma</span></p>
+      <p class="pdp__desc">
+        &Eacute;labor&eacute; &agrave; partir de 100% de Chardonnay biologique de Limoux. Complexe, vibrant, min&eacute;ral. Sans sulfite ni sucre ajout&eacute;.
+      </p>
+
+      <!-- Quantity -->
+      <div class="pdp__qty">
+        <span class="pdp__qty-label">Quantit&eacute;</span>
+        <button class="pdp__qty-btn" id="qtyMinus" aria-label="Diminuer la quantit&eacute;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="7" x2="11" y2="7"/></svg>
+        </button>
+        <div class="pdp__qty-val" id="qtyVal">1</div>
+        <button class="pdp__qty-btn" id="qtyPlus" aria-label="Augmenter la quantit&eacute;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="7" x2="11" y2="7"/><line x1="7" y1="3" x2="7" y2="11"/></svg>
+        </button>
+      </div>
+
+      <!-- CTA Buttons -->
+      <button class="pdp__atc" id="atcBtn">Ajouter au panier</button>
+      <button class="pdp__buy">Acheter maintenant</button>
+
+      <p class="pdp__payments">Visa &middot; MC &middot; Amex &middot; Apple Pay &middot; PayPal</p>
+
+      <ul class="pdp__reassurance">
+        <li>
+          <svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 3.5"/></svg>
+          Livraison offerte d&egrave;s 60&euro;
+        </li>
+        <li>
+          <svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 3.5"/></svg>
+          Exp&eacute;dition sous 48h
+        </li>
+        <li>
+          <svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 3.5"/></svg>
+          0.0% alcool certifi&eacute;
+        </li>
+      </ul>
+
+      <!-- Product Accordions -->
+      <div class="pdp__accordions">
+        <div class="pdp__accordion">
+          <button class="pdp__accordion-trigger">
+            <span>Composition &amp; cépages</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+          </button>
+          <div class="pdp__accordion-content">
+            <p>100% Chardonnay biologique, cultivé à Limoux au pied des Pyrénées. Vinification traditionnelle champenoise. Sans sulfite ni sucre ajouté. Désalcoolisé par distillation sous vide à basse température.</p>
+          </div>
+        </div>
+        <div class="pdp__accordion">
+          <button class="pdp__accordion-trigger">
+            <span>L'art de servir</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+          </button>
+          <div class="pdp__accordion-content">
+            <p>Servir très frais entre 4°C et 6°C, idéalement en flûte tulipe pour concentrer les arômes délicats de fleurs blanches et d'agrumes. Parfait à l'apéritif ou en accompagnement de mets fins.</p>
+          </div>
+        </div>
+        <div class="pdp__accordion">
+          <button class="pdp__accordion-trigger">
+            <span>Livraison &amp; retours</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+          </button>
+          <div class="pdp__accordion-content">
+            <p>Livraison offerte dès 60€ d'achat. Expédition sous 48h ouvrées. Emballage isotherme premium. Retours gratuits sous 14 jours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="credentials">
+  <div class="credentials__inner">
+    <div class="credentials__item">
+      <span class="credentials__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="var(--or)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+      <span class="credentials__text">3× Meilleur Effervescent Sans Alcool</span>
+      <span class="credentials__source">World Beverage Innovation Awards</span>
+    </div>
+    <div class="credentials__divider"></div>
+    <div class="credentials__item">
+      <span class="credentials__text">Partenaire Officiel</span>
+      <span class="credentials__source">Formule 1®</span>
+    </div>
+    <div class="credentials__divider"></div>
+    <div class="credentials__item">
+      <span class="credentials__text">Soutenu par</span>
+      <span class="credentials__source">Moët Hennessy · LVMH</span>
+    </div>
+  </div>
+  <div class="credentials__press">
+    <span class="credentials__press-label">Vu dans</span>
+    <div class="credentials__logos">
+      <span>VOGUE</span><span>TATLER</span><span>THE NEW YORK TIMES</span><span>LE MONDE</span><span>ELLE</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     TASTING NOTES
+     ============================================ -->
+<section class="tasting">
+  <h2 class="tasting__title">Complexe, vibrant &amp; min&eacute;ral</h2>
+  <div class="tasting__grid">
+
+    <div class="tasting__card">
+      <!-- Eye icon -->
+      <svg class="tasting__icon" viewBox="0 0 32 32">
+        <path d="M2 16s5.5-10 14-10 14 10 14 10-5.5 10-14 10S2 16 2 16z"/>
+        <circle cx="16" cy="16" r="5"/>
+      </svg>
+      <p class="tasting__card-title">La Robe</p>
+      <div class="tasting__color-circle"></div>
+      <p class="tasting__card-body">Un or jaune lumineux aux reflets &eacute;clatants</p>
+    </div>
+
+    <div class="tasting__card">
+      <!-- Nose icon -->
+      <svg class="tasting__icon" viewBox="0 0 32 32">
+        <path d="M16 4c-2 0-4 2-4 5v8c0 4 2 7 4 9 2-2 4-5 4-9V9c0-3-2-5-4-5z"/>
+        <path d="M12 22c-2 1-4 2-4 4s2 2 4 2"/>
+        <path d="M20 22c2 1 4 2 4 4s-2 2-4 2"/>
+      </svg>
+      <p class="tasting__card-title">Le Nez</p>
+      <p class="tasting__card-body">D&eacute;licates notes de fleurs blanches et d'abricots secs</p>
+    </div>
+
+    <div class="tasting__card">
+      <!-- Lips icon -->
+      <svg class="tasting__icon" viewBox="0 0 32 32">
+        <path d="M4 16c0 0 4 8 12 8s12-8 12-8"/>
+        <path d="M4 16c0 0 4-6 12-6s12 6 12 6"/>
+        <line x1="16" y1="10" x2="16" y2="24"/>
+      </svg>
+      <p class="tasting__card-title">La Bouche</p>
+      <p class="tasting__card-body">Min&eacute;ralit&eacute; vibrante, acidit&eacute; franche, finale saline raffin&eacute;e</p>
+    </div>
+
+    <div class="tasting__card">
+      <!-- Thermometer icon -->
+      <svg class="tasting__icon" viewBox="0 0 32 32">
+        <path d="M16 3v18"/>
+        <path d="M12 21V8a4 4 0 0 1 8 0v13a6 6 0 1 1-8 0z"/>
+        <circle cx="16" cy="24" r="2.5"/>
+        <line x1="20" y1="12" x2="23" y2="12"/>
+        <line x1="20" y1="16" x2="22" y2="16"/>
+      </svg>
+      <p class="tasting__card-title">Servir</p>
+      <p class="tasting__card-body">Tr&egrave;s frais, 4-6&deg;C, en fl&ucirc;te tulipe</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================
+     WELLNESS FIGURES
+     ============================================ -->
+<section class="wellness">
+  <div class="wellness__header">
+    <h2 class="wellness__title">L'essentiel, rien de plus</h2>
+  </div>
+  <div class="wellness__grid">
+    <div class="wellness__item">
+      <div class="wellness__value" data-count="0.0" data-suffix="%" data-decimal="1">0</div>
+      <div class="wellness__label">alcool</div>
+    </div>
+    <div class="wellness__item">
+      <div class="wellness__value" data-count="0" data-suffix="">0</div>
+      <div class="wellness__label">sulfite</div>
+    </div>
+    <div class="wellness__item">
+      <div class="wellness__value" data-count="0" data-suffix="">0</div>
+      <div class="wellness__label">sucre ajout&eacute;</div>
+    </div>
+    <div class="wellness__item">
+      <div class="wellness__value" data-count="1" data-suffix=" kcal">0</div>
+      <div class="wellness__label">par verre</div>
+    </div>
+    <div class="wellness__item">
+      <div class="wellness__value" data-count="100" data-suffix="%" data-decimal="0">0</div>
+      <div class="wellness__label">biologique</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     TERROIR
+     ============================================ -->
+<section class="terroir">
+  <div class="terroir__bg">
+    <img src="assets/lifestyle/hero-mediterranean.jpg"
+         alt="Vignoble de Limoux" loading="lazy">
+  </div>
+  <div class="terroir__overlay"></div>
+  <div class="terroir__content">
+    <p class="terroir__label">Terroir</p>
+    <h2 class="terroir__title">Limoux, berceau de l'effervescent</h2>
+    <p class="terroir__body">
+      Au pied des Pyr&eacute;n&eacute;es, &agrave; 300 m&egrave;tres d'altitude, les vignobles de Limoux b&eacute;n&eacute;ficient d'un terroir d'exception. L'amplitude thermique entre nuits fra&icirc;ches et journ&eacute;es ensoleill&eacute;es conf&egrave;re au Chardonnay biologique une complexit&eacute; aromatique unique, fondation de L'Extra Brut.
+    </p>
+    <p class="terroir__quote">
+      &laquo;&nbsp;Notre Extra Brut est l'expression parfaite du terroir de Limoux.&nbsp;&raquo;
+      <span class="terroir__quote-author">Rodolphe Frerejean-Taittinger, CEO</span>
+    </p>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOD PAIRING
+     ============================================ -->
+<section class="pairing">
+  <div class="pairing__header">
+    <h2 class="pairing__title">Accords gastronomiques</h2>
+  </div>
+  <div class="pairing__grid">
+
+    <div class="pairing__card" data-cursor="Voir">
+      <img src="assets/lifestyle/lifestyle-dining.jpg"
+           alt="Fruits de mer" loading="lazy">
+      <div class="pairing__card-overlay">
+        <span class="pairing__card-name">Fruits de mer &amp; crustac&eacute;s</span>
+      </div>
+    </div>
+
+    <div class="pairing__card" data-cursor="Voir">
+      <img src="assets/lifestyle/lifestyle-dinner.jpg"
+           alt="Fromages affin&eacute;s" loading="lazy">
+      <div class="pairing__card-overlay">
+        <span class="pairing__card-name">Fromages affin&eacute;s</span>
+      </div>
+    </div>
+
+    <div class="pairing__card" data-cursor="Voir">
+      <img src="assets/lifestyle/lifestyle-festive.jpg"
+           alt="Cuisine japonaise" loading="lazy">
+      <div class="pairing__card-overlay">
+        <span class="pairing__card-name">Cuisine japonaise</span>
+      </div>
+    </div>
+
+  </div>
+  <p class="pairing__sub">L'Extra Brut avec sa min&eacute;ralit&eacute; vibrante sublime chaque plat sans jamais le dominer.</p>
+</section>
+
+<!-- ============================================
+     PRESS QUOTE
+     ============================================ -->
+<section class="press-quote">
+  <span class="press-quote__mark">&ldquo;</span>
+  <div class="press-quote__content">
+    <p class="press-quote__text">&laquo;&nbsp;De la profondeur, des ar&ocirc;mes floraux et une belle trame vineuse&hellip; avec une finale droite, pure et &eacute;clatante.&nbsp;&raquo;</p>
+    <p class="press-quote__source">&mdash; Eric Asimov, The New York Times</p>
+  </div>
+</section>
+
+<!-- ============================================
+     CROSS-SELL
+     ============================================ -->
+<section class="cross-sell">
+  <h2 class="cross-sell__title">Vous aimerez aussi</h2>
+  <div class="cross-sell__grid">
+
+    <div class="product-card" data-cursor="Voir">
+      <span class="product-card__badge">Best-Seller</span>
+      <div class="product-card__image">
+        <img src="assets/bottles/le-blanc.png" alt="Le Blanc">
+      </div>
+      <h3 class="product-card__name">Le Blanc</h3>
+      <p class="product-card__type">Effervescent sans alcool 0.0%</p>
+      <p class="product-card__price">29,00 &euro;</p>
+      <button class="product-card__cta">Ajouter au panier</button>
+    </div>
+
+    <div class="product-card" data-cursor="Voir">
+      <span class="product-card__badge">Meilleur au monde 2025</span>
+      <div class="product-card__image">
+        <img src="assets/bottles/le-rose.png" alt="Le Ros&eacute;">
+      </div>
+      <h3 class="product-card__name">Le Ros&eacute;</h3>
+      <p class="product-card__type">Effervescent sans alcool 0.0%</p>
+      <p class="product-card__price">34,00 &euro;</p>
+      <button class="product-card__cta">Ajouter au panier</button>
+    </div>
+
+    <div class="product-card" data-cursor="Voir">
+      <span class="product-card__badge">&Eacute;dition limit&eacute;e</span>
+      <div class="product-card__image">
+        <img src="assets/bottles/la-cuvee.png" alt="La Cuv&eacute;e Vintage 2023">
+      </div>
+      <h3 class="product-card__name">La Cuv&eacute;e Vintage 2023</h3>
+      <p class="product-card__type">Blanc de Blancs sans alcool 0.0%</p>
+      <p class="product-card__price">109,00 &euro;</p>
+      <button class="product-card__cta">Ajouter au panier</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================
+     WHY FRENCH BLOOM
+     ============================================ -->
+<section class="why">
+  <div class="why__grid">
+
+    <div class="why__card">
+      <!-- Leaf icon -->
+      <svg class="why__icon" viewBox="0 0 40 40">
+        <path d="M10 34c0 0 2-16 14-22C30 8 34 4 34 4s-2 16-14 22"/>
+        <path d="M10 34c4-4 10-8 18-14"/>
+        <path d="M10 34c0 0 0-6 2-10"/>
+      </svg>
+      <p class="why__card-title">Biologique</p>
+      <p class="why__card-body">Raisins certifi&eacute;s bio, cultiv&eacute;s dans le respect de la terre</p>
+    </div>
+
+    <div class="why__card">
+      <!-- Bottle icon -->
+      <svg class="why__icon" viewBox="0 0 40 40">
+        <rect x="13" y="16" width="14" height="20" rx="2"/>
+        <path d="M16 16V8h8v8"/>
+        <path d="M18 4h4v4h-4z"/>
+        <line x1="16" y1="24" x2="24" y2="24"/>
+      </svg>
+      <p class="why__card-title">Sans alcool 0.0%</p>
+      <p class="why__card-body">D&eacute;salcoolisation douce, pr&eacute;servant tous les ar&ocirc;mes</p>
+    </div>
+
+    <div class="why__card">
+      <!-- Trophy icon -->
+      <svg class="why__icon" viewBox="0 0 40 40">
+        <path d="M12 6h16v12a8 8 0 0 1-16 0V6z"/>
+        <path d="M12 10H6a2 2 0 0 0-2 2v2a4 4 0 0 0 4 4h4"/>
+        <path d="M28 10h6a2 2 0 0 1 2 2v2a4 4 0 0 1-4 4h-4"/>
+        <line x1="20" y1="26" x2="20" y2="32"/>
+        <line x1="14" y1="32" x2="26" y2="32"/>
+        <line x1="14" y1="36" x2="26" y2="36"/>
+      </svg>
+      <p class="why__card-title">Triple champion du monde</p>
+      <p class="why__card-body">3 fois meilleur effervescent sans alcool au monde</p>
+    </div>
+
+    <div class="why__card">
+      <!-- Diamond icon -->
+      <svg class="why__icon" viewBox="0 0 40 40">
+        <polygon points="20,4 36,16 20,36 4,16"/>
+        <polyline points="4,16 20,22 36,16"/>
+        <line x1="20" y1="4" x2="20" y2="22"/>
+        <polyline points="10,4 4,16"/>
+        <polyline points="30,4 36,16"/>
+      </svg>
+      <p class="why__card-title">Adoss&eacute; &agrave; Mo&euml;t Hennessy</p>
+      <p class="why__card-body">Un partenariat strat&eacute;gique avec le leader mondial du luxe</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <div class="footer__logo">French Bloom</div>
+  <div class="footer__grid">
+    <div class="footer__col">
+      <p class="footer__col-title">Boutique</p>
+      <ul>
+        <li><a href="#">Le Blanc</a></li>
+        <li><a href="#">Le Ros&eacute;</a></li>
+        <li><a href="product.html">L'Extra Brut</a></li>
+        <li><a href="#">La Cuv&eacute;e Vintage</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">La Maison</p>
+      <ul>
+        <li><a href="#">Savoir-Faire</a></li>
+        <li><a href="#">Histoire</a></li>
+        <li><a href="#">Terroir</a></li>
+        <li><a href="#">Formule 1</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Aide</p>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Livraison</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">CGV</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Suivez-nous</p>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer__badges">0.0% Alcool &middot; Bio &middot; Vegan &middot; Sans sulfite</p>
+  <hr class="footer__sep">
+  <p class="footer__copy">&copy; 2025 French Bloom &mdash; L'effervescence r&eacute;invent&eacute;e.</p>
+</footer>
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ---- Lenis ---- */
+  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+
+  /* ---- Page reveal ---- */
+  gsap.to('.page-reveal', { scaleY: 0, transformOrigin: 'top', duration: 1, ease: 'power4.inOut', delay: 0.2 });
+
+  /* ---- Nav scroll ---- */
+  ScrollTrigger.create({ start: 'top -80', end: 99999, toggleClass: { targets: '.nav', className: 'scrolled' } });
+
+  /* ---- Custom cursor ---- */
+  const cursor = document.querySelector('.cursor');
+  const cursorLabel = cursor?.querySelector('.cursor__label');
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    gsap.ticker.add(() => {
+      cx += (tx - cx) * 0.15;
+      cy += (ty - cy) * 0.15;
+      gsap.set(cursor, { x: cx, y: cy });
+    });
+    document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.classList.add('hover');
+        const label = el.getAttribute('data-cursor');
+        if (label && cursorLabel) cursorLabel.textContent = label;
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hover');
+        if (cursorLabel) cursorLabel.textContent = 'Voir';
+      });
+    });
+  } else if (cursor) { cursor.style.display = 'none'; document.body.style.cursor = 'auto'; }
+
+  /* ============================================
+     THUMBNAIL GALLERY
+     ============================================ */
+  const mainImageContainer = document.getElementById('mainImage');
+  const thumbs = document.querySelectorAll('.pdp__thumb');
+  const galleryImages = [
+    'assets/bottles/extra-brut.png',
+    'assets/lifestyle/lifestyle-dining.jpg',
+    'assets/lifestyle/lifestyle-service.jpg',
+    'assets/lifestyle/lifestyle-convivial.jpg'
+  ];
+
+  thumbs.forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      const idx = parseInt(thumb.getAttribute('data-index'));
+      thumbs.forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+
+      // Crossfade
+      mainImageContainer.style.opacity = '0';
+      setTimeout(() => {
+        if (idx === 0) {
+          mainImageContainer.innerHTML = '<img src="' + galleryImages[idx] + '" alt="L\'Extra Brut — French Bloom" style="width:100%;height:100%;object-fit:contain;padding:2rem;">';
+        } else {
+          mainImageContainer.innerHTML = '<img src="' + galleryImages[idx] + '" alt="French Bloom L\'Extra Brut" style="width:100%;height:100%;object-fit:cover;">';
+        }
+        mainImageContainer.style.opacity = '1';
+      }, 300);
+    });
+  });
+
+  // Smooth crossfade via CSS on the main container
+  mainImageContainer.style.transition = 'opacity 0.5s ease';
+
+  /* ============================================
+     QUANTITY SELECTOR
+     ============================================ */
+  let qty = 1;
+  const qtyVal = document.getElementById('qtyVal');
+  const qtyMinus = document.getElementById('qtyMinus');
+  const qtyPlus = document.getElementById('qtyPlus');
+
+  qtyMinus.addEventListener('click', () => {
+    if (qty > 1) { qty--; qtyVal.textContent = qty; }
+  });
+  qtyPlus.addEventListener('click', () => {
+    if (qty < 12) { qty++; qtyVal.textContent = qty; }
+  });
+
+  /* ============================================
+     ADD TO CART BUTTON
+     ============================================ */
+  const atcBtn = document.getElementById('atcBtn');
+  let atcTimeout = null;
+  atcBtn.addEventListener('click', () => {
+    if (atcTimeout) clearTimeout(atcTimeout);
+    atcBtn.classList.add('added');
+    atcBtn.textContent = '\u2713 AJOUT\u00C9';
+    atcBtn.style.animation = 'atcPulse 0.4s ease';
+    atcTimeout = setTimeout(() => {
+      atcBtn.classList.remove('added');
+      atcBtn.textContent = 'AJOUTER AU PANIER';
+      atcBtn.style.animation = '';
+    }, 2000);
+  });
+
+  /* ============================================
+     GSAP SCROLL ANIMATIONS
+     ============================================ */
+
+  /* ---- PDP Info ---- */
+  gsap.to('.pdp__info', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.6 });
+  gsap.set('.pdp__info', { y: 40 });
+
+  /* ---- Gallery entrance ---- */
+  gsap.from('.pdp__main-image', { opacity: 0, y: 30, duration: 1, ease: 'power3.out', delay: 0.3 });
+  gsap.from('.pdp__thumbs', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.7 });
+
+  /* ---- Tasting ---- */
+  gsap.to('.tasting__title', { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: '.tasting', start: 'top 65%' } });
+  gsap.set('.tasting__title', { y: 50 });
+
+  gsap.utils.toArray('.tasting__card').forEach((card, i) => {
+    gsap.to(card, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.15, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 80%' } });
+    gsap.set(card, { y: 40 });
+  });
+
+  /* ---- Wellness ---- */
+  gsap.to('.wellness__title', { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: '.wellness', start: 'top 65%' } });
+  gsap.set('.wellness__title', { y: 40 });
+
+  gsap.utils.toArray('.wellness__item').forEach((item, i) => {
+    gsap.to(item, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.1, scrollTrigger: { trigger: '.wellness', start: 'top 60%' } });
+    gsap.set(item, { y: 30 });
+  });
+
+  // Counter animation
+  document.querySelectorAll('.wellness__value').forEach(el => {
+    const target = parseFloat(el.getAttribute('data-count'));
+    const suffix = el.getAttribute('data-suffix') || '';
+    const decimal = parseInt(el.getAttribute('data-decimal')) || 0;
+    const obj = { v: 0 };
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 75%',
+      once: true,
+      onEnter: () => {
+        gsap.to(obj, {
+          v: target,
+          duration: 2,
+          ease: 'power2.out',
+          snap: decimal ? undefined : { v: 1 },
+          onUpdate: () => { el.textContent = (decimal ? obj.v.toFixed(decimal) : Math.round(obj.v)) + suffix; }
+        });
+      }
+    });
+  });
+
+  /* ---- Terroir ---- */
+  gsap.to('.terroir__bg', { y: '20%', ease: 'none', scrollTrigger: { trigger: '.terroir', start: 'top bottom', end: 'bottom top', scrub: true } });
+  const tTl = gsap.timeline({ scrollTrigger: { trigger: '.terroir', start: 'top 60%' } });
+  tTl.to('.terroir__label', { opacity: 1, duration: 0.6 })
+     .to('.terroir__title', { opacity: 1, y: 0, duration: 0.8 }, '-=0.3')
+     .to('.terroir__body', { opacity: 0.85, y: 0, duration: 0.8 }, '-=0.4')
+     .to('.terroir__quote', { opacity: 1, duration: 0.8 }, '-=0.3');
+  gsap.set('.terroir__title', { y: 50 });
+  gsap.set('.terroir__body', { y: 30 });
+
+  /* ---- Pairing ---- */
+  gsap.to('.pairing__title', { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: '.pairing', start: 'top 65%' } });
+  gsap.set('.pairing__title', { y: 50 });
+
+  gsap.utils.toArray('.pairing__card').forEach((card, i) => {
+    gsap.to(card, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.15, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 80%' } });
+    gsap.set(card, { y: 40 });
+  });
+
+  gsap.to('.pairing__sub', { opacity: 0.85, y: 0, duration: 0.8, scrollTrigger: { trigger: '.pairing__sub', start: 'top 85%' } });
+  gsap.set('.pairing__sub', { y: 20 });
+
+  /* ---- Press Quote ---- */
+  gsap.to('.press-quote__text', { opacity: 1, y: 0, duration: 1, scrollTrigger: { trigger: '.press-quote', start: 'top 60%' } });
+  gsap.to('.press-quote__source', { opacity: 1, duration: 0.6, delay: 0.3, scrollTrigger: { trigger: '.press-quote', start: 'top 60%' } });
+  gsap.set('.press-quote__text', { y: 40 });
+
+  /* ---- Cross-sell ---- */
+  gsap.to('.cross-sell__title', { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: '.cross-sell', start: 'top 65%' } });
+  gsap.set('.cross-sell__title', { y: 50 });
+
+  gsap.utils.toArray('.cross-sell .product-card').forEach((card, i) => {
+    gsap.to(card, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.15, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 80%' } });
+    gsap.set(card, { y: 60 });
+  });
+
+  /* ---- Why French Bloom ---- */
+  gsap.utils.toArray('.why__card').forEach((card, i) => {
+    gsap.to(card, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.12, ease: 'power3.out', scrollTrigger: { trigger: '.why', start: 'top 65%' } });
+    gsap.set(card, { y: 40 });
+  });
+
+  // Accordion toggle
+  document.querySelectorAll('.pdp__accordion-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      trigger.parentElement.classList.toggle('open');
+    });
+  });
+
+  // Lightbox
+  const mainImage = document.querySelector('.pdp__main-image');
+  const lightbox = document.getElementById('lightbox');
+  if (mainImage && lightbox) {
+    mainImage.style.cursor = 'zoom-in';
+    mainImage.addEventListener('click', () => lightbox.classList.add('active'));
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('active'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.classList.remove('active'); });
+  }
+
+  // Sticky ATC mobile
+  const stickyBar = document.getElementById('stickyATC');
+  const mainATC = document.querySelector('.pdp__atc');
+  if (stickyBar && mainATC) {
+    const obs = new IntersectionObserver(([e]) => {
+      if (window.innerWidth <= 768) {
+        if (!e.isIntersecting) stickyBar.classList.add('visible');
+        else stickyBar.classList.remove('visible');
+      }
+    }, { threshold: 0 });
+    obs.observe(mainATC);
+  }
+
+  // Ambient Bubbles
+  (function() {
+    const bc = document.querySelector('.ambient-bubbles');
+    if (!bc) return;
+    function mkBubble() {
+      const el = document.createElement('div');
+      el.classList.add('bubble');
+      const s = Math.random() * 6 + 2;
+      el.style.cssText = 'width:'+s+'px;height:'+s+'px;left:'+Math.random()*100+'%;bottom:-20px';
+      bc.appendChild(el);
+      el.animate([
+        { transform:'translateY(0) translateX(0)', opacity:0 },
+        { opacity:0.4, offset:0.1 },
+        { opacity:0.2, offset:0.8 },
+        { transform:'translateY(-'+(window.innerHeight+40)+'px) translateX('+((Math.random()-0.5)*80)+'px)', opacity:0 }
+      ],{ duration:Math.random()*8000+6000, easing:'linear', fill:'forwards' }).onfinish = () => { el.remove(); mkBubble(); };
+    }
+    for(let i=0;i<12;i++) setTimeout(mkBubble, i*500);
+  })();
+
+})();
+</script>
+
+<div class="pdp__lightbox" id="lightbox">
+  <button class="pdp__lightbox-close" onclick="document.getElementById('lightbox').classList.remove('active')">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+  </button>
+  <img src="assets/bottles/extra-brut.png" alt="Vue détaillée" id="lightboxImg">
+</div>
+
+<div class="pdp__sticky-bar" id="stickyATC">
+  <div class="pdp__sticky-bar__inner">
+    <div class="pdp__sticky-bar__info">
+      <span class="pdp__sticky-bar__name">L'Extra Brut</span>
+      <span class="pdp__sticky-bar__price">49,00 €</span>
+    </div>
+    <button class="pdp__sticky-bar__btn" onclick="document.querySelector('.pdp__atc').click()">AJOUTER AU PANIER</button>
+  </div>
+</div>
+
+</body>
+</html>

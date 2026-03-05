@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>French Bloom — L'effervescence réinventée</title>
+
+<!-- French Bloom Brand Typography (local @font-face) -->
+
+<!-- GSAP 3 + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Lenis Smooth Scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<style>
+/* @font-face — French Bloom Brand Typography */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & DESIGN TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white-bloom:     #FCF5ED;
+  --blanc:           #FFFFFF;
+  --noir:            #1A1A1A;
+  --noir-doux:       #3A3A3A;
+  --or:              #D4B188;
+  --or-pale:         #E2C9A6;
+  --or-sombre:       #B89A6E;
+  --coral:           #EA5438;
+  --almond-green:    #ACB99C;
+  --gris:            #8A8A8A;
+  --gris-clair:      #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose:            #D4A094;
+  --rose-pale:       #E8C4B8;
+  --ease-luxe:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth:     cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-bounce:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-slow:   1.2s;
+  --duration-med:    0.7s;
+  --duration-fast:   0.35s;
+}
+
+html { font-size: 16px; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--white-bloom);
+  color: var(--noir);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: none;
+}
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+.cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--noir);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.35s var(--ease-luxe), height 0.35s var(--ease-luxe), background 0.3s, border 0.3s;
+}
+.cursor.hover {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1.5px solid var(--noir);
+}
+.cursor__label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--noir);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+.cursor.hover .cursor__label { opacity: 1; }
+
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor { display: none; }
+}
+
+/* ============================================
+   PAGE LOAD REVEAL
+   ============================================ */
+.page-reveal {
+  position: fixed;
+  inset: 0;
+  background: var(--blanc);
+  z-index: 10000;
+  transform-origin: bottom;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, h2, h3, h4 {
+  font-family: 'Begum', serif;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.subtitle, .quote, blockquote {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+}
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+a { color: inherit; text-decoration: none; }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 0 clamp(1.5rem, 3vw, 3rem);
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.5s var(--ease-smooth), height 0.5s var(--ease-smooth), border-color 0.5s;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  height: 60px;
+  border-bottom-color: var(--gris-clair);
+  border-radius: 0;
+}
+.nav__links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  flex: 1;
+}
+.nav__links--right { justify-content: flex-end; }
+.nav__links a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--noir);
+  opacity: 0.6;
+  transition: opacity 0.4s;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--or-sombre);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s var(--ease-luxe);
+}
+.nav__links a:hover { opacity: 1; }
+.nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
+/* Nav Icons — Search & Cart */
+.nav__search {
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: var(--noir); opacity: 0.6; transition: opacity 0.4s;
+}
+.nav__search:hover { opacity: 1; }
+.nav__cart {
+  position: relative; display: inline-flex; align-items: center;
+  color: var(--noir); opacity: 0.6; transition: opacity 0.4s;
+}
+.nav__cart:hover { opacity: 1; }
+.nav__cart-count {
+  position: absolute; top: -4px; right: -10px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--noir); color: var(--blanc);
+  font-family: 'Montserrat', sans-serif; font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.nav__logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0 2rem;
+  color: var(--noir);
+  transition: color 0.4s;
+}
+.nav__logo svg {
+  height: 14px;
+  width: auto;
+  fill: currentColor;
+}
+.nav__desktop-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav__desktop-links a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  transition: color 0.4s;
+  text-decoration: none;
+}
+.nav__desktop-links a:hover {
+  color: var(--noir);
+}
+.nav__mobile-icons {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+}
+.nav__mobile-icons .nav__cart--mobile {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--noir);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+.nav__mobile-icons .nav__cart--mobile:hover { opacity: 1; }
+.nav__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 101;
+}
+.nav__hamburger span {
+  width: 22px;
+  height: 1px;
+  background: var(--noir);
+  transition: transform 0.3s, opacity 0.3s;
+}
+.nav__hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.nav__hamburger.active span:nth-child(2) { opacity: 0; }
+.nav__hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+/* Mobile Menu Overlay */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--blanc);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-luxe);
+}
+.mobile-menu.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-menu a {
+  font-family: 'Begum', serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  opacity: 0.7;
+  transition: opacity 0.4s, color 0.4s;
+  text-decoration: none;
+}
+.mobile-menu a:hover {
+  opacity: 1;
+  color: var(--or-sombre);
+}
+
+/* ============================================
+   MEGA MENU DESKTOP
+   ============================================ */
+.nav__item--mega {
+  position: static;
+}
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: var(--blanc);
+  border-bottom: 1px solid var(--gris-clair);
+  padding: 2.5rem clamp(1.5rem, 3vw, 3rem);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.35s var(--ease-luxe), transform 0.35s var(--ease-luxe), visibility 0.35s;
+  z-index: 99;
+  pointer-events: none;
+}
+/* Bridge CSS — pont invisible entre le lien et le panneau */
+.mega-menu::before {
+  content: '';
+  position: absolute;
+  top: -25px;
+  left: 0;
+  width: 100%;
+  height: 25px;
+}
+.nav__item--mega:hover > .mega-menu,
+.nav__item--mega:focus-within > .mega-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: all;
+}
+/* Disable underline animation on mega-menu parent links */
+.nav__item--mega > a::after {
+  display: none;
+}
+.nav__item--mega > a {
+  transition: opacity 0.4s;
+}
+.nav__item--mega:hover > a {
+  opacity: 1;
+}
+
+/* — COLLECTION mega menu — */
+.mega-menu--collection .mega-menu__inner {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.mega-menu__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+.mega-menu__product {
+  text-align: center;
+  text-decoration: none;
+  color: var(--noir);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  transition: transform 0.4s var(--ease-luxe);
+}
+.mega-menu__product:hover {
+  transform: scale(1.04);
+}
+.mega-menu__product-img {
+  height: 160px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  mix-blend-mode: multiply;
+}
+.mega-menu__product-name {
+  font-family: 'Begum', serif;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.02em;
+}
+.mega-menu__product-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--noir-doux);
+  letter-spacing: 0.04em;
+}
+.mega-menu__feature {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+}
+.mega-menu__feature-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.mega-menu__feature-link {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(transparent, rgba(26,26,26,0.6));
+  text-decoration: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.mega-menu__feature-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--blanc);
+}
+
+/* — LA MAISON mega menu — */
+.mega-menu--maison .mega-menu__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.mega-menu__nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  padding: 1rem 0;
+}
+.mega-menu__nav-item {
+  text-decoration: none;
+  color: var(--noir);
+  display: block;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid rgba(212,206,196,0.3);
+  transition: border-color 0.3s;
+}
+.mega-menu__nav-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.mega-menu__nav-item:hover {
+  border-bottom-color: var(--or-sombre);
+}
+.mega-menu__nav-title {
+  font-family: 'Begum', serif;
+  font-size: 1.05rem;
+  margin-bottom: 0.3rem;
+  transition: color 0.3s;
+  letter-spacing: 0.02em;
+}
+.mega-menu__nav-item:hover .mega-menu__nav-title {
+  color: var(--or-sombre);
+}
+.mega-menu__nav-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--noir-doux);
+  letter-spacing: 0.02em;
+}
+.mega-menu__visual {
+  overflow: hidden;
+  min-height: 280px;
+}
+.mega-menu__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mega-menu {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 700px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  will-change: transform;
+}
+.hero__bg img { width: 100%; height: 120%; object-position: center 40%; }
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(252,245,237,0.9) 0%, rgba(252,245,237,0.35) 50%, rgba(252,245,237,0.45) 100%);
+  z-index: 1;
+}
+.hero__content { position: relative; z-index: 2; padding: 0 2rem; }
+.hero__title {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  line-height: 0.95;
+  margin-bottom: 0.15em;
+  overflow: hidden;
+}
+.hero__title .char {
+  display: inline-block;
+  will-change: transform;
+}
+.hero__title--sub {
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  color: var(--noir-doux);
+}
+.hero__tagline {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  opacity: 0;
+  margin-top: 2rem;
+}
+.hero__cta {
+  display: inline-block;
+  color: var(--blanc);
+  background: transparent;
+  padding: 1rem 3rem;
+  border: 1.5px solid var(--blanc);
+  border-radius: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 2rem;
+  opacity: 0;
+}
+.hero__cta:hover {
+  background: var(--blanc);
+  color: var(--noir);
+  border-color: var(--blanc);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255,255,255,0.15);
+}
+.hero__badge {
+  position: absolute;
+  bottom: 3rem;
+  left: 3rem;
+  z-index: 2;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  opacity: 0;
+  max-width: 240px;
+  line-height: 1.5;
+}
+.hero__scroll {
+  position: absolute;
+  bottom: 3rem;
+  right: 3rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+}
+.hero__scroll-text {
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  color: var(--noir-doux);
+  opacity: 0.5;
+}
+.hero__scroll-line {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom, var(--or), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ============================================
+   PRESS MARQUEE
+   ============================================ */
+.marquee {
+  background: var(--white-bloom);
+  border-top: 1px solid var(--gris-clair);
+  border-bottom: 1px solid var(--gris-clair);
+  padding: 1.5rem 0;
+  overflow: hidden;
+  position: relative;
+}
+.marquee__track {
+  display: flex;
+  gap: 4rem;
+  animation: marqueeScroll 30s linear infinite;
+  width: max-content;
+}
+.marquee__item {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.marquee__item .sep { color: var(--or); margin: 0 1.5rem; opacity: 0.6; }
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ============================================
+   SECTION — LA MAISON
+   ============================================ */
+.maison {
+  padding: clamp(80px, 10vw, 160px) clamp(1.5rem, 5vw, 5rem);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.maison__grid {
+  display: grid;
+  grid-template-columns: 40% 55%;
+  gap: 5%;
+  align-items: center;
+}
+.maison__text { opacity: 0; }
+.maison__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 1.5rem;
+}
+.maison__title {
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  color: var(--noir);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+.maison__body {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--noir-doux);
+  opacity: 0.85;
+  margin-bottom: 2rem;
+}
+.maison__link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--noir);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--noir);
+  transition: color 0.4s, border-color 0.4s;
+}
+.maison__link::after { display: none; }
+.maison__link:hover {
+  color: var(--or-sombre);
+  border-color: var(--or-sombre);
+}
+.maison__image {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  will-change: transform;
+  border-radius: 0;
+}
+.maison__image img {
+  transition: transform 8s var(--ease-smooth);
+}
+.maison__image:hover img { transform: scale(1.03); }
+
+/* ============================================
+   SECTION — COLLECTION
+   ============================================ */
+.collection {
+  padding: clamp(100px, 12vw, 200px) clamp(1.5rem, 5vw, 5rem);
+  text-align: center;
+  background: var(--white-bloom);
+}
+.collection__header { margin-bottom: 4rem; }
+.collection__title {
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  color: var(--noir);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  opacity: 0;
+}
+.collection__subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: var(--noir-doux);
+  opacity: 0;
+}
+.collection__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1300px;
+  margin: 0 auto 3rem;
+}
+.product-card {
+  position: relative;
+  text-align: center;
+  padding: 1.75rem 1.25rem 1.5rem;
+  background: var(--blanc);
+  border: 1px solid var(--gris-clair);
+  border-radius: 0;
+  transition: background 0.6s, box-shadow 0.5s var(--ease-luxe), transform 0.5s var(--ease-bounce);
+  opacity: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+.product-card:hover {
+  background: var(--blanc);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+  transform: translateY(-4px);
+}
+.product-card__badge {
+  position: static;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  font-weight: 500;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.product-card__badge--coral {
+  background: none;
+  color: var(--or-sombre);
+}
+.product-card { text-decoration: none; color: inherit; display: block; }
+.product-card__image {
+  position: relative;
+  aspect-ratio: 3/4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border-radius: 0;
+  background: var(--blanc);
+  padding: 2rem 1rem;
+}
+.product-card__image img {
+  width: auto;
+  height: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  transition: transform 0.8s var(--ease-luxe);
+}
+.product-card:hover .product-card__image img { transform: scale(1.05); }
+.product-card__name {
+  font-family: 'Begum', serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--noir);
+  margin-bottom: 0.35rem;
+}
+.product-card__type {
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: var(--gris);
+  margin-bottom: 0.75rem;
+}
+.product-card__price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--noir);
+  margin-bottom: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+.product-card__cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--blanc);
+  padding: 0.75rem 1.8rem;
+  border: 2px solid var(--noir);
+  background: var(--noir);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.5s var(--ease-luxe), color 0.5s, border-color 0.5s, transform 0.4s var(--ease-luxe), box-shadow 0.4s, opacity 0.4s var(--ease-luxe);
+  opacity: 0;
+  transform: translateY(8px);
+}
+.product-card:hover .product-card__cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+.product-card__cta:hover {
+  background: var(--noir-doux);
+  color: var(--blanc);
+  border-color: var(--noir-doux);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26,26,26,0.15);
+}
+.collection__link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  position: relative;
+  display: inline-block;
+  padding: 0;
+  padding-bottom: 4px;
+  border: none;
+  border-bottom: 1px solid var(--noir);
+  border-radius: 0;
+  opacity: 0;
+  text-decoration: none;
+  transition: color 0.4s, border-color 0.4s;
+}
+.collection__link::after { display: none; }
+.collection__link:hover {
+  color: var(--or-sombre);
+  border-bottom-color: var(--or-sombre);
+  background: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============================================
+   SECTION — TERROIR
+   ============================================ */
+.terroir {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 7.5rem 2rem;
+}
+.terroir__bg {
+  position: absolute;
+  inset: -15% 0;
+  z-index: 0;
+  will-change: transform;
+}
+.terroir__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(44,38,32,0.6);
+  z-index: 1;
+}
+.terroir__content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+.terroir__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--or-pale);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.terroir__title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--blanc);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.terroir__info {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--white-bloom);
+  opacity: 0;
+}
+.terroir__info .dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--or-pale);
+  margin: 0 0.8rem;
+  vertical-align: middle;
+}
+.terroir__cta {
+  display: inline-block;
+  margin-top: 2.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--blanc);
+  padding: 0.9rem 2.2rem;
+  border: 2px solid var(--blanc);
+  border-radius: 0;
+  background: transparent;
+  transition: background 0.5s var(--ease-luxe), color 0.5s, border-color 0.5s, transform 0.4s;
+  opacity: 0;
+}
+.terroir__cta:hover {
+  background: var(--blanc);
+  color: var(--noir);
+  border-color: var(--blanc);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   SECTION — CHIFFRES CLES
+   ============================================ */
+.chiffres {
+  padding: clamp(80px, 10vw, 140px) clamp(1.5rem, 5vw, 5rem);
+  background: var(--white-bloom);
+}
+.chiffres__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+.chiffres__item {
+  padding: 2rem 1.5rem;
+  position: relative;
+  opacity: 0;
+}
+.chiffres__item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: var(--gris-clair);
+  opacity: 0.6;
+}
+.chiffres__value {
+  font-family: 'Begum', serif;
+  font-size: clamp(3.5rem, 6vw, 5rem);
+  font-weight: 300;
+  color: var(--or);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.chiffres__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--noir-doux);
+}
+
+/* ============================================
+   SECTION — QUOTE PRESSE
+   ============================================ */
+.press-quote {
+  padding: clamp(100px, 12vw, 200px) clamp(1.5rem, 5vw, 5rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--gris-tres-clair);
+  border-radius: 0;
+  margin: 0 2rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+.press-quote__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  font-family: 'Begum', serif;
+  font-size: 20rem;
+  color: var(--or);
+  opacity: 0.08;
+  line-height: 1;
+  pointer-events: none;
+}
+.press-quote__content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.press-quote__text {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: var(--noir);
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+.press-quote__source {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  opacity: 0;
+}
+
+/* ============================================
+   SECTION — FORMULE 1
+   ============================================ */
+.f1 {
+  padding: clamp(100px, 10vw, 150px) clamp(1.5rem, 5vw, 5rem);
+  background: var(--white-bloom);
+}
+.f1__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: 1300px;
+  margin: 0 auto;
+  align-items: center;
+}
+.f1__image {
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  opacity: 0;
+  border-radius: 0;
+}
+.f1__image img { transition: transform 6s var(--ease-smooth); }
+.f1__image:hover img { transform: scale(1.03); }
+.f1__text { opacity: 0; }
+.f1__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  margin-bottom: 1.5rem;
+}
+.f1__title {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  color: var(--noir);
+  margin-bottom: 1.25rem;
+}
+.f1__body {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--noir-doux);
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+.f1__cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  display: inline-block;
+  padding-bottom: 3px;
+  position: relative;
+  border-bottom: 1px solid var(--noir);
+  transition: color 0.4s, border-color 0.4s;
+}
+.f1__cta::after { display: none; }
+.f1__cta:hover {
+  color: var(--or-sombre);
+  border-color: var(--or-sombre);
+}
+
+/* ============================================
+   SECTION — NEWSLETTER
+   ============================================ */
+.newsletter {
+  padding: clamp(100px, 12vw, 180px) clamp(1.5rem, 5vw, 5rem);
+  background: var(--noir);
+  text-align: center;
+}
+.newsletter__inner { max-width: 550px; margin: 0 auto; background: rgba(255,255,255,0.04); padding: 3rem 2.5rem; border-radius: 0; }
+.newsletter__title {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  color: var(--blanc);
+  margin-bottom: 1rem;
+  opacity: 0;
+}
+.newsletter__subtitle {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--gris-clair);
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+}
+.newsletter__form {
+  display: flex;
+  gap: 0;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--gris);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+.newsletter__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--blanc);
+  padding: 0.5rem 0;
+}
+.newsletter__input::placeholder { color: var(--gris); }
+.newsletter__btn {
+  background: var(--blanc);
+  border: 2px solid var(--blanc);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  padding: 0.65rem 1.8rem;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.5s var(--ease-luxe), color 0.5s, border-color 0.5s, transform 0.4s, box-shadow 0.4s;
+}
+.newsletter__btn:hover {
+  background: transparent;
+  color: var(--blanc);
+  border-color: var(--blanc);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+}
+.newsletter__legal {
+  font-size: 0.65rem;
+  color: var(--gris);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  padding: clamp(60px, 8vw, 100px) clamp(1.5rem, 5vw, 5rem) 2rem;
+  background: var(--noir);
+  border-top: 1px solid rgba(212,177,136,0.12);
+}
+.footer__logo {
+  text-align: center;
+  font-family: 'Begum', serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 3.5rem;
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+}
+.footer__col-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1.2rem;
+}
+.footer__col ul { list-style: none; }
+.footer__col li { margin-bottom: 0.6rem; }
+.footer__col a {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--blanc);
+  opacity: 0.5;
+  transition: opacity 0.4s;
+}
+.footer__col a:hover { opacity: 1; }
+.footer__badges {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--gris);
+  margin-bottom: 2rem;
+}
+.footer__sep {
+  max-width: 1000px;
+  margin: 0 auto 1.5rem;
+  border: none;
+  border-top: 1px solid rgba(212,177,136,0.1);
+}
+.footer__copy {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--gris);
+  letter-spacing: 0.04em;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .collection__grid { grid-template-columns: repeat(2, 1fr); }
+  .f1__grid { grid-template-columns: 1fr; }
+  .chiffres__grid { grid-template-columns: repeat(2, 1fr); }
+  .chiffres__item:nth-child(2)::after { display: none; }
+}
+@media (max-width: 768px) {
+  .nav__links { display: none !important; }
+  .nav__desktop-links { display: none !important; }
+  .nav__mobile-icons { display: flex; }
+  .nav__hamburger { display: flex; }
+  .nav__logo { font-size: 1rem; }
+  .nav__logo svg { height: 10px; }
+  .maison__grid { grid-template-columns: 1fr; gap: 3rem; }
+  .maison__image { order: -1; }
+  .collection__grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .hero__badge, .hero__scroll { display: none; }
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .chiffres__grid { grid-template-columns: repeat(2, 1fr); }
+  .chiffres__item::after { display: none; }
+  .product-card__cta { opacity: 1; transform: none; }
+}
+@media (max-width: 480px) {
+  .collection__grid { grid-template-columns: 1fr; }
+  .newsletter__form { flex-direction: column; gap: 1rem; align-items: stretch; }
+  .press-quote { margin: 0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor"><span class="cursor__label">Voir</span></div>
+
+<!-- Page Reveal -->
+<div class="page-reveal"></div>
+
+<!-- ============================================
+     NAVIGATION
+     ============================================ -->
+<nav class="nav">
+  <ul class="nav__links">
+    <li class="nav__item--mega"><a href="collection.html">COLLECTION</a>
+      <div class="mega-menu mega-menu--collection">
+        <div class="mega-menu__inner">
+          <div class="mega-menu__grid">
+            <a href="product.html" class="mega-menu__product">
+              <img src="assets/bottles/le-blanc.png" alt="Le Blanc" class="mega-menu__product-img">
+              <span class="mega-menu__product-name">Le Blanc</span>
+              <span class="mega-menu__product-price">29,00 &euro;</span>
+            </a>
+            <a href="product.html" class="mega-menu__product">
+              <img src="assets/bottles/le-rose.png" alt="Le Ros&eacute;" class="mega-menu__product-img">
+              <span class="mega-menu__product-name">Le Ros&eacute;</span>
+              <span class="mega-menu__product-price">34,00 &euro;</span>
+            </a>
+            <a href="product.html" class="mega-menu__product">
+              <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut" class="mega-menu__product-img">
+              <span class="mega-menu__product-name">L'Extra Brut</span>
+              <span class="mega-menu__product-price">49,00 &euro;</span>
+            </a>
+            <a href="product.html" class="mega-menu__product">
+              <img src="assets/bottles/la-cuvee.png" alt="La Cuv&eacute;e Vintage" class="mega-menu__product-img">
+              <span class="mega-menu__product-name">La Cuv&eacute;e Vintage</span>
+              <span class="mega-menu__product-price">89,00 &euro;</span>
+            </a>
+          </div>
+          <div class="mega-menu__feature">
+            <img src="assets/lifestyle/lifestyle-festive.jpg" alt="Collection French Bloom" class="mega-menu__feature-img">
+            <a href="collection.html" class="mega-menu__feature-link">
+              <span class="mega-menu__feature-text">D&eacute;couvrir la collection &rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="nav__item--mega"><a href="la-maison.html">LA MAISON</a>
+      <div class="mega-menu mega-menu--maison">
+        <div class="mega-menu__inner">
+          <div class="mega-menu__nav-links">
+            <a href="la-maison.html#savoir-faire" class="mega-menu__nav-item">
+              <div class="mega-menu__nav-title">Savoir-Faire</div>
+              <div class="mega-menu__nav-desc">L'art de l'effervescence sans alcool</div>
+            </a>
+            <a href="la-maison.html#notre-histoire" class="mega-menu__nav-item">
+              <div class="mega-menu__nav-title">Notre Histoire</div>
+              <div class="mega-menu__nav-desc">De la Champagne au monde entier</div>
+            </a>
+            <a href="la-maison.html" class="mega-menu__nav-item">
+              <div class="mega-menu__nav-title">Terroir</div>
+              <div class="mega-menu__nav-desc">Les vignobles de la Maison</div>
+            </a>
+            <a href="la-maison.html" class="mega-menu__nav-item">
+              <div class="mega-menu__nav-title">Formule 1</div>
+              <div class="mega-menu__nav-desc">Partenaire officiel</div>
+            </a>
+          </div>
+          <div class="mega-menu__visual">
+            <img src="assets/lifestyle/hero-mediterranean.jpg" alt="La Maison French Bloom">
+          </div>
+        </div>
+      </div>
+    </li>
+    <li><a href="#">SAVOIR-FAIRE</a></li>
+  </ul>
+  <a href="homepage.html" class="nav__logo" aria-label="French Bloom">
+    <svg viewBox="0 0 646.2 67.7" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M20.9 34.7 20.9 45.1C20.9 46.8 21.2 48.1 21.8 48.7 22.4 49.4 23.6 49.7 25.5 49.7L26.3 49.7 26.3 52.8 5.8 52.8 5.8 49.7 6.4 49.7C8.3 49.7 9.5 49.3 10.1 48.6 10.7 47.9 11 46.7 11 45L11 22.3C11 20.6 10.7 19.3 10.1 18.7 9.5 18 8.3 17.7 6.4 17.7L5.7 17.7 5.7 14.6 37.7 14.6 38 24.7 34.8 24.7C34.3 23 33.7 21.6 33 20.5 32.3 19.4 31.5 18.7 30.7 18.4 29.9 18.1 28.7 17.9 27.1 17.9L20.9 17.9 20.9 31.1 23.9 31.1C25.3 31.1 26.3 30.8 26.9 30.2 27.5 29.6 27.8 28.3 27.9 26.4L31.1 26.4 31.1 39.5 27.9 39.5C27.9 37.5 27.5 36.1 26.9 35.5 26.3 34.9 25.3 34.5 23.8 34.5L20.8 34.5Z"/><path d="M67.3 36 67.3 45C67.3 46.7 67.6 48 68.2 48.6 68.8 49.3 70 49.6 71.9 49.6L72.6 49.6 72.6 52.7 52 52.7 52 49.6 52.8 49.6C54.7 49.6 56 49.3 56.5 48.5 57.1 47.8 57.4 46.6 57.4 44.9L57.4 22.3C57.4 20.6 57.1 19.3 56.5 18.6 55.9 17.9 54.7 17.6 52.8 17.6L52 17.6 52 14.5 70.7 14.5C74.1 14.5 76.6 14.6 78.1 14.8 79.7 15 81.2 15.6 82.7 16.4 84.2 17.3 85.4 18.4 86.3 19.9 87.2 21.4 87.6 23 87.6 24.7 87.6 29.2 85 32.4 79.9 34 81.3 34.9 83.4 37.6 86.3 42.1 88.6 45.6 90.2 47.7 91.1 48.5 92.1 49.2 93.1 49.6 94.3 49.6L94.3 52.7 82.4 52.7C81.3 51.4 79.3 48.1 76.3 42.8 74.8 40.1 73.8 38.4 73.2 37.6 72.6 36.8 72 36.3 71.4 36.1 70.8 35.9 69.4 35.8 67.3 35.8M67.3 32.6C70.5 32.6 72.6 32.4 73.7 32 74.8 31.6 75.7 30.8 76.3 29.7 76.9 28.6 77.3 27.1 77.3 25.2 77.3 22.5 76.7 20.7 75.4 19.6 74.1 18.5 71.9 18.1 68.8 18.1 65.7 18.1 67.9 18.1 67.3 18.1L67.3 32.5Z"/><path d="M123.6 34.6 123.6 44C123.6 45.8 123.6 47 123.9 47.5 124.1 48.1 124.7 48.5 125.6 48.9 126.5 49.3 127.9 49.5 129.7 49.5 131.5 49.5 134 49.2 135.2 48.6 136.4 48 137.4 46.9 138.4 45.3 139.3 43.7 140 42.1 140.4 40.3L143.6 40.3 143.3 52.8 108.4 52.8 108.4 49.7 109.1 49.7C111 49.7 112.2 49.3 112.8 48.6 113.4 47.9 113.7 46.7 113.7 45L113.7 22.3C113.7 20.6 113.4 19.3 112.8 18.7 112.2 18 111 17.7 109.1 17.7L108.4 17.7 108.4 14.6 141 14.6 141.6 24.5 138.4 24.5C137.8 22.8 137.2 21.4 136.5 20.4 135.8 19.4 135.1 18.7 134.4 18.4 133.7 18.1 132.5 18 130.8 18L123.7 18 123.7 31.2 127.3 31.2C129 31.2 130.1 30.9 130.7 30.2 131.3 29.6 131.6 28.3 131.6 26.4L134.8 26.4 134.8 39.4 131.6 39.4 131.6 38.9C131.6 37.8 131.4 36.8 130.9 35.9 130.4 35 129.3 34.6 127.4 34.6L123.6 34.6Z"/><path d="M168.8 25.6 168.8 43.2C168.8 46 169.3 47.8 170.3 48.6 171.3 49.4 172.6 49.8 174.2 49.8L174.2 52.9 159.9 52.9 159.9 49.8C161.1 49.8 162.2 49.5 163.1 48.9 164 48.3 164.6 47.6 164.8 46.8 165 46 165.2 44.8 165.2 43.1L165.2 23.6C165.2 19.7 163.4 17.8 159.7 17.8L159.7 14.7 172.6 14.7 193.5 38.1 193.5 24.1C193.5 19.9 191.7 17.8 188.2 17.8L188.2 14.7 201.9 14.7 201.9 17.8C200.9 17.8 200 18.1 199.2 18.6 198.4 19.1 197.8 19.8 197.5 20.6 197.2 21.4 197.1 22.6 197.1 24.2L197.1 53.5 193.5 53.5 168.7 25.5Z"/><path d="M255.9 38.2 255.9 52.5 252.8 52.5C252.4 51 251.9 49.8 251.2 48.8 248 52 243.8 53.6 238.6 53.6 233.4 53.6 227.9 51.7 224.4 47.8 220.8 43.9 219.1 39.3 219.1 34 219.1 28.7 220.9 24.1 224.4 20 227.9 15.9 232.8 13.9 239 13.9 245.2 13.9 247.6 15.4 250.8 18.5 251.2 17.5 251.6 16.4 252 15.1L255.1 15.1 255.5 29.2 252.4 29.2C251.5 25.4 250 22.5 247.9 20.5 245.8 18.5 243.3 17.6 240.4 17.6 237.5 17.6 234.6 18.9 232.9 21.5 231.2 24.1 230.4 28.1 230.4 33.6 230.4 39.1 230.7 40.5 231.3 42.8 231.9 45.1 233.1 46.8 234.9 48 236.7 49.2 238.6 49.8 240.7 49.8 242.8 49.8 246 48.8 248.1 46.9 250.3 45 251.8 42 252.8 38.1L255.9 38.1Z"/><path d="M289.1 34.6 289.1 45.1C289.1 46.9 289.4 48.1 290 48.8 290.6 49.5 292 49.8 294 49.8L294 52.9 274.1 52.9 274.1 49.8C276.1 49.8 277.4 49.5 278.1 48.9 278.8 48.3 279.1 47 279.1 45.2L279.1 22.6C279.1 20.8 278.8 19.6 278.2 18.9 277.6 18.2 276.2 17.9 274.1 17.9L274.1 14.8 294 14.8 294 17.9C292 17.9 290.7 18.2 290 18.9 289.4 19.6 289 20.8 289 22.6L289 31.2 304.7 31.2 304.7 22.6C304.7 20.8 304.4 19.6 303.8 18.9 303.2 18.2 301.9 17.9 299.9 17.9L299.9 14.8 319.8 14.8 319.8 17.9C317.8 17.9 316.4 18.2 315.8 18.8 315.1 19.4 314.8 20.7 314.8 22.6L314.8 45.2C314.8 47 315.1 48.3 315.8 48.9 316.4 49.5 317.8 49.9 319.9 49.9L319.9 53 300 53 300 49.9C302 49.9 303.3 49.6 303.9 48.9 304.5 48.2 304.8 47 304.8 45.2L304.8 34.7 289.1 34.7Z"/><path d="M387.2 32.6C391 33.3 393.8 34.5 395.7 36.2 397.6 37.9 398.5 40.2 398.5 42.9 398.5 45.6 397.3 48.4 394.9 50.2 392.5 52 388.5 52.9 382.9 52.9L362.9 52.9 362.9 49.8C364.9 49.8 366.2 49.5 366.9 48.9 367.6 48.3 367.9 47 367.9 45.2L367.9 22.8C367.9 21 367.6 19.8 367 19.1 366.4 18.4 365 18.1 362.9 18.1L362.9 15 377.6 14.6 379.7 14.6C386.3 14.6 390.8 15.4 393.2 17.1 395.6 18.7 396.8 21 396.8 23.8 396.8 26.6 396 27.8 394.4 29.2 392.8 30.7 390.4 31.8 387.2 32.7M377.8 30.9 379.7 30.9C381.8 30.9 383.3 30.4 384.3 29.4 385.3 28.4 385.8 26.8 385.8 24.4 385.8 22 385.5 21.2 384.8 20.2 384.2 19.2 383.3 18.5 382.3 18.2 381.3 17.9 379.7 17.7 377.7 17.7L377.7 30.9ZM377.8 34.4 377.8 45.2C377.8 46.3 377.9 47.1 378.1 47.6 378.3 48.1 378.7 48.6 379.4 49 380 49.4 380.9 49.6 382.1 49.6 383.9 49.6 385.2 49 386.1 47.7 387 46.4 387.4 44.6 387.4 42 387.4 39.4 387.1 38.4 386.5 37.3 385.9 36.2 385.1 35.4 384.1 35 383.1 34.6 381.6 34.4 379.6 34.4L377.8 34.4Z"/><path d="M450.2 40.2 450 52.9 415.2 52.9 415.2 49.8 415.8 49.8C417.7 49.8 419 49.4 419.5 48.7 420.1 48 420.4 46.8 420.4 45.1L420.4 22.5C420.4 20.8 420.1 19.5 419.5 18.8 418.9 18.1 417.7 17.8 415.8 17.8L415.2 17.8 415.2 14.7 435.7 14.7 435.7 17.8 434.9 17.8C433 17.8 431.7 18.2 431.2 18.9 430.6 19.6 430.3 20.8 430.3 22.5L430.3 44.3C430.3 45.9 430.3 47 430.6 47.5 430.8 48 431.3 48.5 432.1 48.9 432.9 49.3 434.3 49.5 436.3 49.5 439.6 49.5 442.1 48.7 443.8 47 445.5 45.3 446.6 43.1 447.2 40.2L450.2 40.2Z"/><path d="M465.6 33.7C465.6 30.3 466.6 26.9 468.5 23.6 470.4 20.3 473 17.9 476.3 16.3 479.6 14.7 483.1 13.9 486.8 13.9 493.5 13.9 498.8 15.8 502.6 19.7 506.4 23.6 508.3 28.3 508.3 34 508.3 39.7 506.4 44 502.6 47.8 498.8 51.6 493.6 53.6 487 53.6 480.4 53.6 478.5 52.7 475.1 50.8 471.6 48.9 469.2 46.3 467.7 43.1 466.2 39.9 465.5 36.7 465.5 33.6M477.3 33.4C477.3 39.3 478.1 43.5 479.7 46.1 481.3 48.7 483.6 50 486.7 50 489.8 50 492.4 48.8 494.1 46.4 495.8 44 496.6 39.9 496.6 33.9 496.6 27.9 495.8 24.4 494.3 21.7 492.8 19 490.3 17.7 486.9 17.7 483.5 17.7 481.3 19 479.7 21.4 478.1 23.9 477.3 27.9 477.3 33.3"/><path d="M526.5 33.7C526.5 30.3 527.5 26.9 529.4 23.6 531.3 20.3 533.9 17.9 537.2 16.3 540.5 14.7 544 13.9 547.7 13.9 554.4 13.9 559.7 15.8 563.5 19.7 567.3 23.6 569.2 28.3 569.2 34 569.2 39.7 567.3 44 563.5 47.8 559.7 51.6 554.5 53.6 547.9 53.6 541.3 53.6 539.4 52.7 536 50.8 532.5 48.9 530.1 46.3 528.6 43.1 527.1 39.9 526.4 36.7 526.4 33.6M538.3 33.4C538.3 39.3 539.1 43.5 540.7 46.1 542.3 48.7 544.6 50 547.7 50 550.8 50 553.4 48.8 555.1 46.4 556.8 44 557.6 39.9 557.6 33.9 557.6 27.9 556.8 24.4 555.3 21.7 553.8 19 551.3 17.7 547.9 17.7 544.5 17.7 542.3 19 540.7 21.4 539.1 23.9 538.3 27.9 538.3 33.3"/><path d="M608.7 52.9 594.5 23.1 594.5 42.9C594.5 44.7 594.5 46 594.9 46.8 595.3 47.6 595.7 48.3 596.6 48.9 597.5 49.5 598.6 49.8 599.9 49.8L599.9 52.9 586.1 52.9 586.1 49.8C587.3 49.8 588.3 49.5 589.2 48.9 590.1 48.3 590.6 47.5 590.8 46.7 591 45.9 591.1 44.6 591.1 42.8L591.1 22.7C591.1 20.8 590.8 19.5 590.1 18.9 589.4 18.2 588.1 17.9 586.1 17.9L586.1 14.8 601.4 14.8 613.2 39.9 625.1 14.8 640.5 14.8 640.5 17.9 639.7 17.9C637.8 17.9 636.5 18.2 636 19 635.4 19.7 635.1 20.9 635.1 22.6L635.1 45.2C635.1 46.9 635.4 48.2 636 48.9 636.6 49.6 637.8 49.9 639.7 49.9L640.6 49.9 640.6 53 619.8 53 619.8 49.9 620.6 49.9C622.5 49.9 623.7 49.5 624.3 48.8 624.9 48.1 625.2 46.9 625.2 45.2L625.2 22.7 611.1 53 608.7 53Z"/></svg>
+  </a>
+  <ul class="nav__links nav__links--right">
+    <li><a href="#">NOTRE HISTOIRE</a></li>
+    <li><button class="nav__search" aria-label="Rechercher"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="6"/><path d="M12 12l4.5 4.5"/></svg></button></li>
+    <li><a href="cart.html" class="nav__cart" aria-label="Panier"><svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h18l-1.5 13H2.5L1 7z"/><path d="M7 7V4a3 3 0 0 1 6 0v3"/></svg><span class="nav__cart-count">3</span></a></li>
+  </ul>
+  <div class="nav__mobile-icons">
+    <a href="cart.html" class="nav__cart nav__cart--mobile" aria-label="Panier">
+      <svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M1 7h18l-1.5 13H2.5L1 7z"/>
+        <path d="M7 7V4a3 3 0 0 1 6 0v3"/>
+      </svg>
+      <span class="nav__cart-count">3</span>
+    </a>
+  </div>
+  <div class="nav__hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('active');this.classList.toggle('active')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu">
+  <a href="collection.html">COLLECTION</a>
+  <a href="la-maison.html">LA MAISON</a>
+  <a href="#">SAVOIR-FAIRE</a>
+  <a href="#">NOTRE HISTOIRE</a>
+  <a href="cart.html">PANIER</a>
+</div>
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<section class="hero">
+  <div class="hero__bg">
+    <img src="assets/lifestyle/hero-poolside.jpg"
+         alt="French Bloom au bord de la piscine — L'effervescence réinventée" loading="eager">
+  </div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <h1 class="hero__title" data-split>L'effervescence</h1>
+    <h1 class="hero__title hero__title--sub" data-split>Réinventée</h1>
+    <p class="hero__tagline">Maison française d'effervescents sans alcool</p>
+    <a href="collection.html" class="hero__cta" data-cursor="Découvrir">DÉCOUVRIR LA COLLECTION</a>
+  </div>
+  <p class="hero__badge">3× Meilleur effervescent sans alcool au monde — World Sparkling Wine Awards</p>
+  <div class="hero__scroll">
+    <span class="hero__scroll-text">Scroll</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- ============================================
+     PRESS MARQUEE
+     ============================================ -->
+<div class="marquee">
+  <div class="marquee__track">
+    <span class="marquee__item">Forbes</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">Vogue</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">The New York Times</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">Elle</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">GQ</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">The Drinks Report</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">Le Monde</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <!-- Duplicate for seamless loop -->
+    <span class="marquee__item">Forbes</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">Vogue</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">The New York Times</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">Elle</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">GQ</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">The Drinks Report</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+    <span class="marquee__item">Le Monde</span>
+    <span class="marquee__item"><span class="sep">·</span></span>
+  </div>
+</div>
+
+<!-- ============================================
+     LA MAISON
+     ============================================ -->
+<section class="maison">
+  <div class="maison__grid">
+    <div class="maison__text">
+      <p class="maison__label">La Maison</p>
+      <h2 class="maison__title">Née de l'amitié.<br>Élevée par l'excellence.</h2>
+      <p class="maison__body">Constance Jablonski et Maggie Frerejean-Taittinger ont imaginé French Bloom en 2019, portées par une conviction : la célébration mérite mieux qu'un compromis. Aujourd'hui, adossée à Moët Hennessy et partenaire officielle de la Formule 1, French Bloom redéfinit l'effervescence française.</p>
+      <a href="#" class="maison__link" data-cursor="Lire">Découvrir notre histoire →</a>
+    </div>
+    <div class="maison__image">
+      <img src="assets/lifestyle/lifestyle-convivial.jpg"
+           alt="Dîner French Bloom entre amis — L'art de la célébration" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     COLLECTION
+     ============================================ -->
+<section class="collection">
+  <div class="collection__header">
+    <h2 class="collection__title">La Collection</h2>
+    <p class="collection__subtitle">Quatre cuvées, une même exigence d'excellence</p>
+  </div>
+  <div class="collection__grid">
+
+    <a href="product.html" class="product-card" data-cursor="Voir">
+      <div class="product-card__image">
+        <img src="assets/bottles/le-blanc.png" alt="Le Blanc — Effervescent sans alcool" loading="lazy">
+      </div>
+      <span class="product-card__badge">BEST-SELLER</span>
+      <h3 class="product-card__name">LE BLANC</h3>
+      <p class="product-card__type">Effervescent sans alcool 0.0%</p>
+      <p class="product-card__price">29,00 €</p>
+    </a>
+
+    <a href="product.html" class="product-card" data-cursor="Voir">
+      <div class="product-card__image">
+        <img src="assets/bottles/le-rose.png" alt="Le Rosé — Effervescent sans alcool" loading="lazy">
+      </div>
+      <span class="product-card__badge product-card__badge--coral">MEILLEUR AU MONDE 2025</span>
+      <h3 class="product-card__name">LE ROSÉ</h3>
+      <p class="product-card__type">Effervescent sans alcool 0.0%</p>
+      <p class="product-card__price">34,00 €</p>
+    </a>
+
+    <a href="product.html" class="product-card" data-cursor="Voir">
+      <div class="product-card__image">
+        <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut — Effervescent sans alcool" loading="lazy">
+      </div>
+      <span class="product-card__badge">GASTRONOMIQUE</span>
+      <h3 class="product-card__name">L'EXTRA BRUT</h3>
+      <p class="product-card__type">Effervescent sans alcool 0.0%</p>
+      <p class="product-card__price">49,00 €</p>
+    </a>
+
+    <a href="product.html" class="product-card" data-cursor="Voir">
+      <div class="product-card__image">
+        <img src="assets/bottles/la-cuvee.png" alt="La Cuvée Vintage 2023 — Blanc de Blancs" loading="lazy">
+      </div>
+      <span class="product-card__badge">ÉDITION LIMITÉE</span>
+      <h3 class="product-card__name">LA CUVÉE VINTAGE 2023</h3>
+      <p class="product-card__type">Blanc de Blancs sans alcool 0.0%</p>
+      <p class="product-card__price">109,00 €</p>
+    </a>
+
+  </div>
+  <a href="collection.html" class="collection__link" data-cursor="Voir">Voir toute la collection →</a>
+</section>
+
+<!-- ============================================
+     TERROIR
+     ============================================ -->
+<section class="terroir">
+  <div class="terroir__bg">
+    <img src="assets/lifestyle/hero-mediterranean.jpg"
+         alt="Vignoble de Limoux" loading="lazy">
+  </div>
+  <div class="terroir__overlay"></div>
+  <div class="terroir__content">
+    <p class="terroir__label">Limoux, Haute Vallée de l'Aude</p>
+    <h2 class="terroir__title">Le berceau de l'effervescent français</h2>
+    <p class="terroir__info">Depuis 1544 <span class="dot"></span> 25 hectares <span class="dot"></span> Chardonnay biologique</p>
+    <a href="#" class="terroir__cta" data-cursor="Explorer">Explorer le savoir-faire →</a>
+  </div>
+</section>
+
+<!-- ============================================
+     CHIFFRES CLES
+     ============================================ -->
+<section class="chiffres">
+  <div class="chiffres__grid">
+    <div class="chiffres__item">
+      <div class="chiffres__value" data-count="0.0" data-suffix="%">0</div>
+      <div class="chiffres__label">d'alcool</div>
+    </div>
+    <div class="chiffres__item">
+      <div class="chiffres__value" data-count="0" data-suffix="">0</div>
+      <div class="chiffres__label">sulfite ajouté</div>
+    </div>
+    <div class="chiffres__item">
+      <div class="chiffres__value" data-count="0" data-suffix="">0</div>
+      <div class="chiffres__label">sucre ajouté</div>
+    </div>
+    <div class="chiffres__item">
+      <div class="chiffres__value" data-count="3" data-suffix="×">0</div>
+      <div class="chiffres__label">Meilleur au monde</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     QUOTE PRESSE
+     ============================================ -->
+<section class="press-quote">
+  <span class="press-quote__mark">"</span>
+  <div class="press-quote__content">
+    <p class="press-quote__text">"Le meilleur effervescent sans alcool que nous ayons goûté. Complexe, vibrant, et indéniablement français."</p>
+    <p class="press-quote__source">— Forbes</p>
+  </div>
+</section>
+
+<!-- ============================================
+     FORMULE 1
+     ============================================ -->
+<section class="f1">
+  <div class="f1__grid">
+    <div class="f1__image">
+      <img src="assets/lifestyle/lifestyle-service.jpg"
+           alt="French Bloom × Formule 1 — Célébration d'exception" loading="lazy">
+    </div>
+    <div class="f1__text">
+      <p class="f1__label">Partenaire officiel</p>
+      <h2 class="f1__title">French Bloom × Formule 1</h2>
+      <p class="f1__body">L'effervescence sans alcool fait son entrée dans le paddock. French Bloom est le vin pétillant sans alcool officiel de la Formule 1.</p>
+      <a href="#" class="f1__cta" data-cursor="Lire">En savoir plus →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     NEWSLETTER
+     ============================================ -->
+<section class="newsletter">
+  <div class="newsletter__inner">
+    <h2 class="newsletter__title">Rejoignez la Maison</h2>
+    <p class="newsletter__subtitle">Accédez en avant-première aux nouvelles cuvées et aux événements French Bloom.</p>
+    <form class="newsletter__form" onsubmit="return false;">
+      <input type="email" class="newsletter__input" placeholder="Votre adresse email" aria-label="Email">
+      <button type="submit" class="newsletter__btn">S'inscrire</button>
+    </form>
+    <p class="newsletter__legal">En vous inscrivant, vous acceptez notre politique de confidentialité.</p>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <div class="footer__logo">French Bloom</div>
+  <div class="footer__grid">
+    <div class="footer__col">
+      <p class="footer__col-title">Boutique</p>
+      <ul>
+        <li><a href="#">Le Blanc</a></li>
+        <li><a href="#">Le Rosé</a></li>
+        <li><a href="product.html">L'Extra Brut</a></li>
+        <li><a href="#">La Cuvée Vintage</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">La Maison</p>
+      <ul>
+        <li><a href="#">Savoir-Faire</a></li>
+        <li><a href="#">Histoire</a></li>
+        <li><a href="#">Terroir</a></li>
+        <li><a href="#">Formule 1</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Aide</p>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Livraison</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">CGV</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <p class="footer__col-title">Suivez-nous</p>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer__badges">0.0% Alcool · Bio · Vegan · Sans sulfite</p>
+  <hr class="footer__sep">
+  <p class="footer__copy">© 2025 French Bloom — L'effervescence réinventée.</p>
+</footer>
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ---- Lenis ---- */
+  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+
+  /* ---- Page reveal ---- */
+  gsap.to('.page-reveal', { scaleY: 0, transformOrigin: 'top', duration: 1, ease: 'power4.inOut', delay: 0.2 });
+
+  /* ---- Nav scroll ---- */
+  ScrollTrigger.create({ start: 'top -80', end: 99999, toggleClass: { targets: '.nav', className: 'scrolled' } });
+
+  /* ---- Custom cursor ---- */
+  const cursor = document.querySelector('.cursor');
+  const cursorLabel = cursor?.querySelector('.cursor__label');
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    gsap.ticker.add(() => {
+      cx += (tx - cx) * 0.15;
+      cy += (ty - cy) * 0.15;
+      gsap.set(cursor, { x: cx, y: cy });
+    });
+    document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.classList.add('hover');
+        const label = el.getAttribute('data-cursor');
+        if (label && cursorLabel) cursorLabel.textContent = label;
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hover');
+        if (cursorLabel) cursorLabel.textContent = 'Voir';
+      });
+    });
+  } else if (cursor) { cursor.style.display = 'none'; document.body.style.cursor = 'auto'; }
+
+  /* ---- Split text util ---- */
+  function splitText(el) {
+    const text = el.textContent;
+    el.innerHTML = '';
+    text.split('').forEach(ch => {
+      const s = document.createElement('span');
+      s.classList.add('char');
+      s.textContent = ch === ' ' ? '\u00A0' : ch;
+      el.appendChild(s);
+    });
+    return el.querySelectorAll('.char');
+  }
+
+  /* ---- HERO ---- */
+  document.querySelectorAll('[data-split]').forEach(el => {
+    const chars = splitText(el);
+    gsap.from(chars, { y: 100, opacity: 0, rotateX: -80, stagger: 0.035, duration: 1.2, ease: 'power4.out', delay: 0.8 });
+  });
+  gsap.to('.hero__tagline', { opacity: 1, y: 0, duration: 1, delay: 1.8, ease: 'power3.out' });
+  gsap.to('.hero__cta', { opacity: 1, y: 0, duration: 0.8, delay: 2.1, ease: 'power3.out' });
+  gsap.to('.hero__badge', { opacity: 0.6, duration: 1, delay: 2.3 });
+  gsap.to('.hero__scroll', { opacity: 1, duration: 1, delay: 2.5 });
+  gsap.set('.hero__tagline', { y: 20 });
+  gsap.set('.hero__cta', { y: 20 });
+
+  // Hero parallax
+  gsap.to('.hero__bg', { y: '25%', ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.hero__content', { y: -60, opacity: 0, scrollTrigger: { trigger: '.hero', start: '50% top', end: 'bottom top', scrub: true } });
+
+  /* ---- MAISON ---- */
+  gsap.to('.maison__text', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.maison', start: 'top 65%' } });
+  gsap.set('.maison__text', { y: 60 });
+  gsap.to('.maison__image', { y: '-8%', scrollTrigger: { trigger: '.maison', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+  /* ---- COLLECTION ---- */
+  gsap.to('.collection__title', { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: '.collection__header', start: 'top 70%' } });
+  gsap.to('.collection__subtitle', { opacity: 0.85, y: 0, duration: 0.8, delay: 0.15, scrollTrigger: { trigger: '.collection__header', start: 'top 70%' } });
+  gsap.set('.collection__title', { y: 50 });
+  gsap.set('.collection__subtitle', { y: 30 });
+
+  gsap.utils.toArray('.product-card').forEach((card, i) => {
+    gsap.to(card, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.15, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 80%' } });
+    gsap.set(card, { y: 60 });
+  });
+  gsap.to('.collection__link', { opacity: 1, y: 0, duration: 0.6, scrollTrigger: { trigger: '.collection__link', start: 'top 85%' } });
+  gsap.set('.collection__link', { y: 20 });
+
+  /* ---- TERROIR ---- */
+  gsap.to('.terroir__bg', { y: '20%', ease: 'none', scrollTrigger: { trigger: '.terroir', start: 'top bottom', end: 'bottom top', scrub: true } });
+  const tTl = gsap.timeline({ scrollTrigger: { trigger: '.terroir', start: 'top 60%' } });
+  tTl.to('.terroir__label', { opacity: 1, duration: 0.6 })
+     .to('.terroir__title', { opacity: 1, y: 0, duration: 0.8 }, '-=0.3')
+     .to('.terroir__info', { opacity: 0.8, duration: 0.6 }, '-=0.3')
+     .to('.terroir__cta', { opacity: 1, y: 0, duration: 0.6 }, '-=0.2');
+  gsap.set('.terroir__title', { y: 50 });
+  gsap.set('.terroir__cta', { y: 20 });
+
+  /* ---- CHIFFRES ---- */
+  gsap.utils.toArray('.chiffres__item').forEach((item, i) => {
+    gsap.to(item, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.12, scrollTrigger: { trigger: '.chiffres', start: 'top 65%' } });
+    gsap.set(item, { y: 40 });
+  });
+  // Animated counters
+  document.querySelectorAll('.chiffres__value').forEach(el => {
+    const target = parseFloat(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    const decimals = el.dataset.count.includes('.') ? 1 : 0;
+
+    gsap.from(el, {
+      textContent: 0,
+      duration: 2.5,
+      ease: 'power2.out',
+      snap: { textContent: decimals ? 0.1 : 1 },
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        once: true
+      },
+      onUpdate: function() {
+        el.textContent = prefix + parseFloat(el.textContent).toFixed(decimals) + suffix;
+      }
+    });
+  });
+
+  /* ---- PRESS QUOTE ---- */
+  gsap.to('.press-quote__text', { opacity: 1, y: 0, duration: 1, scrollTrigger: { trigger: '.press-quote', start: 'top 60%' } });
+  gsap.to('.press-quote__source', { opacity: 1, duration: 0.6, delay: 0.3, scrollTrigger: { trigger: '.press-quote', start: 'top 60%' } });
+  gsap.set('.press-quote__text', { y: 40 });
+
+  /* ---- F1 ---- */
+  gsap.to('.f1__image', { opacity: 1, x: 0, duration: 1, scrollTrigger: { trigger: '.f1', start: 'top 60%' } });
+  gsap.to('.f1__text', { opacity: 1, x: 0, duration: 1, delay: 0.2, scrollTrigger: { trigger: '.f1', start: 'top 60%' } });
+  gsap.set('.f1__image', { x: -40 });
+  gsap.set('.f1__text', { x: 40 });
+
+  /* ---- NEWSLETTER ---- */
+  gsap.to('.newsletter__title', { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: '.newsletter', start: 'top 65%' } });
+  gsap.to('.newsletter__subtitle', { opacity: 0.7, y: 0, duration: 0.8, delay: 0.15, scrollTrigger: { trigger: '.newsletter', start: 'top 65%' } });
+  gsap.set('.newsletter__title', { y: 40 });
+  gsap.set('.newsletter__subtitle', { y: 25 });
+
+})();
+</script>
+
+</body>
+</html>

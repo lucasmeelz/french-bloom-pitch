@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Maison — French Bloom</title>
+
+<!-- French Bloom Brand Typography (local @font-face) -->
+
+<!-- GSAP 3 + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Lenis Smooth Scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<style>
+/* @font-face — French Bloom Brand Typography */
+@font-face { font-family: 'Begum'; src: url('assets/fonts/Begum.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/Montserrat-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --white-bloom:     #FCF5ED;
+  --blanc:           #FFFFFF;
+  --noir:            #1A1A1A;
+  --noir-doux:       #3A3A3A;
+  --or:              #D4B188;
+  --or-pale:        #E2C9A6;
+  --or-sombre:       #B89A6E;
+  --coral:           #EA5438;
+  --almond-green:    #ACB99C;
+  --gris:            #8A8A8A;
+  --gris-clair:      #D4CEC4;
+  --gris-tres-clair: #EDE8E0;
+  --rose-pale:     #E8C4B8;
+  --vert-vigne:      #6B7D5A;
+  --warm-dark:       #2C2620;
+}
+
+html {
+  font-size: 16px;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--white-bloom);
+  color: var(--noir);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, h2, h3, h4 {
+  font-family: 'Begum', serif;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.subtitle, .quote, blockquote {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+}
+
+/* ============================================
+   UTILITY
+   ============================================ */
+.gold { color: var(--or); }
+.gold-highlight {
+  color: var(--or);
+  position: relative;
+  display: inline-block;
+}
+.gold-highlight::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--or);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s ease;
+}
+.gold-highlight.active::after {
+  transform: scaleX(1);
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================
+   NAVIGATION BAR
+   ============================================ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.4s ease, padding 0.4s ease;
+}
+.navbar.scrolled {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 1rem 3rem;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+}
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0 2rem;
+  text-decoration: none;
+  color: var(--blanc);
+  transition: color 0.4s ease;
+}
+.navbar__logo svg {
+  height: 14px;
+  width: auto;
+  fill: currentColor;
+}
+.navbar.scrolled .navbar__logo {
+  color: var(--noir);
+}
+
+/* Hamburger — hidden by default, shown on mobile */
+.navbar__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+}
+.navbar__hamburger span {
+  width: 22px;
+  height: 1px;
+  background: var(--blanc);
+  transition: transform 0.3s, opacity 0.3s, background 0.4s;
+}
+.navbar.scrolled .navbar__hamburger span {
+  background: var(--noir);
+}
+.navbar__hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.navbar__hamburger.active span:nth-child(2) { opacity: 0; }
+.navbar__hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+/* Mobile Menu Overlay */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--blanc);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.mobile-menu.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-menu a {
+  font-family: 'Begum', serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  opacity: 0.7;
+  transition: opacity 0.4s, color 0.4s;
+  text-decoration: none;
+}
+.mobile-menu a:hover {
+  opacity: 1;
+  color: var(--or-sombre);
+}
+.navbar__links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  flex: 1;
+}
+.navbar__links--right {
+  justify-content: flex-end;
+  align-items: center;
+}
+.navbar__links a, .navbar__links button {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--blanc);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+.navbar__links a:hover, .navbar__links button:hover { opacity: 0.7; }
+.navbar.scrolled .navbar__links a, .navbar.scrolled .navbar__links button {
+  color: var(--noir);
+}
+.nav__search {
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: var(--blanc); opacity: 0.7; transition: opacity 0.4s, color 0.4s;
+}
+.nav__search:hover { opacity: 1; }
+.navbar.scrolled .nav__search { color: var(--noir); }
+.nav__cart {
+  position: relative; display: inline-flex; align-items: center;
+  color: var(--blanc); opacity: 0.7; transition: opacity 0.4s, color 0.4s;
+}
+.nav__cart--mobile { display: none; }
+.nav__cart:hover { opacity: 1; }
+.navbar.scrolled .nav__cart { color: var(--noir); }
+.nav__cart-count {
+  position: absolute; top: -4px; right: -10px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--noir); color: var(--blanc);
+  font-family: 'Montserrat', sans-serif; font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+
+/* ============================================
+   SECTION 1 — HERO
+   ============================================ */
+.hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  background: var(--white-bloom);
+}
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  will-change: transform;
+}
+.hero__bg img {
+  width: 100%;
+  height: 120%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(252,245,237,0.35) 0%,
+    rgba(252,245,237,0.15) 40%,
+    rgba(252,245,237,0.55) 100%
+  );
+  z-index: 1;
+}
+.hero__content {
+  position: relative;
+  z-index: 2;
+  padding: 0 2rem;
+}
+.hero__title {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--noir);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.hero__title .char {
+  display: inline-block;
+  will-change: transform;
+}
+.hero__subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  color: var(--noir-doux);
+  opacity: 0.9;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.hero__location {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--or);
+  opacity: 0;
+}
+.hero__separator {
+  width: 40px;
+  height: 1px;
+  background: var(--or);
+  margin: 2rem auto 0;
+  transform: scaleX(0);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+}
+.scroll-indicator__text {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--noir-doux);
+  opacity: 0.5;
+}
+.scroll-indicator__line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--or), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ============================================
+   SECTION 2 — LE TERROIR
+   ============================================ */
+.terroir {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 10rem 0;
+  background: var(--white-bloom);
+}
+.terroir__bg {
+  position: absolute;
+  inset: -20% 0;
+  z-index: 0;
+  will-change: transform;
+}
+.terroir__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(252,245,237,0.88) 0%,
+    rgba(252,245,237,0.55) 50%,
+    rgba(252,245,237,0.75) 100%
+  );
+  z-index: 1;
+}
+.terroir__content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+.terroir__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+.terroir__title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--noir);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+.terroir__title .word {
+  display: inline-block;
+  overflow: hidden;
+}
+.terroir__title .word-inner {
+  display: inline-block;
+  will-change: transform;
+}
+.terroir__text {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  line-height: 1.8;
+  color: var(--noir-doux);
+  opacity: 0.85;
+  margin-bottom: 3rem;
+}
+.terroir__text p {
+  margin-bottom: 1rem;
+  opacity: 0;
+}
+.terroir__keywords {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+.terroir__keyword {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--or-sombre);
+  position: relative;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  background: var(--gris-tres-clair);
+  opacity: 0;
+}
+.terroir__keyword::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--or);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.terroir__stat {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  opacity: 0;
+}
+.terroir__stat-number {
+  font-family: 'Begum', serif;
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-weight: 300;
+  color: var(--or);
+  line-height: 1;
+}
+.terroir__stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--noir-doux);
+  opacity: 0.7;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* ============================================
+   SECTION 3 — LE VIGNOBLE (Horizontal Scroll)
+   ============================================ */
+.vignoble {
+  position: relative;
+  overflow: hidden;
+  background: var(--gris-tres-clair);
+}
+.vignoble__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--or);
+  text-align: center;
+  padding: 7.5rem 0 2.5rem;
+  opacity: 0;
+}
+.vignoble__wrapper {
+  display: flex;
+  width: 400vw;
+  will-change: transform;
+}
+.vignoble__panel {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.vignoble__panel-bg {
+  position: absolute;
+  inset: 0;
+}
+.vignoble__panel-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(252,245,237,0.55);
+  z-index: 1;
+}
+.vignoble__panel-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 600px;
+  padding: 2.5rem 3rem;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 0;
+  border: 1px solid rgba(212,177,136,0.2);
+  box-shadow: 0 8px 32px rgba(44,38,32,0.08), 0 2px 8px rgba(212,177,136,0.06);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.vignoble__panel-content:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(44,38,32,0.12), 0 4px 12px rgba(212,177,136,0.1);
+}
+.vignoble__panel-number {
+  font-family: 'Begum', serif;
+  font-size: clamp(4rem, 8vw, 7rem);
+  font-weight: 300;
+  color: var(--or);
+  line-height: 1;
+  margin-bottom: 1rem;
+  opacity: 0;
+}
+.vignoble__panel-title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 300;
+  color: var(--noir);
+  margin-bottom: 1rem;
+  opacity: 0;
+}
+.vignoble__panel-text {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--noir-doux);
+  opacity: 0;
+  line-height: 1.6;
+}
+.vignoble__panel-stat {
+  margin-top: 2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  font-weight: 500;
+  opacity: 0;
+}
+
+/* Horizontal progress indicator */
+.vignoble__progress {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 0.5rem;
+}
+.vignoble__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gris-clair);
+  opacity: 0.5;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.vignoble__dot.active {
+  opacity: 1;
+  background: var(--or);
+  transform: scale(1.4);
+}
+
+/* ============================================
+   SECTION 4 — LA REVELATION (Timeline)
+   ============================================ */
+.revelation {
+  position: relative;
+  padding: 12.5rem 0;
+  background: var(--white-bloom);
+}
+.revelation__header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 6rem;
+  padding: 0 2rem;
+}
+.revelation__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+.revelation__title {
+  font-size: clamp(2.5rem, 5vw, 3.8rem);
+  color: var(--noir);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.revelation__subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--noir-doux);
+  opacity: 0;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+.timeline__line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(212,177,136,0.2);
+  transform: translateX(-50%);
+}
+.timeline__line-fill {
+  width: 100%;
+  height: 0%;
+  background: var(--or);
+  transition: none;
+}
+.timeline__step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 5rem;
+  opacity: 0;
+}
+.timeline__step:nth-child(odd) {
+  flex-direction: row;
+  text-align: right;
+  padding-right: calc(50% + 2.5rem);
+}
+.timeline__step:nth-child(even) {
+  flex-direction: row-reverse;
+  text-align: left;
+  padding-left: calc(50% + 2.5rem);
+}
+.timeline__dot {
+  position: absolute;
+  left: 50%;
+  top: 0.5rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--or);
+  background: var(--white-bloom);
+  transform: translateX(-50%) scale(0);
+  z-index: 2;
+}
+.timeline__dot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--or);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.timeline__step.active .timeline__dot::after {
+  opacity: 1;
+}
+.timeline__step-number {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--or);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.timeline__step-title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 400;
+  color: var(--noir);
+  margin-bottom: 0.5rem;
+}
+.timeline__step-text {
+  font-size: 0.9rem;
+  color: var(--noir-doux);
+  opacity: 0.65;
+  line-height: 1.6;
+}
+
+/* ============================================
+   SECTION 5 — LA DESALCOOLISATION
+   ============================================ */
+.desalc {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10rem 2rem;
+  background: var(--warm-dark);
+  overflow: hidden;
+}
+.desalc__canvas-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+#desalcCanvas {
+  width: 100%;
+  height: 100%;
+}
+.desalc__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 750px;
+}
+.desalc__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--or-pale);
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+.desalc__title {
+  font-size: clamp(2.5rem, 5vw, 3.8rem);
+  color: var(--blanc);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.desalc__method {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+
+/* Animated gauge */
+.desalc__gauge {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto 2.5rem;
+  opacity: 0;
+}
+.desalc__gauge-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(212,177,136,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.desalc__gauge-circle svg {
+  position: absolute;
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  transform: rotate(-90deg);
+}
+.desalc__gauge-circle svg circle {
+  fill: none;
+  stroke: var(--or);
+  stroke-width: 1;
+  stroke-dasharray: 691;
+  stroke-dashoffset: 0;
+  transition: none;
+}
+.desalc__gauge-value {
+  font-family: 'Begum', serif;
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: var(--blanc);
+  line-height: 1;
+}
+.desalc__gauge-unit {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-top: 0.25rem;
+}
+
+.desalc__tagline {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  color: var(--white-bloom);
+  margin-bottom: 1rem;
+  opacity: 0;
+  line-height: 1.6;
+}
+.desalc__description {
+  font-size: 0.9rem;
+  color: var(--gris-tres-clair);
+  opacity: 0;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+/* Stats row */
+.desalc__stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+.desalc__stat {
+  text-align: center;
+  opacity: 0;
+}
+.desalc__stat-value {
+  font-family: 'Begum', serif;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--or);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.desalc__stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gris-tres-clair);
+  opacity: 0.6;
+}
+
+/* ============================================
+   SECTION 6 — LA MISE EN BOUTEILLE
+   ============================================ */
+.bouteille {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10rem 2rem;
+  background: var(--warm-dark);
+  overflow: hidden;
+}
+.bouteille__canvas-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+#bubblesCanvas {
+  width: 100%;
+  height: 100%;
+}
+.bouteille__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6rem;
+  max-width: 1100px;
+  width: 100%;
+}
+.bouteille__image {
+  flex: 0 0 380px;
+  position: relative;
+  opacity: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+.bouteille__image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0;
+  overflow: hidden;
+  max-height: 70vh;
+}
+.bouteille__text {
+  flex: 1;
+}
+.bouteille__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--or-pale);
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+.bouteille__title {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  color: var(--blanc);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.bouteille__desc {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--white-bloom);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  opacity: 0;
+}
+.bouteille__design {
+  font-size: 0.9rem;
+  color: var(--gris-tres-clair);
+  opacity: 0;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+.bouteille__award {
+  border: 1px solid rgba(212,177,136,0.25);
+  border-radius: 0;
+  padding: 2rem;
+  opacity: 0;
+  box-shadow: 0 2px 12px rgba(44,38,32,0.06);
+}
+.bouteille__award-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.bouteille__award-text {
+  font-family: 'Begum', serif;
+  font-size: 1.3rem;
+  color: var(--blanc);
+  line-height: 1.4;
+}
+.bouteille__award-years {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--gris-tres-clair);
+  opacity: 0.6;
+  margin-top: 0.5rem;
+}
+
+/* ============================================
+   SECTION 7 — FOOTER / CTA
+   ============================================ */
+.footer {
+  position: relative;
+  padding: 12.5rem 2rem 5rem;
+  text-align: center;
+  background: var(--noir);
+}
+.footer__separator {
+  width: 60px;
+  height: 1px;
+  background: var(--or);
+  margin: 0 auto 4rem;
+  opacity: 0;
+}
+.footer__title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--blanc);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.footer__subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--gris-tres-clair);
+  opacity: 0;
+  margin-bottom: 3.5rem;
+}
+.footer__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--or);
+  text-decoration: none;
+  padding: 1.2rem 3rem;
+  border: 1px solid var(--or);
+  border-radius: 0;
+  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.3s ease;
+  opacity: 0;
+}
+.footer__cta:hover {
+  background: var(--or);
+  border-color: var(--or);
+  color: var(--noir);
+  transform: translateY(-2px);
+}
+.footer__cta-arrow {
+  transition: transform 0.3s ease;
+}
+.footer__cta:hover .footer__cta-arrow {
+  transform: translateX(4px);
+}
+.footer__bottom {
+  margin-top: 8rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(212,177,136,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer__brand {
+  font-family: 'Begum', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gris-tres-clair);
+  opacity: 0.4;
+}
+.footer__legal {
+  font-size: 0.7rem;
+  color: var(--gris-tres-clair);
+  opacity: 0.25;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .bouteille__content {
+    flex-direction: column;
+    text-align: center;
+    gap: 3rem;
+  }
+  .bouteille__image {
+    flex: none;
+    width: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar__links { display: none; }
+  .navbar__hamburger, .nav__hamburger { display: flex; }
+  .nav__cart--mobile { display: inline-flex; color: var(--blanc); opacity: 0.7; }
+  .navbar.scrolled .nav__cart--mobile { color: var(--noir); }
+  .navbar { padding: 1.2rem 1.5rem; }
+
+  .terroir__content { padding: 0 1.5rem; }
+  .terroir__keywords { gap: 1rem; }
+
+  .timeline__step:nth-child(odd),
+  .timeline__step:nth-child(even) {
+    padding-left: 2.5rem;
+    padding-right: 0;
+    text-align: left;
+    flex-direction: row;
+  }
+  .timeline__line {
+    left: 0;
+  }
+  .timeline__dot {
+    left: 0;
+  }
+  .timeline { padding: 0 1.5rem; }
+
+  .desalc__stats { gap: 1.5rem; }
+  .desalc__gauge { width: 180px; height: 180px; }
+  .desalc__gauge-value { font-size: 2.8rem; }
+
+  .bouteille__image { width: 200px; }
+  .bouteille__content { gap: 2rem; }
+
+  .footer__bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* ============================================
+   GENERAL POLISH — Soft section transitions
+   ============================================ */
+.revelation {
+  position: relative;
+}
+.revelation::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--gris-tres-clair), var(--white-bloom));
+  pointer-events: none;
+}
+.desalc::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--white-bloom), var(--warm-dark));
+  pointer-events: none;
+  z-index: 1;
+}
+.bouteille::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--warm-dark), var(--warm-dark));
+  pointer-events: none;
+  z-index: 1;
+}
+.footer::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--warm-dark), var(--noir));
+  pointer-events: none;
+  z-index: 1;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     NAVIGATION
+     ============================================ -->
+<nav class="navbar">
+  <ul class="navbar__links navbar__links--left">
+    <li><a href="collection.html">COLLECTION</a></li>
+    <li><a href="la-maison.html">LA MAISON</a></li>
+    <li><a href="#">SAVOIR-FAIRE</a></li>
+  </ul>
+  <a href="homepage.html" class="navbar__logo" aria-label="French Bloom">
+    <svg viewBox="0 0 646.2 67.7" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M20.9 34.7 20.9 45.1C20.9 46.8 21.2 48.1 21.8 48.7 22.4 49.4 23.6 49.7 25.5 49.7L26.3 49.7 26.3 52.8 5.8 52.8 5.8 49.7 6.4 49.7C8.3 49.7 9.5 49.3 10.1 48.6 10.7 47.9 11 46.7 11 45L11 22.3C11 20.6 10.7 19.3 10.1 18.7 9.5 18 8.3 17.7 6.4 17.7L5.7 17.7 5.7 14.6 37.7 14.6 38 24.7 34.8 24.7C34.3 23 33.7 21.6 33 20.5 32.3 19.4 31.5 18.7 30.7 18.4 29.9 18.1 28.7 17.9 27.1 17.9L20.9 17.9 20.9 31.1 23.9 31.1C25.3 31.1 26.3 30.8 26.9 30.2 27.5 29.6 27.8 28.3 27.9 26.4L31.1 26.4 31.1 39.5 27.9 39.5C27.9 37.5 27.5 36.1 26.9 35.5 26.3 34.9 25.3 34.5 23.8 34.5L20.8 34.5Z"/><path d="M67.3 36 67.3 45C67.3 46.7 67.6 48 68.2 48.6 68.8 49.3 70 49.6 71.9 49.6L72.6 49.6 72.6 52.7 52 52.7 52 49.6 52.8 49.6C54.7 49.6 56 49.3 56.5 48.5 57.1 47.8 57.4 46.6 57.4 44.9L57.4 22.3C57.4 20.6 57.1 19.3 56.5 18.6 55.9 17.9 54.7 17.6 52.8 17.6L52 17.6 52 14.5 70.7 14.5C74.1 14.5 76.6 14.6 78.1 14.8 79.7 15 81.2 15.6 82.7 16.4 84.2 17.3 85.4 18.4 86.3 19.9 87.2 21.4 87.6 23 87.6 24.7 87.6 29.2 85 32.4 79.9 34 81.3 34.9 83.4 37.6 86.3 42.1 88.6 45.6 90.2 47.7 91.1 48.5 92.1 49.2 93.1 49.6 94.3 49.6L94.3 52.7 82.4 52.7C81.3 51.4 79.3 48.1 76.3 42.8 74.8 40.1 73.8 38.4 73.2 37.6 72.6 36.8 72 36.3 71.4 36.1 70.8 35.9 69.4 35.8 67.3 35.8M67.3 32.6C70.5 32.6 72.6 32.4 73.7 32 74.8 31.6 75.7 30.8 76.3 29.7 76.9 28.6 77.3 27.1 77.3 25.2 77.3 22.5 76.7 20.7 75.4 19.6 74.1 18.5 71.9 18.1 68.8 18.1 65.7 18.1 67.9 18.1 67.3 18.1L67.3 32.5Z"/><path d="M123.6 34.6 123.6 44C123.6 45.8 123.6 47 123.9 47.5 124.1 48.1 124.7 48.5 125.6 48.9 126.5 49.3 127.9 49.5 129.7 49.5 131.5 49.5 134 49.2 135.2 48.6 136.4 48 137.4 46.9 138.4 45.3 139.3 43.7 140 42.1 140.4 40.3L143.6 40.3 143.3 52.8 108.4 52.8 108.4 49.7 109.1 49.7C111 49.7 112.2 49.3 112.8 48.6 113.4 47.9 113.7 46.7 113.7 45L113.7 22.3C113.7 20.6 113.4 19.3 112.8 18.7 112.2 18 111 17.7 109.1 17.7L108.4 17.7 108.4 14.6 141 14.6 141.6 24.5 138.4 24.5C137.8 22.8 137.2 21.4 136.5 20.4 135.8 19.4 135.1 18.7 134.4 18.4 133.7 18.1 132.5 18 130.8 18L123.7 18 123.7 31.2 127.3 31.2C129 31.2 130.1 30.9 130.7 30.2 131.3 29.6 131.6 28.3 131.6 26.4L134.8 26.4 134.8 39.4 131.6 39.4 131.6 38.9C131.6 37.8 131.4 36.8 130.9 35.9 130.4 35 129.3 34.6 127.4 34.6L123.6 34.6Z"/><path d="M168.8 25.6 168.8 43.2C168.8 46 169.3 47.8 170.3 48.6 171.3 49.4 172.6 49.8 174.2 49.8L174.2 52.9 159.9 52.9 159.9 49.8C161.1 49.8 162.2 49.5 163.1 48.9 164 48.3 164.6 47.6 164.8 46.8 165 46 165.2 44.8 165.2 43.1L165.2 23.6C165.2 19.7 163.4 17.8 159.7 17.8L159.7 14.7 172.6 14.7 193.5 38.1 193.5 24.1C193.5 19.9 191.7 17.8 188.2 17.8L188.2 14.7 201.9 14.7 201.9 17.8C200.9 17.8 200 18.1 199.2 18.6 198.4 19.1 197.8 19.8 197.5 20.6 197.2 21.4 197.1 22.6 197.1 24.2L197.1 53.5 193.5 53.5 168.7 25.5Z"/><path d="M255.9 38.2 255.9 52.5 252.8 52.5C252.4 51 251.9 49.8 251.2 48.8 248 52 243.8 53.6 238.6 53.6 233.4 53.6 227.9 51.7 224.4 47.8 220.8 43.9 219.1 39.3 219.1 34 219.1 28.7 220.9 24.1 224.4 20 227.9 15.9 232.8 13.9 239 13.9 245.2 13.9 247.6 15.4 250.8 18.5 251.2 17.5 251.6 16.4 252 15.1L255.1 15.1 255.5 29.2 252.4 29.2C251.5 25.4 250 22.5 247.9 20.5 245.8 18.5 243.3 17.6 240.4 17.6 237.5 17.6 234.6 18.9 232.9 21.5 231.2 24.1 230.4 28.1 230.4 33.6 230.4 39.1 230.7 40.5 231.3 42.8 231.9 45.1 233.1 46.8 234.9 48 236.7 49.2 238.6 49.8 240.7 49.8 242.8 49.8 246 48.8 248.1 46.9 250.3 45 251.8 42 252.8 38.1L255.9 38.1Z"/><path d="M289.1 34.6 289.1 45.1C289.1 46.9 289.4 48.1 290 48.8 290.6 49.5 292 49.8 294 49.8L294 52.9 274.1 52.9 274.1 49.8C276.1 49.8 277.4 49.5 278.1 48.9 278.8 48.3 279.1 47 279.1 45.2L279.1 22.6C279.1 20.8 278.8 19.6 278.2 18.9 277.6 18.2 276.2 17.9 274.1 17.9L274.1 14.8 294 14.8 294 17.9C292 17.9 290.7 18.2 290 18.9 289.4 19.6 289 20.8 289 22.6L289 31.2 304.7 31.2 304.7 22.6C304.7 20.8 304.4 19.6 303.8 18.9 303.2 18.2 301.9 17.9 299.9 17.9L299.9 14.8 319.8 14.8 319.8 17.9C317.8 17.9 316.4 18.2 315.8 18.8 315.1 19.4 314.8 20.7 314.8 22.6L314.8 45.2C314.8 47 315.1 48.3 315.8 48.9 316.4 49.5 317.8 49.9 319.9 49.9L319.9 53 300 53 300 49.9C302 49.9 303.3 49.6 303.9 48.9 304.5 48.2 304.8 47 304.8 45.2L304.8 34.7 289.1 34.7Z"/><path d="M387.2 32.6C391 33.3 393.8 34.5 395.7 36.2 397.6 37.9 398.5 40.2 398.5 42.9 398.5 45.6 397.3 48.4 394.9 50.2 392.5 52 388.5 52.9 382.9 52.9L362.9 52.9 362.9 49.8C364.9 49.8 366.2 49.5 366.9 48.9 367.6 48.3 367.9 47 367.9 45.2L367.9 22.8C367.9 21 367.6 19.8 367 19.1 366.4 18.4 365 18.1 362.9 18.1L362.9 15 377.6 14.6 379.7 14.6C386.3 14.6 390.8 15.4 393.2 17.1 395.6 18.7 396.8 21 396.8 23.8 396.8 26.6 396 27.8 394.4 29.2 392.8 30.7 390.4 31.8 387.2 32.7M377.8 30.9 379.7 30.9C381.8 30.9 383.3 30.4 384.3 29.4 385.3 28.4 385.8 26.8 385.8 24.4 385.8 22 385.5 21.2 384.8 20.2 384.2 19.2 383.3 18.5 382.3 18.2 381.3 17.9 379.7 17.7 377.7 17.7L377.7 30.9ZM377.8 34.4 377.8 45.2C377.8 46.3 377.9 47.1 378.1 47.6 378.3 48.1 378.7 48.6 379.4 49 380 49.4 380.9 49.6 382.1 49.6 383.9 49.6 385.2 49 386.1 47.7 387 46.4 387.4 44.6 387.4 42 387.4 39.4 387.1 38.4 386.5 37.3 385.9 36.2 385.1 35.4 384.1 35 383.1 34.6 381.6 34.4 379.6 34.4L377.8 34.4Z"/><path d="M450.2 40.2 450 52.9 415.2 52.9 415.2 49.8 415.8 49.8C417.7 49.8 419 49.4 419.5 48.7 420.1 48 420.4 46.8 420.4 45.1L420.4 22.5C420.4 20.8 420.1 19.5 419.5 18.8 418.9 18.1 417.7 17.8 415.8 17.8L415.2 17.8 415.2 14.7 435.7 14.7 435.7 17.8 434.9 17.8C433 17.8 431.7 18.2 431.2 18.9 430.6 19.6 430.3 20.8 430.3 22.5L430.3 44.3C430.3 45.9 430.3 47 430.6 47.5 430.8 48 431.3 48.5 432.1 48.9 432.9 49.3 434.3 49.5 436.3 49.5 439.6 49.5 442.1 48.7 443.8 47 445.5 45.3 446.6 43.1 447.2 40.2L450.2 40.2Z"/><path d="M465.6 33.7C465.6 30.3 466.6 26.9 468.5 23.6 470.4 20.3 473 17.9 476.3 16.3 479.6 14.7 483.1 13.9 486.8 13.9 493.5 13.9 498.8 15.8 502.6 19.7 506.4 23.6 508.3 28.3 508.3 34 508.3 39.7 506.4 44 502.6 47.8 498.8 51.6 493.6 53.6 487 53.6 480.4 53.6 478.5 52.7 475.1 50.8 471.6 48.9 469.2 46.3 467.7 43.1 466.2 39.9 465.5 36.7 465.5 33.6M477.3 33.4C477.3 39.3 478.1 43.5 479.7 46.1 481.3 48.7 483.6 50 486.7 50 489.8 50 492.4 48.8 494.1 46.4 495.8 44 496.6 39.9 496.6 33.9 496.6 27.9 495.8 24.4 494.3 21.7 492.8 19 490.3 17.7 486.9 17.7 483.5 17.7 481.3 19 479.7 21.4 478.1 23.9 477.3 27.9 477.3 33.3"/><path d="M526.5 33.7C526.5 30.3 527.5 26.9 529.4 23.6 531.3 20.3 533.9 17.9 537.2 16.3 540.5 14.7 544 13.9 547.7 13.9 554.4 13.9 559.7 15.8 563.5 19.7 567.3 23.6 569.2 28.3 569.2 34 569.2 39.7 567.3 44 563.5 47.8 559.7 51.6 554.5 53.6 547.9 53.6 541.3 53.6 539.4 52.7 536 50.8 532.5 48.9 530.1 46.3 528.6 43.1 527.1 39.9 526.4 36.7 526.4 33.6M538.3 33.4C538.3 39.3 539.1 43.5 540.7 46.1 542.3 48.7 544.6 50 547.7 50 550.8 50 553.4 48.8 555.1 46.4 556.8 44 557.6 39.9 557.6 33.9 557.6 27.9 556.8 24.4 555.3 21.7 553.8 19 551.3 17.7 547.9 17.7 544.5 17.7 542.3 19 540.7 21.4 539.1 23.9 538.3 27.9 538.3 33.3"/><path d="M608.7 52.9 594.5 23.1 594.5 42.9C594.5 44.7 594.5 46 594.9 46.8 595.3 47.6 595.7 48.3 596.6 48.9 597.5 49.5 598.6 49.8 599.9 49.8L599.9 52.9 586.1 52.9 586.1 49.8C587.3 49.8 588.3 49.5 589.2 48.9 590.1 48.3 590.6 47.5 590.8 46.7 591 45.9 591.1 44.6 591.1 42.8L591.1 22.7C591.1 20.8 590.8 19.5 590.1 18.9 589.4 18.2 588.1 17.9 586.1 17.9L586.1 14.8 601.4 14.8 613.2 39.9 625.1 14.8 640.5 14.8 640.5 17.9 639.7 17.9C637.8 17.9 636.5 18.2 636 19 635.4 19.7 635.1 20.9 635.1 22.6L635.1 45.2C635.1 46.9 635.4 48.2 636 48.9 636.6 49.6 637.8 49.9 639.7 49.9L640.6 49.9 640.6 53 619.8 53 619.8 49.9 620.6 49.9C622.5 49.9 623.7 49.5 624.3 48.8 624.9 48.1 625.2 46.9 625.2 45.2L625.2 22.7 611.1 53 608.7 53Z"/></svg>
+  </a>
+  <ul class="navbar__links navbar__links--right">
+    <li><a href="#">NOTRE HISTOIRE</a></li>
+    <li><button class="nav__search" aria-label="Rechercher"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="6"/><path d="M12 12l4.5 4.5"/></svg></button></li>
+    <li><a href="cart.html" class="nav__cart" aria-label="Panier"><svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h18l-1.5 13H2.5L1 7z"/><path d="M7 7V4a3 3 0 0 1 6 0v3"/></svg><span class="nav__cart-count">3</span></a></li>
+  </ul>
+  <a href="cart.html" class="nav__cart nav__cart--mobile" aria-label="Panier"><svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h18l-1.5 13H2.5L1 7z"/><path d="M7 7V4a3 3 0 0 1 6 0v3"/></svg><span class="nav__cart-count">3</span></a>
+  <div class="navbar__hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('active');this.classList.toggle('active')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu">
+  <a href="collection.html">COLLECTION</a>
+  <a href="la-maison.html">LA MAISON</a>
+  <a href="#">SAVOIR-FAIRE</a>
+  <a href="#">NOTRE HISTOIRE</a>
+  <a href="cart.html">PANIER</a>
+</div>
+
+<!-- ============================================
+     SECTION 1 — HERO
+     ============================================ -->
+<section class="hero" id="hero">
+  <div class="hero__bg">
+    <img src="assets/lifestyle/hero-mediterranean.jpg"
+         alt="Scene mediterraneenne French Bloom"
+         loading="eager">
+  </div>
+  <div class="hero__overlay"></div>
+
+  <div class="hero__content">
+    <h1 class="hero__title" data-split>LA MAISON</h1>
+    <p class="hero__subtitle">La ou l'effervescence francaise renait</p>
+    <p class="hero__location">French Bloom — Limoux, Haute Vallee de l'Aude</p>
+    <div class="hero__separator"></div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span class="scroll-indicator__text">Defiler</span>
+    <div class="scroll-indicator__line"></div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 2 — LE TERROIR
+     ============================================ -->
+<section class="terroir" id="terroir">
+  <div class="terroir__bg">
+    <img src="assets/lifestyle/hero-sand.jpg"
+         alt="Terroir French Bloom"
+         loading="lazy">
+  </div>
+  <div class="terroir__overlay"></div>
+
+  <div class="terroir__content">
+    <p class="terroir__label">Le Terroir</p>
+    <h2 class="terroir__title">
+      <span class="word"><span class="word-inner">LE BERCEAU</span></span>
+      <span class="word"><span class="word-inner">DE L'EFFERVESCENT</span></span>
+      <span class="word"><span class="word-inner">FRANCAIS</span></span>
+    </h2>
+    <div class="terroir__text">
+      <p>Depuis 1544, Limoux ecrit l'histoire des bulles. Bien avant la Champagne.</p>
+      <p>Un climat oceanique d'exception qui sublime le Chardonnay.</p>
+    </div>
+    <div class="terroir__keywords">
+      <span class="terroir__keyword" data-highlight>Altitude</span>
+      <span class="terroir__keyword" data-highlight>Fraicheur nocturne</span>
+      <span class="terroir__keyword" data-highlight>Sols calcaires</span>
+    </div>
+    <div class="terroir__stat">
+      <span class="terroir__stat-number" data-count="25">0</span>
+      <span class="terroir__stat-label">hectares au coeur de la Haute Vallee de l'Aude</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 3 — LE VIGNOBLE (Horizontal Scroll)
+     ============================================ -->
+<section class="vignoble" id="vignoble">
+  <p class="vignoble__label">Le Vignoble</p>
+  <div class="vignoble__wrapper">
+
+    <!-- Panel 1 -->
+    <div class="vignoble__panel">
+      <div class="vignoble__panel-bg">
+        <img src="assets/lifestyle/lifestyle-service.jpg"
+             alt="Service French Bloom" loading="lazy">
+      </div>
+      <div class="vignoble__panel-overlay"></div>
+      <div class="vignoble__panel-content">
+        <div class="vignoble__panel-number">01</div>
+        <h3 class="vignoble__panel-title">CHARDONNAY BIOLOGIQUE</h3>
+        <p class="vignoble__panel-text">Des ceps cultives en agriculture biologique, au plus pres de la nature.</p>
+        <p class="vignoble__panel-stat">100% biologique</p>
+      </div>
+    </div>
+
+    <!-- Panel 2 -->
+    <div class="vignoble__panel">
+      <div class="vignoble__panel-bg">
+        <img src="assets/lifestyle/lifestyle-dining.jpg"
+             alt="Dining French Bloom" loading="lazy">
+      </div>
+      <div class="vignoble__panel-overlay"></div>
+      <div class="vignoble__panel-content">
+        <div class="vignoble__panel-number">02</div>
+        <h3 class="vignoble__panel-title">RECOLTES PLUS TOT</h3>
+        <p class="vignoble__panel-text">A leur fraicheur optimale, pour preserver une acidite naturelle vibrante.</p>
+        <p class="vignoble__panel-stat">0 sulfite ajoute</p>
+      </div>
+    </div>
+
+    <!-- Panel 3 -->
+    <div class="vignoble__panel">
+      <div class="vignoble__panel-bg">
+        <img src="assets/lifestyle/lifestyle-convivial.jpg"
+             alt="Convivialite French Bloom" loading="lazy">
+      </div>
+      <div class="vignoble__panel-overlay"></div>
+      <div class="vignoble__panel-content">
+        <div class="vignoble__panel-number">03</div>
+        <h3 class="vignoble__panel-title">ACIDITE NATURELLE PRESERVEE</h3>
+        <p class="vignoble__panel-text">Le fruit d'un terroir d'altitude qui confere fraicheur et tension.</p>
+        <p class="vignoble__panel-stat">0 sucre ajoute</p>
+      </div>
+    </div>
+
+    <!-- Panel 4 -->
+    <div class="vignoble__panel">
+      <div class="vignoble__panel-bg">
+        <img src="assets/lifestyle/lifestyle-festive.jpg"
+             alt="Festive French Bloom" loading="lazy">
+      </div>
+      <div class="vignoble__panel-overlay"></div>
+      <div class="vignoble__panel-content">
+        <div class="vignoble__panel-number">04</div>
+        <h3 class="vignoble__panel-title">DIRECTION LA CUVERIE</h3>
+        <p class="vignoble__panel-text">La ou commence la magie de la revelation.</p>
+        <p class="vignoble__panel-stat">Chardonnay - Pinot Noir</p>
+      </div>
+    </div>
+
+  </div>
+  <!-- Progress dots -->
+  <div class="vignoble__progress">
+    <div class="vignoble__dot active"></div>
+    <div class="vignoble__dot"></div>
+    <div class="vignoble__dot"></div>
+    <div class="vignoble__dot"></div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 4 — LA REVELATION (Timeline)
+     ============================================ -->
+<section class="revelation" id="revelation">
+  <div class="revelation__header">
+    <p class="revelation__label">Le Processus</p>
+    <h2 class="revelation__title">LA REVELATION</h2>
+    <p class="revelation__subtitle">Creer le vin parfait avant meme la desalcoolisation.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline__line">
+      <div class="timeline__line-fill"></div>
+    </div>
+
+    <div class="timeline__step">
+      <div class="timeline__dot"></div>
+      <div class="timeline__step-content">
+        <p class="timeline__step-number">Etape 01</p>
+        <h3 class="timeline__step-title">VINIFICATION BIOLOGIQUE</h3>
+        <p class="timeline__step-text">Une vinification traditionnelle qui respecte la matiere premiere dans son integralite.</p>
+      </div>
+    </div>
+
+    <div class="timeline__step">
+      <div class="timeline__dot"></div>
+      <div class="timeline__step-content">
+        <p class="timeline__step-number">Etape 02</p>
+        <h3 class="timeline__step-title">ELEVAGE EN FUTS DE CHENE</h3>
+        <p class="timeline__step-text">8 mois pour 30% des vins — une patine boisee qui apporte profondeur et complexite.</p>
+      </div>
+    </div>
+
+    <div class="timeline__step">
+      <div class="timeline__dot"></div>
+      <div class="timeline__step-content">
+        <p class="timeline__step-number">Etape 03</p>
+        <h3 class="timeline__step-title">ASSEMBLAGE DE PRECISION</h3>
+        <p class="timeline__step-text">Plus de 70 ajustements pour atteindre l'equilibre parfait entre structure, acidite et finesse.</p>
+      </div>
+    </div>
+
+    <div class="timeline__step">
+      <div class="timeline__dot"></div>
+      <div class="timeline__step-content">
+        <p class="timeline__step-number">Etape 04</p>
+        <h3 class="timeline__step-title">UN VIN D'EXCEPTION</h3>
+        <p class="timeline__step-text">Pret a etre revele. Le meilleur vin possible, pret pour la desalcoolisation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 5 — LA DESALCOOLISATION
+     ============================================ -->
+<section class="desalc" id="desalc">
+  <div class="desalc__canvas-container">
+    <canvas id="desalcCanvas"></canvas>
+  </div>
+
+  <div class="desalc__content">
+    <p class="desalc__label">L'Innovation</p>
+    <h2 class="desalc__title">LA DESALCOOLISATION</h2>
+    <p class="desalc__method">Distillation sous vide a basse temperature</p>
+
+    <div class="desalc__gauge">
+      <div class="desalc__gauge-circle">
+        <svg viewBox="0 0 220 220">
+          <circle cx="110" cy="110" r="109"></circle>
+        </svg>
+        <span class="desalc__gauge-value">12.0</span>
+        <span class="desalc__gauge-unit">% vol.</span>
+      </div>
+    </div>
+
+    <p class="desalc__tagline">L'alcool s'evapore. La complexite reste.</p>
+    <p class="desalc__description">Une technique en trois etapes qui preserve 100% des aromes d'origine.</p>
+
+    <div class="desalc__stats">
+      <div class="desalc__stat">
+        <div class="desalc__stat-value">0.0%</div>
+        <div class="desalc__stat-label">Alcool</div>
+      </div>
+      <div class="desalc__stat">
+        <div class="desalc__stat-value">0</div>
+        <div class="desalc__stat-label">Sulfite</div>
+      </div>
+      <div class="desalc__stat">
+        <div class="desalc__stat-value">0</div>
+        <div class="desalc__stat-label">Sucre ajoute</div>
+      </div>
+      <div class="desalc__stat">
+        <div class="desalc__stat-value">5x</div>
+        <div class="desalc__stat-label">Moins de calories</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 6 — LA MISE EN BOUTEILLE
+     ============================================ -->
+<section class="bouteille" id="collection">
+  <div class="bouteille__canvas-container">
+    <canvas id="bubblesCanvas"></canvas>
+  </div>
+
+  <div class="bouteille__content">
+    <div class="bouteille__image">
+      <img src="assets/lifestyle/lifestyle-service.jpg"
+           alt="Bouteille French Bloom"
+           loading="lazy">
+    </div>
+
+    <div class="bouteille__text">
+      <p class="bouteille__label">L'Ecrin</p>
+      <h2 class="bouteille__title">UN ECRIN D'EXCEPTION</h2>
+      <p class="bouteille__desc">Col plus long. Corps plus large. Un design en rupture, pense comme un objet d'art.</p>
+      <p class="bouteille__design">Chaque bouteille incarne l'elegance et l'audace de la maison French Bloom.</p>
+
+      <div class="bouteille__award">
+        <p class="bouteille__award-badge">Distinction mondiale</p>
+        <p class="bouteille__award-text">Elu meilleur effervescent sans alcool au monde</p>
+        <p class="bouteille__award-years">World Sparkling Wine Awards — 2022 - 2023 - 2025</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 7 — FOOTER / CTA
+     ============================================ -->
+<footer class="footer">
+  <div class="footer__separator"></div>
+  <h2 class="footer__title">L'EFFERVESCENCE REINVENTEE.</h2>
+  <p class="footer__subtitle">French Bloom — Maison d'effervescents francais sans alcool</p>
+  <a href="#" class="footer__cta">
+    Decouvrir la collection
+    <span class="footer__cta-arrow">&rarr;</span>
+  </a>
+
+  <div class="footer__bottom">
+    <span class="footer__brand">French Bloom</span>
+    <span class="footer__legal">&copy; 2025 French Bloom. Tous droits reserves. L'abus d'alcool est dangereux pour la sante.</span>
+  </div>
+</footer>
+
+<!-- ============================================
+     JAVASCRIPT — Animations
+     ============================================ -->
+<script>
+(function() {
+  'use strict';
+
+  /* =========================================
+     LENIS SMOOTH SCROLL
+     ========================================= */
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+  });
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // Connect Lenis to GSAP ScrollTrigger
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  /* =========================================
+     NAVBAR SCROLL EFFECT
+     ========================================= */
+  const navbar = document.querySelector('.navbar');
+  ScrollTrigger.create({
+    start: 'top -80',
+    end: 99999,
+    toggleClass: { targets: navbar, className: 'scrolled' },
+  });
+
+  /* =========================================
+     SPLIT TEXT UTILITY
+     ========================================= */
+  function splitText(el) {
+    const text = el.textContent;
+    el.innerHTML = '';
+    text.split('').forEach((char) => {
+      const span = document.createElement('span');
+      span.classList.add('char');
+      span.textContent = char === ' ' ? '\u00A0' : char;
+      el.appendChild(span);
+    });
+    return el.querySelectorAll('.char');
+  }
+
+  /* =========================================
+     SECTION 1 — HERO ANIMATIONS
+     ========================================= */
+  const heroTitle = document.querySelector('.hero__title');
+  const heroChars = splitText(heroTitle);
+  const heroTl = gsap.timeline({ delay: 0.5 });
+
+  heroTl
+    .from(heroChars, {
+      y: 120,
+      opacity: 0,
+      rotateX: -90,
+      stagger: 0.04,
+      duration: 1.2,
+      ease: 'power4.out',
+    })
+    .from('.hero__subtitle', {
+      y: 30,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out',
+    }, '-=0.5')
+    .to('.hero__location', {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+    }, '-=0.4')
+    .to('.hero__separator', {
+      scaleX: 1,
+      duration: 0.8,
+      ease: 'power3.inOut',
+    }, '-=0.3')
+    .to('.scroll-indicator', {
+      opacity: 1,
+      duration: 0.8,
+    }, '-=0.2');
+
+  // Hero parallax
+  gsap.to('.hero__bg', {
+    y: '30%',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true,
+    },
+  });
+
+  // Fade out hero on scroll
+  gsap.to('.hero__content', {
+    y: -80,
+    opacity: 0,
+    scrollTrigger: {
+      trigger: '.hero',
+      start: '60% top',
+      end: 'bottom top',
+      scrub: true,
+    },
+  });
+
+  /* =========================================
+     SECTION 2 — LE TERROIR
+     ========================================= */
+  // Parallax background
+  gsap.to('.terroir__bg', {
+    y: '25%',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.terroir',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+    },
+  });
+
+  const terroirTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.terroir',
+      start: 'top 70%',
+      end: 'center center',
+      toggleActions: 'play none none reverse',
+    },
+  });
+
+  terroirTl
+    .to('.terroir__label', { opacity: 1, duration: 0.6 })
+    .from('.terroir__title .word-inner', {
+      y: '110%',
+      stagger: 0.15,
+      duration: 1,
+      ease: 'power4.out',
+    }, '-=0.3')
+    .to('.terroir__text p', {
+      opacity: 0.85,
+      y: 0,
+      stagger: 0.2,
+      duration: 0.8,
+      ease: 'power3.out',
+    }, '-=0.5')
+    .to('.terroir__keyword', {
+      opacity: 1,
+      stagger: 0.12,
+      duration: 0.6,
+      onComplete: function() {
+        document.querySelectorAll('.terroir__keyword').forEach((k) => {
+          gsap.to(k.querySelector('::after') || k, {
+            onStart: () => {
+              gsap.to(k, { '--after-scale': 1 });
+            },
+          });
+        });
+      },
+    }, '-=0.3')
+    .to('.terroir__stat', { opacity: 1, duration: 0.8 }, '-=0.2');
+
+  // Keyword underline animation
+  document.querySelectorAll('.terroir__keyword').forEach((kw) => {
+    ScrollTrigger.create({
+      trigger: kw,
+      start: 'top 80%',
+      onEnter: () => {
+        gsap.to(kw, {
+          '--underline': '1',
+          duration: 0.6,
+          ease: 'power2.out',
+          onUpdate: function() {
+            kw.style.setProperty('--uScale', this.progress());
+          },
+        });
+        gsap.fromTo(
+          kw,
+          { backgroundSize: '0% 1px' },
+          { backgroundSize: '100% 1px', duration: 0.8, delay: 0.2 }
+        );
+      },
+    });
+  });
+
+  // Animate keyword underlines with CSS
+  gsap.utils.toArray('.terroir__keyword').forEach((kw) => {
+    ScrollTrigger.create({
+      trigger: kw,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        gsap.to(kw.querySelector(':after') || kw, { duration: 0.6 });
+        // Direct style manipulation for pseudo-element
+        kw.style.cssText += `
+          background-image: linear-gradient(var(--or), var(--or));
+          background-repeat: no-repeat;
+          background-position: bottom left;
+          background-size: 0% 1px;
+          transition: background-size 0.8s ease;
+        `;
+        requestAnimationFrame(() => {
+          kw.style.backgroundSize = '100% 1px';
+        });
+      },
+    });
+  });
+
+  // Animated counter for "25 hectares"
+  const statNumber = document.querySelector('.terroir__stat-number');
+  const countTarget = parseInt(statNumber.getAttribute('data-count'));
+  const counterObj = { value: 0 };
+
+  ScrollTrigger.create({
+    trigger: '.terroir__stat',
+    start: 'top 80%',
+    once: true,
+    onEnter: () => {
+      gsap.to(counterObj, {
+        value: countTarget,
+        duration: 2,
+        ease: 'power2.out',
+        snap: { value: 1 },
+        onUpdate: () => {
+          statNumber.textContent = Math.round(counterObj.value);
+        },
+      });
+    },
+  });
+
+  /* =========================================
+     SECTION 3 — LE VIGNOBLE (Horizontal Scroll)
+     ========================================= */
+  // Label reveal
+  gsap.to('.vignoble__label', {
+    opacity: 1,
+    scrollTrigger: {
+      trigger: '.vignoble',
+      start: 'top 80%',
+      toggleActions: 'play none none reverse',
+    },
+    duration: 0.6,
+  });
+
+  const panels = gsap.utils.toArray('.vignoble__panel');
+  const wrapper = document.querySelector('.vignoble__wrapper');
+  const dots = document.querySelectorAll('.vignoble__dot');
+
+  const horizontalScroll = gsap.to(wrapper, {
+    x: () => -(wrapper.scrollWidth - window.innerWidth),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.vignoble',
+      pin: true,
+      scrub: 1,
+      end: () => '+=' + (wrapper.scrollWidth - window.innerWidth),
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const activeIndex = Math.min(
+          Math.floor(progress * panels.length),
+          panels.length - 1
+        );
+        dots.forEach((d, i) => d.classList.toggle('active', i === activeIndex));
+      },
+    },
+  });
+
+  // Panel content reveals
+  panels.forEach((panel, i) => {
+    const content = panel.querySelector('.vignoble__panel-content');
+    const num = panel.querySelector('.vignoble__panel-number');
+    const title = panel.querySelector('.vignoble__panel-title');
+    const text = panel.querySelector('.vignoble__panel-text');
+    const stat = panel.querySelector('.vignoble__panel-stat');
+
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: panel,
+        containerAnimation: horizontalScroll,
+        start: 'left 70%',
+        end: 'left 30%',
+        toggleActions: 'play none none reverse',
+      },
+    })
+      .to(num, { opacity: 1, y: 0, duration: 0.6 })
+      .to(title, { opacity: 1, y: 0, duration: 0.6 }, '-=0.3')
+      .to(text, { opacity: 0.85, y: 0, duration: 0.6 }, '-=0.3')
+      .to(stat, { opacity: 1, y: 0, duration: 0.6 }, '-=0.3');
+  });
+
+  /* =========================================
+     SECTION 4 — LA REVELATION (Timeline)
+     ========================================= */
+  const revTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.revelation__header',
+      start: 'top 70%',
+      toggleActions: 'play none none reverse',
+    },
+  });
+
+  revTl
+    .to('.revelation__label', { opacity: 1, duration: 0.6 })
+    .to('.revelation__title', { opacity: 1, y: 0, duration: 0.8 }, '-=0.3')
+    .to('.revelation__subtitle', { opacity: 0.85, y: 0, duration: 0.8 }, '-=0.3');
+
+  // Timeline line fill
+  gsap.to('.timeline__line-fill', {
+    height: '100%',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.timeline',
+      start: 'top 60%',
+      end: 'bottom 60%',
+      scrub: true,
+    },
+  });
+
+  // Timeline steps
+  gsap.utils.toArray('.timeline__step').forEach((step, i) => {
+    const dot = step.querySelector('.timeline__dot');
+
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: step,
+        start: 'top 65%',
+        toggleActions: 'play none none reverse',
+        onEnter: () => step.classList.add('active'),
+        onLeaveBack: () => step.classList.remove('active'),
+      },
+    })
+      .to(step, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+      .to(dot, { scale: 1, duration: 0.4, ease: 'back.out(2)' }, '-=0.4');
+  });
+
+  /* =========================================
+     SECTION 5 — LA DESALCOOLISATION
+     ========================================= */
+
+  // Particle Canvas
+  const desalcCanvas = document.getElementById('desalcCanvas');
+  const dCtx = desalcCanvas.getContext('2d');
+  let dParticles = [];
+  let desalcProgress = 0;
+
+  function resizeDesalcCanvas() {
+    const rect = desalcCanvas.parentElement.getBoundingClientRect();
+    desalcCanvas.width = rect.width * window.devicePixelRatio;
+    desalcCanvas.height = rect.height * window.devicePixelRatio;
+    dCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    desalcCanvas.style.width = rect.width + 'px';
+    desalcCanvas.style.height = rect.height + 'px';
+  }
+  resizeDesalcCanvas();
+  window.addEventListener('resize', resizeDesalcCanvas);
+
+  // Create particles
+  function createDesalcParticles() {
+    const w = desalcCanvas.width / window.devicePixelRatio;
+    const h = desalcCanvas.height / window.devicePixelRatio;
+    dParticles = [];
+
+    // Alcohol particles (will rise and fade)
+    for (let i = 0; i < 60; i++) {
+      dParticles.push({
+        type: 'alcohol',
+        x: w * 0.2 + Math.random() * w * 0.6,
+        y: h * 0.3 + Math.random() * h * 0.5,
+        baseY: 0,
+        size: 2 + Math.random() * 4,
+        speed: 0.3 + Math.random() * 0.8,
+        opacity: 0.15 + Math.random() * 0.3,
+        drift: (Math.random() - 0.5) * 0.5,
+        phase: Math.random() * Math.PI * 2,
+      });
+      dParticles[dParticles.length - 1].baseY = dParticles[dParticles.length - 1].y;
+    }
+
+    // Aroma particles (golden, stay)
+    for (let i = 0; i < 40; i++) {
+      dParticles.push({
+        type: 'aroma',
+        x: w * 0.25 + Math.random() * w * 0.5,
+        y: h * 0.35 + Math.random() * h * 0.4,
+        size: 1.5 + Math.random() * 3,
+        opacity: 0.1 + Math.random() * 0.25,
+        phase: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.5 + Math.random() * 1,
+      });
+    }
+  }
+  createDesalcParticles();
+  window.addEventListener('resize', createDesalcParticles);
+
+  function drawDesalcParticles(time) {
+    const w = desalcCanvas.width / window.devicePixelRatio;
+    const h = desalcCanvas.height / window.devicePixelRatio;
+    dCtx.clearRect(0, 0, w, h);
+
+    dParticles.forEach((p) => {
+      if (p.type === 'alcohol') {
+        // Rise with progress
+        const rise = desalcProgress * h * 0.6;
+        const currentY = p.baseY - rise * (0.5 + p.speed * 0.5);
+        const fadeOut = Math.max(0, 1 - desalcProgress * 1.5);
+        const sway = Math.sin(time * 0.001 * p.speed + p.phase) * 15;
+
+        dCtx.beginPath();
+        dCtx.arc(p.x + sway, currentY, p.size, 0, Math.PI * 2);
+        dCtx.fillStyle = `rgba(237, 232, 224, ${p.opacity * fadeOut})`;
+        dCtx.fill();
+      } else {
+        // Aroma — gentle pulse, stay in place
+        const pulse = Math.sin(time * 0.001 * p.pulseSpeed + p.phase);
+        const grow = 1 + desalcProgress * 0.5;
+        const glowOpacity = p.opacity * (0.8 + pulse * 0.2) * (0.5 + desalcProgress * 0.8);
+
+        dCtx.beginPath();
+        dCtx.arc(p.x, p.y, p.size * grow, 0, Math.PI * 2);
+        dCtx.fillStyle = `rgba(212, 177, 136, ${glowOpacity})`;
+        dCtx.fill();
+
+        // Glow
+        if (desalcProgress > 0.3) {
+          const glowSize = p.size * grow * 3;
+          const grd = dCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowSize);
+          grd.addColorStop(0, `rgba(212, 177, 136, ${glowOpacity * 0.3})`);
+          grd.addColorStop(1, 'rgba(212, 177, 136, 0)');
+          dCtx.beginPath();
+          dCtx.arc(p.x, p.y, glowSize, 0, Math.PI * 2);
+          dCtx.fillStyle = grd;
+          dCtx.fill();
+        }
+      }
+    });
+  }
+
+  // Animate canvas
+  let desalcRafId;
+  function desalcLoop(time) {
+    drawDesalcParticles(time);
+    desalcRafId = requestAnimationFrame(desalcLoop);
+  }
+  desalcRafId = requestAnimationFrame(desalcLoop);
+
+  // ScrollTrigger for desalc progress
+  ScrollTrigger.create({
+    trigger: '.desalc',
+    start: 'top 80%',
+    end: 'bottom 20%',
+    scrub: true,
+    onUpdate: (self) => {
+      desalcProgress = self.progress;
+    },
+  });
+
+  // Content reveals
+  const desalcTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.desalc__content',
+      start: 'top 70%',
+      toggleActions: 'play none none reverse',
+    },
+  });
+
+  desalcTl
+    .to('.desalc__label', { opacity: 1, duration: 0.6 })
+    .to('.desalc__title', { opacity: 1, y: 0, duration: 0.8 }, '-=0.3')
+    .to('.desalc__method', { opacity: 1, duration: 0.6 }, '-=0.3')
+    .to('.desalc__gauge', { opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.2)' }, '-=0.2');
+
+  // Gauge animation: 12.0% -> 0.0%
+  const gaugeValue = document.querySelector('.desalc__gauge-value');
+  const gaugeCircle = document.querySelector('.desalc__gauge-circle svg circle');
+  const gaugeObj = { value: 12.0 };
+
+  ScrollTrigger.create({
+    trigger: '.desalc__gauge',
+    start: 'top 60%',
+    once: true,
+    onEnter: () => {
+      gsap.to(gaugeObj, {
+        value: 0.0,
+        duration: 3,
+        delay: 0.5,
+        ease: 'power2.inOut',
+        onUpdate: () => {
+          gaugeValue.textContent = gaugeObj.value.toFixed(1);
+          // Circle stroke animation (691 = circumference)
+          const progress = 1 - gaugeObj.value / 12;
+          gaugeCircle.style.strokeDashoffset = 691 * progress;
+        },
+      });
+    },
+  });
+
+  // Tagline and stats
+  const desalcTl2 = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.desalc__tagline',
+      start: 'top 75%',
+      toggleActions: 'play none none reverse',
+    },
+  });
+
+  desalcTl2
+    .to('.desalc__tagline', { opacity: 1, y: 0, duration: 0.8 })
+    .to('.desalc__description', { opacity: 0.7, y: 0, duration: 0.6 }, '-=0.3')
+    .to('.desalc__stat', {
+      opacity: 1,
+      y: 0,
+      stagger: 0.15,
+      duration: 0.6,
+      ease: 'power3.out',
+    }, '-=0.2');
+
+  /* =========================================
+     SECTION 6 — BOUTEILLE + BUBBLES CANVAS
+     ========================================= */
+  const bubblesCanvas = document.getElementById('bubblesCanvas');
+  const bCtx = bubblesCanvas.getContext('2d');
+  let bubbles = [];
+
+  function resizeBubblesCanvas() {
+    const rect = bubblesCanvas.parentElement.getBoundingClientRect();
+    bubblesCanvas.width = rect.width * window.devicePixelRatio;
+    bubblesCanvas.height = rect.height * window.devicePixelRatio;
+    bCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    bubblesCanvas.style.width = rect.width + 'px';
+    bubblesCanvas.style.height = rect.height + 'px';
+  }
+  resizeBubblesCanvas();
+  window.addEventListener('resize', resizeBubblesCanvas);
+
+  // Create bubbles
+  function createBubble() {
+    const w = bubblesCanvas.width / window.devicePixelRatio;
+    const h = bubblesCanvas.height / window.devicePixelRatio;
+    return {
+      x: w * 0.2 + Math.random() * w * 0.6,
+      y: h + Math.random() * 40,
+      size: 1 + Math.random() * 4,
+      speed: 0.4 + Math.random() * 1.2,
+      opacity: 0.08 + Math.random() * 0.2,
+      drift: (Math.random() - 0.5) * 0.3,
+      phase: Math.random() * Math.PI * 2,
+    };
+  }
+
+  for (let i = 0; i < 50; i++) {
+    const b = createBubble();
+    const h = bubblesCanvas.height / window.devicePixelRatio;
+    b.y = Math.random() * h; // Distribute across height initially
+    bubbles.push(b);
+  }
+
+  function drawBubbles(time) {
+    const w = bubblesCanvas.width / window.devicePixelRatio;
+    const h = bubblesCanvas.height / window.devicePixelRatio;
+    bCtx.clearRect(0, 0, w, h);
+
+    bubbles.forEach((b) => {
+      b.y -= b.speed;
+      b.x += Math.sin(time * 0.001 + b.phase) * b.drift;
+
+      // Fade out near top
+      const fadeZone = h * 0.2;
+      const fade = b.y < fadeZone ? b.y / fadeZone : 1;
+
+      bCtx.beginPath();
+      bCtx.arc(b.x, b.y, b.size, 0, Math.PI * 2);
+      bCtx.fillStyle = `rgba(212, 177, 136, ${b.opacity * fade})`;
+      bCtx.fill();
+
+      // Highlight
+      bCtx.beginPath();
+      bCtx.arc(b.x - b.size * 0.25, b.y - b.size * 0.25, b.size * 0.3, 0, Math.PI * 2);
+      bCtx.fillStyle = `rgba(255, 255, 255, ${b.opacity * fade * 0.5})`;
+      bCtx.fill();
+
+      // Reset if off screen
+      if (b.y < -20) {
+        Object.assign(b, createBubble());
+      }
+    });
+  }
+
+  function bubblesLoop(time) {
+    drawBubbles(time);
+    requestAnimationFrame(bubblesLoop);
+  }
+  requestAnimationFrame(bubblesLoop);
+
+  // Bouteille content reveals
+  const boutTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.bouteille',
+      start: 'top 60%',
+      toggleActions: 'play none none reverse',
+    },
+  });
+
+  boutTl
+    .to('.bouteille__image', {
+      opacity: 1,
+      scale: 1,
+      duration: 1.2,
+      ease: 'power3.out',
+    })
+    .to('.bouteille__label', { opacity: 1, duration: 0.5 }, '-=0.6')
+    .to('.bouteille__title', { opacity: 1, y: 0, duration: 0.8 }, '-=0.3')
+    .to('.bouteille__desc', { opacity: 0.85, y: 0, duration: 0.6 }, '-=0.2')
+    .to('.bouteille__design', { opacity: 0.65, y: 0, duration: 0.6 }, '-=0.2')
+    .to('.bouteille__award', { opacity: 1, y: 0, duration: 0.8 }, '-=0.2');
+
+  // Bottle scale effect
+  gsap.fromTo('.bouteille__image', {
+    scale: 0.85,
+  }, {
+    scale: 1,
+    scrollTrigger: {
+      trigger: '.bouteille',
+      start: 'top 80%',
+      end: 'top 30%',
+      scrub: true,
+    },
+  });
+
+  /* =========================================
+     SECTION 7 — FOOTER
+     ========================================= */
+  const footerTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.footer',
+      start: 'top 75%',
+      toggleActions: 'play none none reverse',
+    },
+  });
+
+  footerTl
+    .to('.footer__separator', { opacity: 1, scaleX: 1, duration: 0.8 })
+    .to('.footer__title', { opacity: 1, y: 0, duration: 0.8 }, '-=0.3')
+    .to('.footer__subtitle', { opacity: 0.7, y: 0, duration: 0.6 }, '-=0.2')
+    .to('.footer__cta', { opacity: 1, y: 0, duration: 0.6 }, '-=0.2');
+
+  /* =========================================
+     INITIAL STATES (set by GSAP)
+     ========================================= */
+  // Set initial transforms for elements that animate in
+  gsap.set('.hero__location', { y: 20 });
+  gsap.set('.terroir__text p', { y: 30 });
+  gsap.set('.vignoble__panel-number', { y: 30 });
+  gsap.set('.vignoble__panel-title', { y: 20 });
+  gsap.set('.vignoble__panel-text', { y: 20 });
+  gsap.set('.vignoble__panel-stat', { y: 15 });
+  gsap.set('.revelation__title', { y: 40 });
+  gsap.set('.revelation__subtitle', { y: 30 });
+  gsap.set('.desalc__title', { y: 40 });
+  gsap.set('.desalc__gauge', { scale: 0.8 });
+  gsap.set('.desalc__tagline', { y: 30 });
+  gsap.set('.desalc__description', { y: 20 });
+  gsap.set('.desalc__stat', { y: 20 });
+  gsap.set('.bouteille__image', { scale: 0.85 });
+  gsap.set('.bouteille__title', { y: 30 });
+  gsap.set('.bouteille__desc', { y: 20 });
+  gsap.set('.bouteille__design', { y: 20 });
+  gsap.set('.bouteille__award', { y: 20 });
+  gsap.set('.footer__separator', { scaleX: 0 });
+  gsap.set('.footer__title', { y: 40 });
+  gsap.set('.footer__subtitle', { y: 20 });
+  gsap.set('.footer__cta', { y: 20 });
+  gsap.set('.timeline__step', { y: 40 });
+
+})();
+</script>
+
+</body>
+</html>
