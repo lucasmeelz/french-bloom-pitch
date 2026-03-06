@@ -357,6 +357,23 @@ a { color: inherit; text-decoration: none; }
 .nav__item--mega > a { transition: opacity 0.4s; }
 .nav__item--mega:hover > a { opacity: 1; }
 
+/* Force nav to white bg + dark text when mega menu is open */
+.nav.mega-open {
+  background: var(--blanc) !important;
+  border-bottom-color: rgba(212,206,196,0.25) !important;
+}
+.nav.mega-open .nav__links a,
+.nav.mega-open .nav__logo,
+.nav.mega-open .nav__search,
+.nav.mega-open .nav__cart {
+  color: var(--noir) !important;
+  opacity: 0.7;
+}
+.nav.mega-open .nav__item--mega:hover > a {
+  opacity: 1;
+  color: var(--noir) !important;
+}
+
 /* — COLLECTION — disruptive editorial layout — */
 .mega-menu--collection {
   padding: 100px clamp(2rem, 5vw, 5rem) 2.5rem;
@@ -1717,6 +1734,12 @@ a { color: inherit; text-decoration: none; }
 
   /* ---- Nav scroll ---- */
   ScrollTrigger.create({ start: 'top -80', end: 99999, toggleClass: { targets: '.nav', className: 'scrolled' } });
+
+  /* ---- Mega menu → force nav white bg ---- */
+  document.querySelectorAll('.nav__item--mega').forEach(item => {
+    item.addEventListener('mouseenter', () => document.querySelector('.nav').classList.add('mega-open'));
+    item.addEventListener('mouseleave', () => document.querySelector('.nav').classList.remove('mega-open'));
+  });
 
   /* ---- Custom cursor ---- */
   const cursor = document.querySelector('.cursor');
