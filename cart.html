@@ -785,6 +785,120 @@ a { color: inherit; text-decoration: none; }
 /* ============================================
    CROSS-SELL SECTION
    ============================================ */
+/* ============================================
+   UPSELL BANNER
+   ============================================ */
+.upsell {
+  padding: clamp(40px, 6vw, 80px) clamp(1.5rem, 5vw, 5rem);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.upsell__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4rem);
+  background: linear-gradient(135deg, #2C2620 0%, #3A3228 100%);
+  border-radius: 12px;
+  padding: clamp(2rem, 3vw, 3rem);
+  overflow: hidden;
+}
+.upsell__image {
+  flex-shrink: 0;
+  width: clamp(140px, 18vw, 220px);
+}
+.upsell__image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.3));
+}
+.upsell__content {
+  flex: 1;
+  min-width: 0;
+}
+.upsell__badge {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--blanc);
+  background: var(--or-sombre);
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+.upsell__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  font-weight: 400;
+  color: var(--blanc);
+  margin-bottom: 0.8rem;
+  text-transform: none;
+}
+.upsell__text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--gris-clair);
+  margin-bottom: 1.2rem;
+  max-width: 500px;
+}
+.upsell__pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.upsell__price-old {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--gris);
+  text-decoration: line-through;
+}
+.upsell__price-new {
+  font-family: 'Begum', serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--or-pale);
+}
+.upsell__cta {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.9rem 2rem;
+  border: 1.5px solid var(--or);
+  border-radius: 0;
+  background: transparent;
+  color: var(--or);
+  cursor: pointer;
+  transition: background 0.4s var(--ease-luxe), color 0.4s;
+}
+.upsell__cta:hover {
+  background: var(--or);
+  color: var(--blanc);
+}
+
+@media (max-width: 768px) {
+  .upsell__inner {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+  .upsell__image { width: 120px; }
+  .upsell__text { max-width: 100%; }
+  .upsell__pricing { justify-content: center; }
+}
+
+/* ============================================
+   CROSS-SELL
+   ============================================ */
 .cross-sell {
   padding: 0 clamp(1.5rem, 5vw, 5rem) clamp(60px, 8vw, 100px);
   max-width: 1400px;
@@ -867,6 +981,19 @@ a { color: inherit; text-decoration: none; }
   font-weight: 400;
   color: var(--noir);
   margin-bottom: 0.8rem;
+}
+.product-card__price-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.product-card__price-old {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--gris);
+  text-decoration: line-through;
 }
 .product-card__cta {
   display: inline-block;
@@ -1355,8 +1482,32 @@ a { color: inherit; text-decoration: none; }
 <!-- ============================================
      CROSS-SELL
      ============================================ -->
+<!-- ============================================
+     UPSELL BANNER
+     ============================================ -->
+<section class="upsell" id="upsellSection">
+  <div class="upsell__inner">
+    <div class="upsell__image">
+      <img src="assets/bottles/la-cuvee-coffret.png" alt="Coffret La Cuv&eacute;e">
+    </div>
+    <div class="upsell__content">
+      <span class="upsell__badge">&Eacute;conomisez 15%</span>
+      <h2 class="upsell__title">Passez au Coffret Prestige</h2>
+      <p class="upsell__text">Offrez (ou offrez-vous) un &eacute;crin d'exception : 3 cuv&eacute;es French Bloom dans leur coffret noir et or. Id&eacute;al pour les f&ecirc;tes, un cadeau ou un ap&eacute;ro m&eacute;morable.</p>
+      <div class="upsell__pricing">
+        <span class="upsell__price-old">132,00 &euro;</span>
+        <span class="upsell__price-new">112,00 &euro;</span>
+      </div>
+      <button class="upsell__cta" data-cursor="Ajouter">Ajouter le coffret</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     CROSS-SELL
+     ============================================ -->
 <section class="cross-sell" id="crossSellSection">
-  <p class="cross-sell__label">Compl&eacute;tez votre collection</p>
+  <p class="cross-sell__label">Compl&eacute;tez votre s&eacute;lection</p>
   <h2 class="cross-sell__title">Vous aimerez aussi</h2>
   <div class="cross-sell__grid">
 
@@ -1366,31 +1517,34 @@ a { color: inherit; text-decoration: none; }
       </div>
       <span class="product-card__badge">&Eacute;dition limit&eacute;e</span>
       <h3 class="product-card__name">La Cuv&eacute;e Vintage 2023</h3>
-      <p class="product-card__type">Blanc de Blancs sans alcool 0.0%</p>
+      <p class="product-card__type">Blanc de Blancs &middot; 0,0% alcool</p>
       <p class="product-card__price">89,00 &euro;</p>
-      <button class="product-card__cta">Ajouter</button>
+      <button class="product-card__cta">Ajouter au panier</button>
     </div>
 
     <div class="product-card" data-cursor="Voir">
       <div class="product-card__image">
-        <img src="assets/bottles/le-rose.png" alt="Le Ros&eacute;">
+        <img src="assets/bottles/la-cuvee-coffret.png" alt="Coffret D&eacute;couverte">
       </div>
-      <span class="product-card__badge">Meilleur au monde 2025</span>
-      <h3 class="product-card__name">Le Ros&eacute;</h3>
-      <p class="product-card__type">Effervescent sans alcool 0.0%</p>
-      <p class="product-card__price">34,00 &euro;</p>
-      <button class="product-card__cta">Ajouter</button>
+      <span class="product-card__badge">Coffret Cadeau</span>
+      <h3 class="product-card__name">Coffret D&eacute;couverte</h3>
+      <p class="product-card__type">Le Blanc + Le Ros&eacute; &middot; 2 &times; 75cl</p>
+      <p class="product-card__price">59,00 &euro;</p>
+      <button class="product-card__cta">Ajouter au panier</button>
     </div>
 
     <div class="product-card" data-cursor="Voir">
       <div class="product-card__image">
-        <img src="assets/bottles/le-blanc.png" alt="Le Blanc">
+        <img src="assets/bottles/extra-brut.png" alt="L'Extra Brut &times; 3">
       </div>
-      <span class="product-card__badge">Best-Seller</span>
-      <h3 class="product-card__name">Le Blanc</h3>
-      <p class="product-card__type">Effervescent sans alcool 0.0%</p>
-      <p class="product-card__price">29,00 &euro;</p>
-      <button class="product-card__cta">Ajouter</button>
+      <span class="product-card__badge">-10% d&egrave;s 3</span>
+      <h3 class="product-card__name">L'Extra Brut &times; 3</h3>
+      <p class="product-card__type">Lot de 3 bouteilles &middot; 0,0% alcool</p>
+      <div class="product-card__price-group">
+        <span class="product-card__price-old">147,00 &euro;</span>
+        <span class="product-card__price">132,30 &euro;</span>
+      </div>
+      <button class="product-card__cta">Ajouter au panier</button>
     </div>
 
   </div>
