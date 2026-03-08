@@ -149,80 +149,109 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    ============================================ */
 .overlay-menu {
   position: fixed; inset: 0;
-  background: #7B6A56;
+  background: #634A3A;
   z-index: calc(var(--z-nav) - 1);
   opacity: 0; pointer-events: none;
   transition: opacity 0.6s var(--ease-luxe);
   overflow-y: auto;
 }
 .overlay-menu.active { opacity: 1; pointer-events: all; }
+
 .overlay-menu__inner {
   display: grid;
-  grid-template-columns: 55% 1px 1fr;
+  grid-template-columns: 58fr 33fr;
   grid-template-rows: 1fr auto;
   min-height: 100vh;
-  padding: 110px clamp(2rem, 5vw, 5rem) 2.5rem;
-  gap: 0 clamp(2rem, 4vw, 4rem);
+  padding: 140px 48px 32px;
+  gap: 0 48px;
 }
-.overlay-menu__nav {
+
+.overlay-menu__left {
   grid-column: 1; grid-row: 1;
-  display: flex; flex-direction: column; justify-content: center;
-  gap: 0; padding-right: 2rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr;
+  gap: 0 32px;
+  border-right: 1px solid rgba(245,240,232,0.15);
+  padding-right: 48px;
 }
-.overlay-menu__link {
+
+.overlay-menu__nav {
+  grid-column: 1; grid-row: 1 / -1;
+  display: flex; flex-direction: column; justify-content: flex-start;
+  gap: 0;
+}
+
+.overlay-menu__item { position: relative; }
+.overlay-menu__ghost {
+  position: absolute; top: 0; left: 0;
   font-family: 'Begum', serif;
-  font-size: clamp(2rem, 4.2vw, 3.6rem);
-  color: var(--creme); opacity: 0.8; line-height: 1.2;
-  padding: 0.35em 0;
-  transition: opacity 0.35s, transform 0.4s var(--ease-luxe);
-  display: block;
+  font-size: clamp(3.5rem, 6.5vw, 94px);
+  font-weight: 200; text-transform: uppercase;
+  line-height: 0.68; color: #fff; opacity: 0.05;
+  pointer-events: none; white-space: nowrap; user-select: none;
 }
-.overlay-menu__link:hover { opacity: 1; transform: translateX(4px); }
-.overlay-menu__nav:hover .overlay-menu__link { opacity: 0.4; }
-.overlay-menu__nav:hover .overlay-menu__link:hover { opacity: 1; }
+
+.overlay-menu__link {
+  display: block;
+  font-family: 'Begum', serif;
+  font-size: clamp(3.5rem, 6.5vw, 94px);
+  font-weight: 200; text-transform: uppercase;
+  line-height: 0.68; color: var(--creme);
+  transition: opacity 0.35s;
+  white-space: nowrap; position: relative;
+}
+.overlay-menu__link:hover { opacity: 0.7; }
+.overlay-menu__nav:hover .overlay-menu__item .overlay-menu__link { opacity: 0.4; }
+.overlay-menu__nav:hover .overlay-menu__item:hover .overlay-menu__link { opacity: 1; }
+
 .overlay-menu__sub {
-  display: flex; gap: 1.5rem; flex-wrap: wrap; padding: 0.3rem 0 1rem;
+  display: flex; gap: clamp(1.2rem, 2.5vw, 2.5rem); flex-wrap: wrap;
+  padding: 12px 0 clamp(1rem, 2vw, 1.8rem);
 }
 .overlay-menu__sub a {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--creme); opacity: 0.45; transition: opacity 0.3s;
+  font-family: 'Begum', serif;
+  font-size: clamp(14px, 1.3vw, 19px); font-weight: 400;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: #fff; opacity: 0.6; transition: opacity 0.3s;
 }
-.overlay-menu__sub a:hover { opacity: 0.85; }
-.overlay-menu__sep {
-  grid-column: 2; grid-row: 1 / -1;
-  background: rgba(245,240,232,0.12);
+.overlay-menu__sub a:hover { opacity: 1; }
+
+.overlay-menu__social {
+  grid-column: 2; grid-row: 1;
+  display: flex; flex-direction: column;
+  gap: 6px; text-align: right;
 }
-.overlay-menu__right {
-  grid-column: 3; grid-row: 1;
-  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem;
-}
-.overlay-menu__image {
-  width: 100%; max-width: 420px; aspect-ratio: 3 / 4;
-  border-radius: 6px; overflow: hidden;
-}
-.overlay-menu__image img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: opacity 0.5s var(--ease-luxe), transform 0.6s var(--ease-luxe);
-}
-.overlay-menu__social { display: flex; gap: 1.5rem; }
 .overlay-menu__social a {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--creme); opacity: 0.4; transition: opacity 0.3s;
+  font-size: 14px; font-weight: 400;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  color: var(--creme); opacity: 0.55; transition: opacity 0.3s;
 }
-.overlay-menu__social a:hover { opacity: 0.8; }
+.overlay-menu__social a:hover { opacity: 1; }
+
+.overlay-menu__right {
+  grid-column: 2; grid-row: 1;
+  display: flex; align-items: flex-start; justify-content: center;
+}
+.overlay-menu__right img {
+  width: 100%; max-height: 70vh;
+  object-fit: cover; transition: opacity 0.4s var(--ease-luxe);
+}
+
 .overlay-menu__footer {
-  grid-column: 1 / -1;
-  display: flex; gap: 2rem; justify-content: center;
-  padding-top: 2rem; border-top: 1px solid rgba(245,240,232,0.08);
+  grid-column: 1 / -1; grid-row: 2;
+  display: flex; gap: clamp(1.5rem, 3vw, 3rem);
+  justify-content: flex-start; flex-wrap: wrap;
+  padding-top: 60px;
 }
 .overlay-menu__footer a {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--creme); opacity: 0.35; transition: opacity 0.3s;
+  font-size: 14px; font-weight: 400;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  color: var(--creme); opacity: 0.4; transition: opacity 0.3s;
 }
-.overlay-menu__footer a:hover { opacity: 0.7; }
+.overlay-menu__footer a:hover { opacity: 0.8; }
 
 /* ============================================
    CART HEADER
@@ -654,10 +683,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 @media (max-width: 900px) {
   .nav__quick-links { display: none; }
   .overlay-menu__inner { grid-template-columns: 1fr; padding-top: 80px; min-height: auto; }
-  .overlay-menu__sep, .overlay-menu__right { display: none; }
+  .overlay-menu__left { border-right: none; padding-right: 0; grid-template-columns: 1fr; }
+  .overlay-menu__right { display: none; }
+  .overlay-menu__social { grid-column: 1; grid-row: auto; flex-direction: row; gap: 1.2rem; text-align: center; justify-content: center; padding-top: 1.5rem; }
   .overlay-menu__nav { align-items: center; text-align: center; }
-  .overlay-menu__link { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+  .overlay-menu__link { font-size: clamp(2rem, 8vw, 3.2rem); }
+  .overlay-menu__ghost { font-size: clamp(2rem, 8vw, 3.2rem); left: 50%; transform: translateX(-50%); }
   .overlay-menu__sub { justify-content: center; }
+  .overlay-menu__footer { justify-content: center; }
 
   .cart-layout { grid-template-columns: 1fr; padding-top: 2rem; }
   .cart-sidebar { position: static; top: auto; }
@@ -723,33 +756,43 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 <!-- ========== OVERLAY MENU ========== -->
 <div class="overlay-menu" id="overlayMenu" aria-hidden="true">
   <div class="overlay-menu__inner">
-    <div class="overlay-menu__nav">
-      <a href="collection-v2.html" class="overlay-menu__link" data-img="assets/lifestyle/lifestyle-festive.jpg">La Collection</a>
-      <div class="overlay-menu__sub">
-        <a href="product-v2.html">Le Blanc</a>
-        <a href="product-v2.html">Le Rosé</a>
-        <a href="product-v2.html">L'Extra Brut</a>
-        <a href="product-v2.html">La Cuvée Vintage</a>
-      </div>
-      <a href="la-maison-v2.html" class="overlay-menu__link" data-img="assets/lifestyle/lifestyle-convivial.jpg">La Maison</a>
-      <div class="overlay-menu__sub">
-        <a href="la-maison-v2.html">Savoir-Faire</a>
-        <a href="la-maison-v2.html">Notre Histoire</a>
-        <a href="la-maison-v2.html">Terroir</a>
-      </div>
-      <a href="#" class="overlay-menu__link" data-img="assets/lifestyle/hero-mediterranean.jpg">Nos Moments</a>
-      <a href="#" class="overlay-menu__link" data-img="assets/lifestyle/editorial-large.jpg">Journal</a>
-    </div>
-    <div class="overlay-menu__sep"></div>
-    <div class="overlay-menu__right">
-      <div class="overlay-menu__image">
-        <img src="assets/lifestyle/lifestyle-festive.jpg" alt="" id="overlayImg">
+    <div class="overlay-menu__left">
+      <div class="overlay-menu__nav">
+        <div class="overlay-menu__item">
+          <span class="overlay-menu__ghost" aria-hidden="true">La Collection</span>
+          <a href="collection-v2.html" class="overlay-menu__link" data-img="assets/lifestyle/lifestyle-festive.jpg">La Collection</a>
+          <div class="overlay-menu__sub">
+            <a href="product-v2.html">Le Blanc</a>
+            <a href="product-v2.html">Le Rosé</a>
+            <a href="product-v2.html">L'Extra Brut</a>
+            <a href="product-v2.html">La Cuvée Vintage</a>
+          </div>
+        </div>
+        <div class="overlay-menu__item">
+          <span class="overlay-menu__ghost" aria-hidden="true">La Maison</span>
+          <a href="la-maison-v2.html" class="overlay-menu__link" data-img="assets/lifestyle/lifestyle-convivial.jpg">La Maison</a>
+          <div class="overlay-menu__sub">
+            <a href="la-maison-v2.html">Savoir-Faire</a>
+            <a href="la-maison-v2.html">Notre Histoire</a>
+            <a href="la-maison-v2.html">Terroir</a>
+          </div>
+        </div>
+        <div class="overlay-menu__item">
+          <span class="overlay-menu__ghost" aria-hidden="true">Nos Moments</span>
+          <a href="#" class="overlay-menu__link" data-img="assets/lifestyle/hero-mediterranean.jpg">Nos Moments</a>
+        </div>
+        <div class="overlay-menu__item">
+          <span class="overlay-menu__ghost" aria-hidden="true">Journal</span>
+          <a href="#" class="overlay-menu__link" data-img="assets/lifestyle/editorial-large.jpg">Journal</a>
+        </div>
       </div>
       <div class="overlay-menu__social">
         <a href="#">Instagram</a>
         <a href="#">Facebook</a>
-        <a href="#">LinkedIn</a>
       </div>
+    </div>
+    <div class="overlay-menu__right">
+      <img src="assets/lifestyle/lifestyle-festive.jpg" alt="" id="overlayImg">
     </div>
     <div class="overlay-menu__footer">
       <a href="#">Livraison</a>
