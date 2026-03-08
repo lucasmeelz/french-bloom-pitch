@@ -183,17 +183,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .overlay-menu__nav {
   grid-column: 1; grid-row: 1 / -1;
   display: flex; flex-direction: column; justify-content: flex-start;
-  gap: 0;
+  gap: 8px;
 }
 
-.overlay-menu__item { position: relative; }
+.overlay-menu__item { position: relative; padding-bottom: 4px; }
 .overlay-menu__ghost {
   position: absolute; top: 0; left: 0;
   font-family: 'Begum', serif;
   font-size: clamp(3.5rem, 6.5vw, 94px);
   font-weight: 200;
   text-transform: uppercase;
-  line-height: 0.68;
+  line-height: 1.1;
   color: #fff;
   opacity: 0.05;
   pointer-events: none;
@@ -207,7 +207,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: clamp(3.5rem, 6.5vw, 94px);
   font-weight: 200;
   text-transform: uppercase;
-  line-height: 0.68;
+  line-height: 1.1;
   color: var(--cream);
   transition: opacity 0.35s;
   white-space: nowrap;
@@ -219,7 +219,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .overlay-menu__sub {
   display: flex; gap: clamp(1.2rem, 2.5vw, 2.5rem); flex-wrap: wrap;
-  padding: 12px 0 clamp(1rem, 2vw, 1.8rem);
+  padding: 16px 0 clamp(1.2rem, 2.5vw, 2.2rem);
 }
 .overlay-menu__sub a {
   font-family: 'Begum', serif;
@@ -318,7 +318,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .hero__bottle {
   position: absolute;
   top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -45%);
   z-index: 3;
   max-height: 70vh;
   object-fit: contain;
@@ -525,6 +525,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .vinification__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  min-height: 500px;
 }
 .vinification__text {
   padding: 80px 48px;
@@ -549,10 +550,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .vinification__images {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 .vinification__images img {
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  height: 50%;
   object-fit: cover;
 }
 
@@ -706,6 +709,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--brown-body);
   border-top: 1px solid var(--separator);
   padding: 120px 48px;
+  padding-bottom: 120px;
   text-align: center;
   position: relative;
 }
@@ -1330,23 +1334,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroTl = gsap.timeline({ delay: 0.3 });
     heroTl
       .fromTo('#heroTitle',
-        { opacity: 0, scale: 0.85 },
-        { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out' }
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 1.6, ease: 'power2.out' }
       )
       .fromTo('#heroBottle',
-        { opacity: 0, y: 120 },
-        { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out' },
-        '-=0.8'
+        { opacity: 0, y: 60 },
+        { opacity: 1, y: 0, duration: 1.8, ease: 'power2.out' },
+        '-=1.0'
       )
       .fromTo('.hero__back',
-        { opacity: 0, y: -10 },
-        { opacity: 0.7, y: 0, duration: 0.6, ease: 'power2.out' },
-        '-=0.6'
+        { opacity: 0, y: -5 },
+        { opacity: 0.7, y: 0, duration: 0.9, ease: 'power2.out' },
+        '-=0.8'
       )
       .fromTo('.hero__cta-left, .hero__cta-right',
-        { opacity: 0, x: (i) => i === 0 ? -30 : 30 },
-        { opacity: 1, x: 0, duration: 0.8, ease: 'power2.out', stagger: 0.15 },
-        '-=0.5'
+        { opacity: 0, x: (i) => i === 0 ? -15 : 15 },
+        { opacity: 1, x: 0, duration: 1.2, ease: 'power2.out', stagger: 0.15 },
+        '-=0.6'
       );
   } else {
     document.querySelectorAll('#heroTitle, #heroBottle, .hero__back, .hero__cta-left, .hero__cta-right').forEach(el => {
@@ -1377,11 +1381,11 @@ document.addEventListener('DOMContentLoaded', () => {
      ============================================ */
   if (!prefersReducedMotion) {
     gsap.fromTo('.product-desc__inner',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1.4, ease: 'power2.out',
         scrollTrigger: {
           trigger: '.product-desc',
-          start: 'top 80%',
+          start: 'top 85%',
           toggleActions: 'play none none none'
         }
       }
@@ -1394,12 +1398,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!prefersReducedMotion) {
     const tastingCols = document.querySelectorAll('[data-tasting-col]');
     gsap.fromTo(tastingCols,
-      { opacity: 0, y: 60 },
-      { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+      { opacity: 0, y: 25 },
+      { opacity: 1, y: 0, duration: 1.3, ease: 'power2.out',
         stagger: 0.2,
         scrollTrigger: {
           trigger: '.tasting',
-          start: 'top 75%',
+          start: 'top 85%',
           toggleActions: 'play none none none'
         }
       }
@@ -1411,21 +1415,21 @@ document.addEventListener('DOMContentLoaded', () => {
      ============================================ */
   if (!prefersReducedMotion) {
     gsap.fromTo('[data-vini-text]',
-      { opacity: 0, x: -60 },
-      { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+      { opacity: 0, x: -30 },
+      { opacity: 1, x: 0, duration: 1.4, ease: 'power2.out',
         scrollTrigger: {
           trigger: '.vinification',
-          start: 'top 75%',
+          start: 'top 85%',
           toggleActions: 'play none none none'
         }
       }
     );
     gsap.fromTo('[data-vini-images]',
-      { opacity: 0, x: 60 },
-      { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+      { opacity: 0, x: 30 },
+      { opacity: 1, x: 0, duration: 1.4, ease: 'power2.out',
         scrollTrigger: {
           trigger: '.vinification',
-          start: 'top 75%',
+          start: 'top 85%',
           toggleActions: 'play none none none'
         }
       }
@@ -1438,12 +1442,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!prefersReducedMotion) {
     const accordionItems = document.querySelectorAll('[data-accordion-item]');
     gsap.fromTo(accordionItems,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out',
         stagger: 0.1,
         scrollTrigger: {
           trigger: '.pairing',
-          start: 'top 70%',
+          start: 'top 85%',
           toggleActions: 'play none none none'
         }
       }
@@ -1457,13 +1461,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const showcaseBottle = document.getElementById('showcaseBottle');
     if (showcaseBottle) {
       gsap.fromTo(showcaseBottle,
-        { y: 80 },
-        { y: -80,
+        { y: 40 },
+        { y: -40,
           scrollTrigger: {
             trigger: '.bottle-showcase',
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1
+            scrub: 1.5
           }
         }
       );
@@ -1475,11 +1479,11 @@ document.addEventListener('DOMContentLoaded', () => {
      ============================================ */
   if (!prefersReducedMotion) {
     gsap.fromTo('.next-wine__link',
-      { opacity: 0, y: 50 },
-      { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+      { opacity: 0, y: 25 },
+      { opacity: 1, y: 0, duration: 1.4, ease: 'power2.out',
         scrollTrigger: {
           trigger: '.next-wine',
-          start: 'top 80%',
+          start: 'top 85%',
           toggleActions: 'play none none none'
         }
       }

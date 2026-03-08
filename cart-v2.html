@@ -224,18 +224,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .overlay-menu__nav {
   grid-column: 1; grid-row: 1 / -1;
   display: flex; flex-direction: column; justify-content: flex-start;
-  gap: 0;
+  gap: 8px;
 }
 
 /* Each nav item wrapper */
-.overlay-menu__item { position: relative; }
+.overlay-menu__item { position: relative; padding-bottom: 4px; }
 .overlay-menu__ghost {
   position: absolute; top: 0; left: 0;
   font-family: 'Begum', serif;
   font-size: clamp(3.5rem, 6.5vw, 94px);
   font-weight: 200;
   text-transform: uppercase;
-  line-height: 0.68;
+  line-height: 1.1;
   color: #fff;
   opacity: 0.05;
   pointer-events: none;
@@ -249,7 +249,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: clamp(3.5rem, 6.5vw, 94px);
   font-weight: 200;
   text-transform: uppercase;
-  line-height: 0.68;
+  line-height: 1.1;
   color: var(--cream);
   transition: opacity 0.35s;
   white-space: nowrap;
@@ -262,7 +262,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .overlay-menu__sub {
   display: flex; gap: clamp(1.2rem, 2.5vw, 2.5rem); flex-wrap: wrap;
-  padding: 12px 0 clamp(1rem, 2vw, 1.8rem);
+  padding: 16px 0 clamp(1.2rem, 2.5vw, 2.2rem);
 }
 .overlay-menu__sub a {
   font-family: 'Begum', serif;
@@ -1524,8 +1524,8 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.fromTo(itemEl,
           { x: 0, opacity: 1, height: h },
           {
-            x: -64, opacity: 0, height: 0,
-            duration: 0.46, ease: 'power3.in',
+            x: -32, opacity: 0, height: 0,
+            duration: 0.46, ease: 'power2.in',
             onComplete: () => {
               itemEl.remove();
               data.qty = 0;
@@ -1589,24 +1589,24 @@ document.addEventListener('DOMContentLoaded', () => {
      ============================================ */
   if (!prefersReducedMotion) {
     gsap.fromTo('.cart-header',
-      { opacity: 0, y: -18 },
-      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', delay: 0.1 }
+      { opacity: 0, y: -10 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 0.1 }
     );
     gsap.fromTo('.shipping-bar',
-      { opacity: 0, y: -10 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', delay: 0.2 }
+      { opacity: 0, y: -5 },
+      { opacity: 1, y: 0, duration: 0.75, ease: 'power2.out', delay: 0.2 }
     );
     gsap.fromTo('.cart-item',
-      { opacity: 0, x: -28 },
-      { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out', stagger: 0.1, delay: 0.18 }
+      { opacity: 0, x: -14 },
+      { opacity: 1, x: 0, duration: 0.75, ease: 'power2.out', stagger: 0.1, delay: 0.18 }
     );
     gsap.fromTo('.cart-sidebar',
-      { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: 0.62, ease: 'power3.out', delay: 0.32 }
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 0.32 }
     );
     gsap.fromTo('.cart-gift',
       { opacity: 0 },
-      { opacity: 1, duration: 0.5, ease: 'power2.out', delay: 0.52 }
+      { opacity: 1, duration: 0.75, ease: 'power2.out', delay: 0.52 }
     );
 
     /* Shipping bar animate on load */
@@ -1618,26 +1618,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* Cross-sell scroll reveal */
     gsap.fromTo('.cross-sell__title',
-      { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
-        scrollTrigger: { trigger: '.cross-sell', start: 'top 82%' } }
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out',
+        scrollTrigger: { trigger: '.cross-sell', start: 'top 85%' } }
     );
     gsap.fromTo('.cross-sell-card',
-      { opacity: 0, y: 36 },
-      { opacity: 1, y: 0, duration: 0.62, ease: 'power3.out', stagger: 0.13,
-        scrollTrigger: { trigger: '.cross-sell__grid', start: 'top 86%' } }
+      { opacity: 0, y: 18 },
+      { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', stagger: 0.13,
+        scrollTrigger: { trigger: '.cross-sell__grid', start: 'top 85%' } }
     );
 
     /* Footer reveal */
     gsap.fromTo('.footer__pre',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out',
         scrollTrigger: { trigger: '.footer', start: 'top 90%' } }
     );
     gsap.fromTo('.footer__nav',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.15,
-        scrollTrigger: { trigger: '.footer', start: 'top 85%' } }
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out', delay: 0.15,
+        scrollTrigger: { trigger: '.footer', start: 'top 90%' } }
     );
   }
 

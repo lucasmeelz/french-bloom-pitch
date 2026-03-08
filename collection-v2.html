@@ -237,18 +237,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .overlay-menu__nav {
   grid-column: 1; grid-row: 1 / -1;
   display: flex; flex-direction: column; justify-content: flex-start;
-  gap: 0;
+  gap: 8px;
 }
 
 /* Each nav item wrapper */
-.overlay-menu__item { position: relative; }
+.overlay-menu__item { position: relative; padding-bottom: 4px; }
 .overlay-menu__ghost {
   position: absolute; top: 0; left: 0;
   font-family: 'Begum', serif;
   font-size: clamp(3.5rem, 6.5vw, 94px);
   font-weight: 200;
   text-transform: uppercase;
-  line-height: 0.68;
+  line-height: 1.1;
   color: #fff;
   opacity: 0.05;
   pointer-events: none;
@@ -262,7 +262,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: clamp(3.5rem, 6.5vw, 94px);
   font-weight: 200;
   text-transform: uppercase;
-  line-height: 0.68;
+  line-height: 1.1;
   color: var(--cream);
   transition: opacity 0.35s;
   white-space: nowrap;
@@ -275,7 +275,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .overlay-menu__sub {
   display: flex; gap: clamp(1.2rem, 2.5vw, 2.5rem); flex-wrap: wrap;
-  padding: 12px 0 clamp(1rem, 2vw, 1.8rem);
+  padding: 16px 0 clamp(1.2rem, 2.5vw, 2.2rem);
 }
 .overlay-menu__sub a {
   font-family: 'Begum', serif;
@@ -1129,7 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ---- Hero banner image parallax ---- */
     gsap.fromTo('.hero-banner__img',
-      { scale: 1.05 },
+      { scale: 1.02 },
       {
         scale: 1,
         ease: 'none',
@@ -1144,44 +1144,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ---- Filter tabs entrance ---- */
     gsap.fromTo('.filter-tab',
-      { opacity: 0, y: 15 },
+      { opacity: 0, y: 8 },
       {
         opacity: 1, y: 0,
-        duration: 0.6,
+        duration: 0.9,
         stagger: 0.08,
-        ease: 'power3.out',
+        ease: 'power2.out',
         scrollTrigger: { trigger: '.filters', start: 'top 85%' }
       }
     );
 
     /* ---- Collection title reveal ---- */
     gsap.fromTo('.collection-header__title',
-      { opacity: 0, y: 60, skewY: 2 },
+      { opacity: 0, y: 25, skewY: 1 },
       {
         opacity: 1, y: 0, skewY: 0,
-        duration: 1.1,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: '.collection-header', start: 'top 80%' }
+        duration: 1.6,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.collection-header', start: 'top 85%' }
       }
     );
     gsap.fromTo('.collection-header__tagline',
-      { opacity: 0, y: 20 },
+      { opacity: 0, y: 10 },
       {
         opacity: 0.7, y: 0,
-        duration: 0.8,
-        ease: 'power3.out',
+        duration: 1.2,
+        ease: 'power2.out',
         delay: 0.2,
-        scrollTrigger: { trigger: '.collection-header', start: 'top 80%' }
+        scrollTrigger: { trigger: '.collection-header', start: 'top 85%' }
       }
     );
     gsap.fromTo('.collection-header__count',
-      { opacity: 0, y: 20 },
+      { opacity: 0, y: 10 },
       {
         opacity: 1, y: 0,
-        duration: 0.8,
-        ease: 'power3.out',
+        duration: 1.2,
+        ease: 'power2.out',
         delay: 0.3,
-        scrollTrigger: { trigger: '.collection-header', start: 'top 80%' }
+        scrollTrigger: { trigger: '.collection-header', start: 'top 85%' }
       }
     );
 
@@ -1189,11 +1189,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.card-wrapper');
     cards.forEach((card, i) => {
       gsap.fromTo(card,
-        { opacity: 0, y: 60 },
+        { opacity: 0, y: 25 },
         {
           opacity: 1, y: 0,
-          duration: 0.9,
-          ease: 'power3.out',
+          duration: 1.3,
+          ease: 'power2.out',
           delay: i * 0.12,
           scrollTrigger: {
             trigger: card,
@@ -1205,44 +1205,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ---- Editorial cell entrance ---- */
     gsap.fromTo('.editorial-cell',
-      { opacity: 0, y: 40 },
+      { opacity: 0, y: 20 },
       {
         opacity: 1, y: 0,
-        duration: 0.8,
-        ease: 'power3.out',
+        duration: 1.2,
+        ease: 'power2.out',
         scrollTrigger: { trigger: '.editorial-cell', start: 'top 85%' }
       }
     );
 
     /* ---- Brand cell entrance ---- */
     gsap.fromTo('.brand-cell',
-      { opacity: 0, y: 40 },
+      { opacity: 0, y: 20 },
       {
         opacity: 1, y: 0,
-        duration: 0.8,
-        ease: 'power3.out',
+        duration: 1.2,
+        ease: 'power2.out',
         scrollTrigger: { trigger: '.brand-cell', start: 'top 85%' }
       }
     );
 
     /* ---- Footer reveal ---- */
     gsap.fromTo('.footer__pre',
-      { opacity: 0, y: 20 },
+      { opacity: 0, y: 10 },
       {
         opacity: 1, y: 0,
-        duration: 0.7,
-        ease: 'power3.out',
+        duration: 1.0,
+        ease: 'power2.out',
         scrollTrigger: { trigger: '.footer', start: 'top 90%' }
       }
     );
     gsap.fromTo('.footer__nav',
-      { opacity: 0, y: 20 },
+      { opacity: 0, y: 10 },
       {
         opacity: 1, y: 0,
-        duration: 0.7,
-        ease: 'power3.out',
+        duration: 1.0,
+        ease: 'power2.out',
         delay: 0.15,
-        scrollTrigger: { trigger: '.footer', start: 'top 85%' }
+        scrollTrigger: { trigger: '.footer', start: 'top 90%' }
       }
     );
   }
