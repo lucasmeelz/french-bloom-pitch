@@ -25,149 +25,217 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --white-bloom:     #FCF5ED;
-  --blanc:           #FFFFFF;
-  --noir:            #1A1A1A;
-  --noir-doux:       #3A3A3A;
-  --encre:           #2C2620;
-  --or:              #D4B188;
-  --or-pale:         #E2C9A6;
-  --or-sombre:       #B89A6E;
-  --or-glow:         rgba(212,177,136,0.15);
-  --coral:           #EA5438;
-  --coral-hover:     #D44828;
-  --almond-green:    #ACB99C;
-  --gris:            #8A8A8A;
-  --gris-clair:      #D4CEC4;
-  --gris-tres-clair: #EDE8E0;
-  --rose:            #D4A094;
-  --rose-pale:       #E8C4B8;
-  --creme:           #F5F0E8;
-  --cuvee-blanc:     #F5EDD4;
-  --cuvee-rose:      #F2D5CC;
-  --cuvee-brut:      #E8E0D8;
-  --cuvee-vintage:   #2C2620;
-
-  --ease-luxe:    cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-soft:    cubic-bezier(0.25, 0.1, 0.25, 1);
-  --ease-spring:  cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --t-fast:       0.3s;
-  --t-medium:     0.5s;
-  --t-slow:       0.8s;
-  --t-cinematic:  1.2s;
-
-  --z-cursor:  9999;
-  --z-reveal:  9000;
-  --z-nav:     1000;
-  --z-mobile:  800;
-  --z-toast:   700;
+  --brown-body: #A87B61;
+  --brown-dark: #634A3A;
+  --brown-text: #5D4635;
+  --brown-cta: #533829;
+  --brown-accent: #8B4537;
+  --cream: #F0EEE6;
+  --cream-light: #FBEED8;
+  --cream-border: rgba(251,238,216,0.3);
+  --separator: rgba(70,70,68,0.4);
+  --frosted: rgba(240,238,230,0.6);
+  --ease-luxe: cubic-bezier(0.25, 1, 0.5, 1);
+  --z-nav: 100;
+  --z-cursor: 200;
+  --z-overlay: 99;
+  --padding-edge: 48px;
 }
 
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
+
 body {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 300;
-  color: var(--noir);
-  background: var(--encre);
+  font-weight: 400;
+  color: var(--cream);
+  background: var(--brown-body);
   overflow-x: hidden;
+  text-transform: uppercase;
   line-height: 1.6;
 }
+
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; border: none; background: none; }
-
-/* ============================================
-   PAGE REVEAL
-   ============================================ */
-.reveal-overlay {
-  position: fixed; inset: 0;
-  background: var(--encre);
-  z-index: var(--z-reveal);
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: none;
-}
-.reveal-overlay__text {
-  font-family: 'Begum', serif;
-  font-size: clamp(1rem, 2vw, 1.4rem);
-  letter-spacing: 0.3em;
-  color: var(--or);
-  text-transform: uppercase;
-}
+button { font-family: inherit; cursor: pointer; border: none; background: none; text-transform: uppercase; }
 
 /* ============================================
    CUSTOM CURSOR (desktop only)
    ============================================ */
-.cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: var(--z-cursor); mix-blend-mode: difference; }
-.cursor__outer { width: 40px; height: 40px; border: 1.5px solid var(--or); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.4s var(--ease-luxe), height 0.4s var(--ease-luxe), border-color 0.3s; }
-.cursor__dot { position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: var(--or); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: var(--z-cursor); }
-.cursor--hover .cursor__outer { width: 56px; height: 56px; border-color: var(--coral); }
-@media (pointer: coarse) { .cursor, .cursor__dot { display: none !important; } }
+@media (hover: hover) {
+  .cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 12px; height: 12px;
+    background: var(--cream);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: var(--z-cursor);
+    mix-blend-mode: difference;
+    transform: translate(-50%, -50%);
+  }
+}
+@media (hover: none), (pointer: coarse) {
+  .cursor { display: none !important; }
+}
+
+/* ============================================
+   BUTTONS — CIRCLE-EXPAND HOVER
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 8px 20px;
+  border: 1px solid var(--cream);
+  border-radius: 0;
+  background: transparent;
+  color: var(--cream);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: color 0.4s var(--ease-luxe);
+  white-space: nowrap;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: var(--cream);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s var(--ease-luxe), height 0.5s var(--ease-luxe);
+  z-index: 0;
+}
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+.btn:hover {
+  color: var(--brown-body);
+}
+.btn span,
+.btn svg { position: relative; z-index: 1; }
+
+.btn--brown {
+  border-color: var(--brown-text);
+  color: var(--brown-text);
+}
+.btn--brown::before {
+  background: var(--brown-text);
+}
+.btn--brown:hover {
+  color: var(--cream-light);
+}
+
+.btn--frosted {
+  border: none;
+  background: rgba(240,238,230,0.15);
+  color: var(--cream);
+}
+.btn--frosted::before {
+  background: rgba(240,238,230,0.3);
+}
 
 /* ============================================
    NAVIGATION
    ============================================ */
 .nav {
-  position: fixed; top: 0; left: 0; width: 100%; height: 64px;
+  position: fixed; top: 0; left: 0; width: 100%; height: 120px;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  padding: 0 var(--padding-edge);
   z-index: var(--z-nav);
-  transition: transform 0.5s var(--ease-luxe), background 0.4s, opacity 0.5s var(--ease-luxe);
+  background: transparent;
+  transition: transform 0.5s var(--ease-luxe), background 0.4s, backdrop-filter 0.4s, height 0.4s;
 }
 .nav--hidden { transform: translateY(-100%); }
-.nav--frosted { background: rgba(44,38,32,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-.nav--transparent { opacity: 0; pointer-events: none; }
+.nav--frosted {
+  background: rgba(168,123,97,0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
 
-.nav__left { display: flex; align-items: center; gap: 1.4rem; flex: 1; }
+.nav__left { display: flex; align-items: center; gap: 16px; flex: 1; }
 .nav__hamburger {
-  display: flex; flex-direction: column; gap: 5px; width: 32px; cursor: pointer;
-  padding: 8px; border: 1px solid rgba(255,255,255,0.25); border-radius: 4px;
+  display: flex; flex-direction: column; gap: 5px; width: 36px; cursor: pointer;
+  padding: 8px; border: 1px solid var(--cream-border); border-radius: 0;
   transition: border-color 0.3s;
   z-index: calc(var(--z-nav) + 2);
 }
-.nav__hamburger:hover { border-color: rgba(255,255,255,0.5); }
+.nav__hamburger:hover { border-color: var(--cream); }
 .nav__hamburger span {
-  width: 100%; height: 2px; background: var(--blanc);
+  width: 100%; height: 1.5px; background: var(--cream);
   transition: transform 0.4s var(--ease-luxe), opacity 0.3s;
 }
 .nav__hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
 .nav__hamburger.active span:nth-child(2) { opacity: 0; }
 .nav__hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-/* When overlay open, hamburger becomes dark */
-.nav.overlay-open .nav__hamburger { border-color: rgba(245,240,232,0.25); }
-.nav.overlay-open .nav__hamburger span { background: var(--creme); }
 
-.nav__quick-links { display: flex; gap: 1.8rem; }
-.nav__quick-links a {
-  font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--blanc); opacity: 0.6; transition: opacity var(--t-fast);
+.nav__collection-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 42px; padding: 8px 20px;
+  border: 1px solid var(--cream-border); border-radius: 0;
+  background: transparent; color: var(--cream);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer;
+  position: relative; overflow: hidden;
+  transition: color 0.4s var(--ease-luxe);
+  white-space: nowrap;
 }
-.nav__quick-links a:hover { opacity: 1; }
-.nav.overlay-open .nav__quick-links a { color: var(--creme); }
+.nav__collection-btn::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: var(--cream);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s var(--ease-luxe), height 0.5s var(--ease-luxe);
+  z-index: 0;
+}
+.nav__collection-btn:hover::before { width: 300px; height: 300px; }
+.nav__collection-btn:hover { color: var(--brown-body); }
+.nav__collection-btn span { position: relative; z-index: 1; }
 
 .nav__logo {
   position: absolute; left: 50%; transform: translateX(-50%);
   font-family: 'Begum', serif; font-size: 0.95rem; letter-spacing: 0.25em;
-  color: var(--blanc); text-transform: uppercase; white-space: nowrap;
+  color: var(--cream); text-transform: uppercase; white-space: nowrap;
   z-index: calc(var(--z-nav) + 2);
   transition: color 0.4s;
 }
-.nav.overlay-open .nav__logo { color: var(--creme); }
+.nav.overlay-open .nav__logo { color: var(--cream); }
 
-.nav__right { display: flex; align-items: center; gap: 1.2rem; z-index: calc(var(--z-nav) + 2); }
-.nav__icon { color: var(--blanc); opacity: 0.7; transition: opacity var(--t-fast), color 0.4s; }
-.nav__icon:hover { opacity: 1; }
-.nav.overlay-open .nav__icon { color: var(--creme); }
-.nav__cart { position: relative; }
-.nav__cart-count {
-  position: absolute; top: -5px; right: -8px;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--coral); color: var(--blanc);
-  font-size: 0.55rem; font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
+.nav__right { display: flex; align-items: center; gap: 16px; z-index: calc(var(--z-nav) + 2); }
+.nav__lang {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400; letter-spacing: 0.05em;
+  color: var(--cream); opacity: 0.7;
+  text-transform: uppercase;
+  transition: opacity 0.3s;
 }
+.nav__lang:hover { opacity: 1; }
+.nav__icon { color: var(--cream); opacity: 0.7; transition: opacity 0.3s, color 0.4s; display: flex; align-items: center; }
+.nav__icon:hover { opacity: 1; }
+.nav.overlay-open .nav__icon { color: var(--cream); }
+.nav__cart-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400; letter-spacing: 0.05em;
+  color: var(--cream); opacity: 0.7;
+  text-transform: uppercase;
+  transition: opacity 0.3s;
+}
+.nav__cart-text:hover { opacity: 1; }
 
 /* ============================================
-   OVERLAY MENU (Franc Lizêr-inspired)
+   OVERLAY MENU (Franc Lizer-inspired)
    ============================================ */
 .overlay-menu {
   position: fixed; inset: 0;
@@ -188,7 +256,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   gap: 0 48px;
 }
 
-/* Left column — nav + social + separator */
 .overlay-menu__left {
   grid-column: 1; grid-row: 1;
   display: grid;
@@ -199,14 +266,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   padding-right: 48px;
 }
 
-/* Nav links area */
 .overlay-menu__nav {
   grid-column: 1; grid-row: 1 / -1;
   display: flex; flex-direction: column; justify-content: flex-start;
   gap: 0;
 }
 
-/* Each nav item wrapper */
 .overlay-menu__item { position: relative; }
 .overlay-menu__ghost {
   position: absolute; top: 0; left: 0;
@@ -229,13 +294,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-weight: 200;
   text-transform: uppercase;
   line-height: 0.68;
-  color: var(--creme);
+  color: var(--cream);
   transition: opacity 0.35s;
   white-space: nowrap;
   position: relative;
 }
 .overlay-menu__link:hover { opacity: 0.7; }
-/* Dim siblings on hover */
 .overlay-menu__nav:hover .overlay-menu__item .overlay-menu__link { opacity: 0.4; }
 .overlay-menu__nav:hover .overlay-menu__item:hover .overlay-menu__link { opacity: 1; }
 
@@ -254,7 +318,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .overlay-menu__sub a:hover { opacity: 1; }
 
-/* Social links — top right of left area */
 .overlay-menu__social {
   grid-column: 2; grid-row: 1;
   display: flex; flex-direction: column;
@@ -264,12 +327,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-family: 'Montserrat', sans-serif;
   font-size: 14px; font-weight: 400;
   letter-spacing: 0.03em; text-transform: uppercase;
-  color: var(--creme); opacity: 0.55;
+  color: var(--cream); opacity: 0.55;
   transition: opacity 0.3s;
 }
 .overlay-menu__social a:hover { opacity: 1; }
 
-/* Right column — image */
 .overlay-menu__right {
   grid-column: 2; grid-row: 1;
   display: flex; align-items: flex-start; justify-content: center;
@@ -281,7 +343,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transition: opacity 0.4s var(--ease-luxe);
 }
 
-/* Footer row — spans both columns */
 .overlay-menu__footer {
   grid-column: 1 / -1; grid-row: 2;
   display: flex; gap: clamp(1.5rem, 3vw, 3rem);
@@ -292,737 +353,704 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-family: 'Montserrat', sans-serif;
   font-size: 14px; font-weight: 400;
   letter-spacing: 0.03em; text-transform: uppercase;
-  color: var(--creme); opacity: 0.4;
+  color: var(--cream); opacity: 0.4;
   transition: opacity 0.3s;
 }
 .overlay-menu__footer a:hover { opacity: 0.8; }
 
 /* ============================================
-   SECTION 1 — HERO CINEMATIQUE
+   SECTION 1 — HERO
    ============================================ */
 .hero {
   position: relative;
   height: 100vh;
   min-height: 600px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  text-align: center;
+  justify-content: flex-end;
 }
 .hero__bg {
-  position: absolute; inset: 0;
-  background: linear-gradient(160deg, #2C2620 0%, #1e1a16 40%, #2C2620 70%, rgba(212,177,136,0.08) 100%);
-  z-index: 0;
+  position: absolute; inset: 0; z-index: 0;
 }
-.hero__noise {
-  position: absolute; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  opacity: 0.5;
-  z-index: 1;
-  pointer-events: none;
+.hero__bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
 }
-.hero__bubbles {
-  position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none;
-}
-.bubble {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(212,177,136,0.4), rgba(212,177,136,0.05));
-  pointer-events: none;
-  animation: bubbleFloat var(--duration, 8s) var(--delay, 0s) infinite ease-in-out;
-}
-@keyframes bubbleFloat {
-  0%   { transform: translateY(0) scale(1); opacity: 0; }
-  10%  { opacity: var(--max-opacity, 0.3); }
-  90%  { opacity: var(--max-opacity, 0.3); }
-  100% { transform: translateY(calc(-100vh - 50px)) scale(var(--end-scale, 0.5)); opacity: 0; }
-}
-
 .hero__content {
-  position: relative; z-index: 3;
-  display: flex; flex-direction: column; align-items: center; gap: 0;
-}
-.hero__crest {
-  width: 80px; height: auto;
-  margin-bottom: 2.5rem;
-  opacity: 0;
+  position: relative; z-index: 2;
+  padding: 0 var(--padding-edge) 80px;
 }
 .hero__title {
   font-family: 'Begum', serif;
-  font-size: clamp(3rem, 7vw, 6rem);
-  line-height: 1;
-  letter-spacing: 0.03em;
-  color: var(--blanc);
-  margin-bottom: 1.2rem;
+  font-size: clamp(48px, 8vw, 114px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: var(--cream);
+  text-transform: uppercase;
+  max-width: 900px;
 }
 .hero__title-line {
   display: block;
   opacity: 0;
 }
-.hero__tagline {
-  font-weight: 300;
-  font-style: italic;
-  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
-  color: var(--or-pale);
-  opacity: 0;
-  max-width: 400px;
-  line-height: 1.8;
-  margin-bottom: 2.5rem;
-}
-.hero__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 1rem 2.8rem;
-  background: transparent;
-  color: var(--or);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  border-radius: 50px;
-  border: 1.5px solid var(--or);
-  opacity: 0;
-  transition: background var(--t-fast), color var(--t-fast), transform 0.2s;
-}
-.hero__cta:hover { background: var(--or); color: var(--encre); transform: scale(1.04); }
 
-.hero__scroll {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  opacity: 0;
-  z-index: 3;
+.hero__bottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 var(--padding-edge) 32px;
+  z-index: 2;
 }
-.hero__scroll-text {
-  font-size: 0.55rem;
-  letter-spacing: 0.35em;
+.hero__scroll-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--cream);
+  opacity: 0.7;
   text-transform: uppercase;
-  color: var(--or);
-  opacity: 0.5;
-}
-.hero__scroll-line {
-  width: 1px;
-  height: 50px;
-  background: linear-gradient(to bottom, var(--or), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
-@keyframes scrollPulse {
-  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
-  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
-  100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
 }
 
 /* ============================================
-   SECTION 2 — MANIFESTE SCROLL (PINNED)
+   SECTION 2a — FULL WIDTH IMAGE
    ============================================ */
-.manifeste {
+.about-image {
+  width: 100%;
+  overflow: hidden;
+}
+.about-image img {
+  width: 100%;
+  height: 60vh;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============================================
+   SECTION 2b — ABOUT TEXT
+   ============================================ */
+.about-text {
+  position: relative;
+  padding: 120px var(--padding-edge);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+.about-text__bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.about-text__bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.about-text__overlay {
+  position: absolute; inset: 0;
+  background: rgba(83,56,41,0.85);
+  z-index: 1;
+}
+.about-text__title {
+  position: relative; z-index: 2;
+  font-family: 'Begum', serif;
+  font-size: clamp(28px, 3.5vw, 38px);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--cream);
+  text-transform: uppercase;
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+.about-text__title-line {
+  display: block;
+  opacity: 0;
+}
+.about-text__subtitle {
+  position: relative; z-index: 2;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 400;
+  line-height: 1.8;
+  color: var(--cream);
+  opacity: 0.8;
+  text-transform: uppercase;
+  max-width: 700px;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   SECTION 3 — LETTER REVEAL (STICKY)
+   ============================================ */
+.letter-reveal {
   position: relative;
   height: 300vh;
+  background: var(--brown-body);
 }
-.manifeste__sticky {
+.letter-reveal__sticky {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.manifeste__shot {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0;
-}
-.manifeste__shot:first-child { opacity: 1; }
-.manifeste__shot-bg {
-  position: absolute; inset: 0;
-  background-size: cover;
-  background-position: center;
-}
-.manifeste__shot-overlay {
-  position: absolute; inset: 0;
-  background: rgba(44,38,32,0.7);
-}
-.manifeste__shot-content {
-  position: relative; z-index: 2;
-  max-width: 800px;
-  text-align: center;
-  padding: 0 2rem;
-}
-.manifeste__text {
-  font-family: 'Begum', serif;
-  font-size: clamp(1.6rem, 3vw, 3rem);
-  line-height: 1.4;
-  color: var(--blanc);
-}
-.manifeste__word {
-  display: inline-block;
-  opacity: 0.15;
-  color: var(--gris);
-  margin-right: 0.22em;
-  will-change: opacity, color;
-  transition: color 0.3s;
-}
-
-/* Reduced-motion: stack shots vertically instead of overlapping */
-@media (prefers-reduced-motion: reduce) {
-  .manifeste { height: auto; }
-  .manifeste__sticky {
-    position: relative;
-    height: auto;
-    flex-direction: column;
-  }
-  .manifeste__shot {
-    position: relative;
-    inset: auto;
-    opacity: 1;
-    min-height: 70vh;
-  }
-  .manifeste__word {
-    opacity: 1;
-    color: var(--blanc);
-  }
-}
-.manifeste__bottles {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 2.5rem;
-  opacity: 0;
-  transform: translateY(40px);
-}
-.manifeste__bottles img {
-  height: clamp(200px, 30vh, 300px);
-  object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
-}
-
-/* ============================================
-   SECTION 3 — LES MOMENTS (ASYMMETRIC GRID)
-   ============================================ */
-.moments {
-  background: var(--white-bloom);
-  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 4vw, 3rem);
-}
-.moments__header {
-  margin-bottom: 3rem;
-}
-.moments__label {
-  font-size: 0.65rem;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--or-sombre);
-  margin-bottom: 0.8rem;
-}
-.moments__title {
-  font-family: 'Begum', serif;
-  font-size: clamp(2rem, 3.5vw, 2.8rem);
-  line-height: 1.1;
-  color: var(--encre);
-}
-.moments__grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: auto auto auto;
-  gap: 1rem;
-}
-.moment-card {
-  position: relative;
   overflow: hidden;
-  border-radius: 4px;
-  min-height: 280px;
-  cursor: pointer;
 }
-.moment-card:nth-child(1) { grid-column: 1 / 8; grid-row: 1 / 3; min-height: 560px; }
-.moment-card:nth-child(2) { grid-column: 8 / 13; grid-row: 1 / 2; }
-.moment-card:nth-child(3) { grid-column: 8 / 13; grid-row: 2 / 3; }
-.moment-card:nth-child(4) { grid-column: 1 / 7; grid-row: 3 / 4; min-height: 320px; }
-.moment-card:nth-child(5) { grid-column: 7 / 13; grid-row: 3 / 4; min-height: 320px; }
-
-.moment-card__bg {
-  position: absolute; inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.6s var(--ease-luxe);
-}
-.moment-card:hover .moment-card__bg { transform: scale(1.08); }
-.moment-card__overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
-  z-index: 1;
-}
-.moment-card__number {
-  position: absolute; top: 1.2rem; left: 1.2rem;
+.letter-reveal__text {
   font-family: 'Begum', serif;
-  font-size: 0.75rem;
-  color: var(--or);
-  z-index: 2;
-}
-.moment-card__content {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 1.5rem;
-  z-index: 2;
-}
-.moment-card__title {
-  font-family: 'Begum', serif;
-  font-size: clamp(1.2rem, 2vw, 1.6rem);
-  color: var(--blanc);
-  margin-bottom: 0.3rem;
-}
-.moment-card__subtitle {
-  font-size: 0.75rem;
-  font-weight: 300;
-  color: var(--or-pale);
-  opacity: 0.8;
-}
-.moment-card__bottle {
-  position: absolute;
-  bottom: -20px;
-  right: 1.5rem;
-  height: clamp(140px, 20vh, 200px);
-  object-fit: contain;
-  z-index: 3;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.4s var(--ease-luxe), transform 0.4s var(--ease-luxe);
-  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
-  pointer-events: none;
-}
-.moment-card:hover .moment-card__bottle {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ============================================
-   SECTION 4 — LE RITUEL (QUIZ)
-   ============================================ */
-.rituel {
-  background: var(--encre);
-  color: var(--blanc);
-  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 4vw, 3rem);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.rituel__title {
-  font-family: 'Begum', serif;
-  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-  line-height: 1.2;
-  margin-bottom: 3rem;
-}
-.rituel__container {
-  width: 100%;
-  max-width: 800px;
-  position: relative;
-  min-height: 400px;
-}
-.rituel__step {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.5s var(--ease-luxe);
-}
-.rituel__step.active { opacity: 1; pointer-events: all; position: relative; }
-
-.rituel__step-label {
-  font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
-  color: var(--or); margin-bottom: 2rem; opacity: 0.7;
-}
-
-/* Step 1 — image buttons */
-.rituel__images {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  width: 100%;
-}
-.rituel__img-btn {
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  aspect-ratio: 4/5;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: border-color var(--t-fast), transform var(--t-fast);
-}
-.rituel__img-btn:hover { transform: scale(1.03); border-color: var(--or); }
-.rituel__img-btn-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-}
-.rituel__img-btn-overlay {
-  position: absolute; inset: 0;
-  background: rgba(44,38,32,0.45);
-  transition: background var(--t-fast);
-}
-.rituel__img-btn:hover .rituel__img-btn-overlay { background: rgba(44,38,32,0.25); }
-.rituel__img-btn-label {
-  position: absolute; bottom: 1.2rem; left: 0; right: 0;
-  font-family: 'Begum', serif;
-  font-size: clamp(1rem, 1.8vw, 1.3rem);
-  color: var(--blanc);
-  z-index: 2;
-  text-align: center;
-}
-
-/* Step 2 — text buttons with icon */
-.rituel__options {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  width: 100%;
-  max-width: 500px;
-}
-.rituel__opt-btn {
-  padding: 1.2rem 1.5rem;
-  background: rgba(255,255,255,0.05);
-  border: 1.5px solid rgba(212,177,136,0.2);
-  border-radius: 8px;
-  color: var(--blanc);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
+  font-size: clamp(60px, 14vw, 200px);
   font-weight: 400;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
-  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-}
-.rituel__opt-btn:hover { background: rgba(212,177,136,0.15); border-color: var(--or); transform: scale(1.03); }
-
-/* Step 3 — text buttons */
-.rituel__palais {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  max-width: 400px;
-}
-.rituel__palais-btn {
-  padding: 1.2rem 2rem;
-  background: rgba(255,255,255,0.05);
-  border: 1.5px solid rgba(212,177,136,0.2);
-  border-radius: 8px;
-  color: var(--blanc);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
-}
-.rituel__palais-btn:hover { background: rgba(212,177,136,0.15); border-color: var(--or); transform: scale(1.03); }
-
-/* Dots */
-.rituel__dots {
-  display: flex; gap: 0.6rem;
-  margin-top: 2rem;
-}
-.rituel__dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  transition: background var(--t-fast), transform var(--t-fast);
-}
-.rituel__dot.active { background: var(--or); transform: scale(1.3); }
-
-/* Result */
-.rituel__result {
-  display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
-}
-.rituel__result-bottle {
-  height: clamp(200px, 30vh, 280px);
-  object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
-}
-.rituel__result-name {
-  font-family: 'Begum', serif;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  color: var(--blanc);
-}
-.rituel__result-tagline {
-  font-weight: 300; font-style: italic;
-  font-size: 0.9rem;
-  color: var(--or-pale);
-  max-width: 360px;
-}
-.rituel__result-cta {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 1rem 2.4rem;
-  background: var(--coral);
-  color: var(--blanc);
-  font-size: 0.7rem; font-weight: 500;
-  letter-spacing: 0.18em;
+  color: var(--cream);
   text-transform: uppercase;
-  border-radius: 50px;
-  transition: background var(--t-fast), transform 0.2s;
-}
-.rituel__result-cta:hover { background: var(--coral-hover); transform: scale(1.04); }
-
-/* Confetti */
-.confetti-piece {
-  position: fixed;
-  width: 8px; height: 8px;
-  z-index: 9999;
-  pointer-events: none;
-  animation: confettiFall 1.5s ease-out forwards;
-}
-@keyframes confettiFall {
-  0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-  100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
-}
-
-/* ============================================
-   SECTION 5 — SOCIAL PROOF / PRESSE
-   ============================================ */
-.presse {
-  background: var(--white-bloom);
-  padding: clamp(4rem, 8vh, 6rem) 0;
-  overflow: hidden;
-}
-.presse__marquee {
-  display: flex;
+  letter-spacing: 0.05em;
   white-space: nowrap;
-  animation: marqueeScroll 20s linear infinite;
-  margin-bottom: clamp(3rem, 6vh, 5rem);
-}
-@keyframes marqueeScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.presse__marquee-inner {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  padding-right: 2.5rem;
-}
-.presse__item {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(0.7rem, 1vw, 0.85rem);
-  font-weight: 600;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--or-sombre);
-  white-space: nowrap;
-}
-.presse__sep {
-  color: var(--or);
-  font-size: 1.2rem;
-}
-.presse__citation {
-  position: relative;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  text-align: center;
-}
-.presse__guillemet {
-  font-family: 'Begum', serif;
-  font-size: clamp(6rem, 15vw, 15rem);
-  color: var(--or);
-  opacity: 0.08;
-  position: absolute;
-  top: -3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  line-height: 1;
-  pointer-events: none;
   user-select: none;
 }
-.presse__quote {
-  font-family: 'Begum', serif;
-  font-style: italic;
-  font-size: clamp(1.6rem, 3vw, 2.6rem);
-  line-height: 1.35;
-  color: var(--encre);
-  position: relative;
-  z-index: 1;
-}
-.presse__author {
-  margin-top: 1.5rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--or-sombre);
-  font-weight: 500;
+.letter-reveal__char {
+  display: inline-block;
+  opacity: 0.1;
 }
 
 /* ============================================
-   SECTION 6 — CRM CAPTURE (NEWSLETTER)
+   SECTION 4 — LES CUVEES (wine lines)
+   ============================================ */
+.cuvees {
+  background: var(--cream-light);
+}
+.cuvee-slide {
+  padding: 120px var(--padding-edge);
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+.cuvee-slide:nth-child(even) {
+  flex-direction: row-reverse;
+}
+.cuvee-slide__info {
+  flex: 1;
+  z-index: 2;
+}
+.cuvee-slide__name {
+  font-family: 'Begum', serif;
+  font-size: clamp(48px, 7vw, 100px);
+  font-weight: 400;
+  line-height: 0.95;
+  color: var(--brown-text);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.cuvee-slide__tagline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--brown-text);
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 32px;
+}
+.cuvee-slide__visual {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+.cuvee-slide__bottle {
+  height: 60vh;
+  max-height: 600px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 20px 60px rgba(93,70,53,0.2));
+}
+
+/* Starburst decoration */
+.starburst {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px; height: 500px;
+  z-index: 1;
+  pointer-events: none;
+}
+.starburst__line {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 1px; height: 250px;
+  background: var(--brown-text);
+  opacity: 0.06;
+  transform-origin: bottom center;
+}
+
+/* ============================================
+   SECTION 4b — PRODUCT CAROUSEL
+   ============================================ */
+.product-carousel {
+  background: var(--brown-body);
+  padding: 0;
+  position: relative;
+}
+.product-carousel__inner {
+  display: flex;
+  position: relative;
+}
+.product-card {
+  width: 33.333%;
+  min-width: 33.333%;
+  border-left: 1px solid var(--separator);
+  border-bottom: 1px solid var(--separator);
+  height: 740px;
+  padding: var(--padding-edge);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.product-card__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(88,64,47,1) 0%, rgba(88,64,47,0.5) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-luxe);
+  pointer-events: none;
+  z-index: 0;
+}
+.product-card:hover .product-card__glow { opacity: 1; }
+
+.product-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative; z-index: 1;
+}
+.product-card__brand {
+  font-family: 'Begum', serif;
+  font-size: 14px;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.product-card__format {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: var(--cream);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+.product-card__image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; z-index: 1;
+  padding: 24px 0;
+}
+.product-card__image img {
+  max-height: 400px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.15));
+}
+.product-card__bottom {
+  position: relative; z-index: 1;
+}
+.product-card__name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px; font-weight: 400;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.product-card__price {
+  font-family: 'Begum', serif;
+  font-size: 16px;
+  color: var(--cream);
+  margin-bottom: 20px;
+}
+.product-card__actions {
+  display: flex;
+  gap: 12px;
+}
+.product-card__actions .btn {
+  flex: 1;
+  font-size: 12px;
+  height: 42px;
+}
+
+.product-carousel__arrows {
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 5;
+}
+.product-carousel__arrow {
+  width: 48px; height: 48px;
+  border: 1px solid var(--cream);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  pointer-events: all;
+  transition: background 0.3s, color 0.3s;
+}
+.product-carousel__arrow:hover {
+  background: var(--cream);
+  color: var(--brown-body);
+}
+
+/* ============================================
+   SECTION 5 — EDITORIAL / INSTAGRAM FEED
+   ============================================ */
+.editorial {
+  background: var(--cream-light);
+  padding: 120px var(--padding-edge);
+}
+.editorial__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.editorial__post {
+  display: flex;
+  flex-direction: column;
+}
+.editorial__post-image {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+.editorial__post-title {
+  font-family: 'Begum', serif;
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 400;
+  color: var(--brown-text);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.editorial__post-caption {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: var(--brown-text);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+.editorial__post-cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: var(--brown-text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: opacity 0.3s;
+}
+.editorial__post-cta:hover { opacity: 0.6; }
+.editorial__counter {
+  text-align: center;
+  margin-top: 48px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: var(--brown-text);
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   SECTION 6 — SOCIAL / INSTAGRAM
+   ============================================ */
+.social {
+  background: var(--brown-body);
+  padding: 120px var(--padding-edge);
+  text-align: center;
+}
+.social__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(28px, 3.5vw, 38px);
+  font-weight: 400;
+  color: var(--cream);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.social__text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: var(--cream);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 32px;
+}
+.social__cta-wrap {
+  margin-bottom: 60px;
+}
+.social__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.social__grid img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.social__counter {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: var(--cream);
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   SECTION 7 — NEWSLETTER
    ============================================ */
 .newsletter {
-  background: var(--encre);
-  color: var(--blanc);
-  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 4vw, 3rem);
+  background: linear-gradient(180deg, var(--brown-dark) 0%, #4A3228 100%);
+  padding: 160px var(--padding-edge);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  overflow: hidden;
 }
-.newsletter__crest {
-  width: 60px; height: auto;
-  opacity: 0.6;
-  margin-bottom: 2rem;
+/* Starburst decorations */
+.newsletter__starburst {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.06;
 }
+.newsletter__starburst .starburst__line {
+  background: var(--cream);
+  opacity: 1;
+}
+.newsletter__starburst:nth-child(1) { top: 10%; left: 5%; width: 200px; height: 200px; }
+.newsletter__starburst:nth-child(2) { top: 60%; left: 15%; width: 150px; height: 150px; }
+.newsletter__starburst:nth-child(3) { top: 20%; right: 10%; width: 180px; height: 180px; }
+.newsletter__starburst:nth-child(4) { bottom: 15%; right: 20%; width: 160px; height: 160px; }
+.newsletter__starburst:nth-child(5) { top: 50%; left: 50%; width: 120px; height: 120px; transform: translate(-50%, -50%); }
+
 .newsletter__title {
   font-family: 'Begum', serif;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  margin-bottom: 1rem;
-}
-.newsletter__subtitle {
-  font-weight: 300;
-  font-size: clamp(0.85rem, 1vw, 0.95rem);
-  color: var(--or-pale);
-  max-width: 520px;
-  line-height: 1.8;
-  margin-bottom: 2.5rem;
-  opacity: 0.8;
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 400;
+  color: var(--cream);
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  position: relative; z-index: 1;
 }
 .newsletter__form {
   display: flex;
   gap: 0;
-  max-width: 480px;
+  max-width: 500px;
   width: 100%;
+  position: relative; z-index: 1;
 }
 .newsletter__input {
   flex: 1;
-  padding: 1rem 1.5rem;
-  background: rgba(255,255,255,0.06);
-  border: 1.5px solid rgba(212,177,136,0.2);
-  border-right: none;
-  border-radius: 50px 0 0 50px;
-  color: var(--blanc);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 300;
-  outline: none;
-  transition: box-shadow var(--t-fast), border-color var(--t-fast);
-}
-.newsletter__input::placeholder { color: var(--gris); }
-.newsletter__input:focus {
-  border-color: var(--or);
-  box-shadow: 0 0 20px var(--or-glow);
-}
-.newsletter__btn {
-  padding: 1rem 2rem;
-  background: var(--coral);
-  color: var(--blanc);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  padding: 0 0 12px;
+  background: transparent;
   border: none;
-  border-radius: 0 50px 50px 0;
-  cursor: pointer;
-  transition: background var(--t-fast);
-  white-space: nowrap;
+  border-bottom: 1px solid var(--cream-border);
+  color: var(--cream);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  outline: none;
+  transition: border-color 0.3s;
 }
-.newsletter__btn:hover { background: var(--coral-hover); }
+.newsletter__input::placeholder { color: var(--cream); opacity: 0.4; }
+.newsletter__input:focus { border-color: var(--cream); }
+.newsletter__submit {
+  margin-left: 16px;
+}
+.newsletter__success {
+  display: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 20px;
+  position: relative; z-index: 1;
+}
 
 /* ============================================
-   SECTION 7 — FOOTER LUXE
+   SECTION 8 — FOOTER
    ============================================ */
 .footer {
-  background: var(--encre);
-  color: var(--blanc);
-  padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 4vw, 3rem) 2rem;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  background: var(--brown-body);
 }
-.footer__top {
+.footer__prefooter {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 3rem;
+  justify-content: space-between;
+  padding: var(--padding-edge);
+  border-top: 1px solid var(--separator);
+  border-bottom: 1px solid var(--separator);
+  gap: 24px;
+  flex-wrap: wrap;
 }
-.footer__crest {
-  width: 50px; height: auto;
-  opacity: 0.5;
-  margin-bottom: 1rem;
-}
-.footer__tagline {
-  font-weight: 300;
-  font-style: italic;
-  font-size: 0.85rem;
-  color: var(--or-pale);
-  opacity: 0.6;
-}
-.footer__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  max-width: 800px;
-  margin: 0 auto 3rem;
-}
-.footer__col-title {
-  font-family: 'Begum', serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  margin-bottom: 1rem;
-  color: var(--or);
-}
-.footer__col ul { list-style: none; }
-.footer__col li { margin-bottom: 0.6rem; }
-.footer__col a {
-  font-size: 0.75rem;
-  font-weight: 300;
-  opacity: 0.5;
-  transition: opacity var(--t-fast), color var(--t-fast);
-}
-.footer__col a:hover { opacity: 1; color: var(--or-pale); }
-.footer__badges {
-  text-align: center;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
+.footer__prefooter-item {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: var(--cream);
   text-transform: uppercase;
-  color: var(--or);
-  opacity: 0.4;
-  margin-bottom: 2rem;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  transition: opacity 0.3s;
 }
-.footer__bottom {
-  text-align: center;
-  font-size: 0.65rem;
-  color: var(--gris);
-  opacity: 0.4;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255,255,255,0.06);
+.footer__prefooter-item:hover { opacity: 1; }
+.footer__prefooter-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--separator);
 }
 
-/* ============================================
-   CTA RIPPLE EFFECT
-   ============================================ */
-.cta--ripple {
-  position: relative;
-  overflow: hidden;
+.footer__nav {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--padding-edge);
+  border-bottom: 1px solid var(--separator);
+  gap: 48px;
 }
-.cta--ripple::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(212,177,136,0.25) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.4s var(--ease-luxe);
-  pointer-events: none;
+.footer__nav-group {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
 }
-.cta--ripple:hover::after { opacity: 1; }
+.footer__nav-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+.footer__nav-link:hover { opacity: 1; }
+
+.footer__legal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--padding-edge);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer__legal-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.4;
+}
+.footer__legal-social {
+  display: flex; gap: 24px;
+}
+.footer__legal-social a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.footer__legal-social a:hover { opacity: 1; }
 
 /* ============================================
    RESPONSIVE — 900px
    ============================================ */
 @media (max-width: 900px) {
-  .nav__quick-links { display: none; }
+  :root {
+    --padding-edge: 24px;
+  }
+
+  .nav { height: 80px; }
+  .nav__collection-btn { display: none; }
+
+  /* Hero */
+  .hero__title { font-size: clamp(36px, 10vw, 48px); }
+  .hero__content { padding: 0 var(--padding-edge) 60px; }
+
+  /* About */
+  .about-image img { height: 40vh; }
+  .about-text { padding: 80px var(--padding-edge); }
+  .about-text__title { font-size: 24px; }
+
+  /* Letter reveal */
+  .letter-reveal__text { font-size: clamp(40px, 10vw, 70px); white-space: normal; text-align: center; padding: 0 var(--padding-edge); }
+
+  /* Cuvees */
+  .cuvee-slide {
+    flex-direction: column !important;
+    padding: 80px var(--padding-edge);
+    min-height: auto;
+    gap: 40px;
+    text-align: center;
+  }
+  .cuvee-slide__name { font-size: clamp(36px, 10vw, 56px); }
+  .cuvee-slide__bottle { height: 40vh; }
+  .starburst { width: 300px; height: 300px; }
+  .starburst__line { height: 150px; }
+
+  /* Product carousel */
+  .product-carousel__inner {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .product-card {
+    width: 85vw;
+    min-width: 85vw;
+    scroll-snap-align: start;
+    height: 620px;
+  }
+  .product-carousel__arrows { display: none; }
+
+  /* Editorial */
+  .editorial__grid { grid-template-columns: 1fr; gap: 48px; }
+  .editorial { padding: 80px var(--padding-edge); }
+
+  /* Social */
+  .social__grid { grid-template-columns: 1fr; gap: 12px; }
+  .social { padding: 80px var(--padding-edge); }
+
+  /* Newsletter */
+  .newsletter {
+    padding: 100px var(--padding-edge);
+  }
+  .newsletter__form {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .newsletter__submit { margin-left: 0; }
+  .newsletter__title { font-size: 32px; }
+
+  /* Footer */
+  .footer__prefooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .footer__prefooter-sep { display: none; }
+  .footer__nav {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .footer__nav-group { flex-direction: column; gap: 12px; }
+  .footer__legal { flex-direction: column; align-items: flex-start; }
 
   /* Overlay → single column, no image */
   .overlay-menu__inner { grid-template-columns: 1fr; padding-top: 80px; min-height: auto; }
@@ -1034,53 +1062,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .overlay-menu__ghost { font-size: clamp(2rem, 8vw, 3.2rem); left: 50%; transform: translateX(-50%); }
   .overlay-menu__sub { justify-content: center; }
   .overlay-menu__footer { justify-content: center; }
-
-  .hero__title { font-size: clamp(2.4rem, 9vw, 4rem); }
-  .hero__crest { width: 60px; }
-
-  .moments__grid {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-  }
-  .moment-card:nth-child(1) { grid-column: 1 / -1; grid-row: auto; min-height: 400px; }
-  .moment-card:nth-child(2) { grid-column: 1 / 2; grid-row: auto; min-height: 260px; }
-  .moment-card:nth-child(3) { grid-column: 2 / 3; grid-row: auto; min-height: 260px; }
-  .moment-card:nth-child(4) { grid-column: 1 / 2; grid-row: auto; min-height: 260px; }
-  .moment-card:nth-child(5) { grid-column: 2 / 3; grid-row: auto; min-height: 260px; }
-
-  .rituel__images { grid-template-columns: 1fr; gap: 0.8rem; }
-  .rituel__img-btn { aspect-ratio: 16/9; }
-  .rituel__options { grid-template-columns: 1fr; }
-
-  .footer__grid { grid-template-columns: repeat(2, 1fr); }
-
-  .newsletter__form { flex-direction: column; }
-  .newsletter__input { border-right: 1.5px solid rgba(212,177,136,0.2); border-radius: 50px; margin-bottom: 0.8rem; }
-  .newsletter__btn { border-radius: 50px; }
-}
-
-/* ============================================
-   RESPONSIVE — 600px
-   ============================================ */
-@media (max-width: 600px) {
-  .hero__title { font-size: clamp(2rem, 10vw, 3rem); }
-  .hero__crest { width: 50px; margin-bottom: 1.5rem; }
-  .hero__cta { padding: 0.9rem 2rem; font-size: 0.65rem; }
-
-  .moments__grid {
-    grid-template-columns: 1fr;
-  }
-  .moment-card:nth-child(1) { grid-column: 1; min-height: 350px; }
-  .moment-card:nth-child(2),
-  .moment-card:nth-child(3),
-  .moment-card:nth-child(4),
-  .moment-card:nth-child(5) { grid-column: 1; min-height: 240px; }
-
-  .manifeste__text { font-size: clamp(1.2rem, 5vw, 1.6rem); }
-
-  .presse__quote { font-size: clamp(1.2rem, 5vw, 1.8rem); }
-
-  .footer__grid { grid-template-columns: 1fr 1fr; }
 }
 
 /* ============================================
@@ -1092,45 +1073,35 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .bubble { display: none; }
-  .hero__scroll-line { animation: none; }
-  .presse__marquee { animation: none; }
+  .letter-reveal { height: auto; }
+  .letter-reveal__sticky { position: relative; }
+  .letter-reveal__char { opacity: 1; }
 }
 </style>
 </head>
 <body>
 
-<!-- ========== PAGE REVEAL ========== -->
-<div class="reveal-overlay" aria-hidden="true">
-  <span class="reveal-overlay__text">French Bloom</span>
-</div>
-
 <!-- ========== CUSTOM CURSOR ========== -->
-<div class="cursor" aria-hidden="true">
-  <div class="cursor__outer"></div>
-</div>
-<div class="cursor__dot" aria-hidden="true"></div>
+<div class="cursor" id="customCursor" aria-hidden="true"></div>
 
 <!-- ========== NAVIGATION ========== -->
-<nav class="nav nav--transparent" aria-label="Navigation principale">
+<nav class="nav" aria-label="Navigation principale">
   <div class="nav__left">
     <div class="nav__hamburger" id="menuToggle" aria-label="Menu" aria-expanded="false" role="button" tabindex="0">
       <span></span><span></span><span></span>
     </div>
-    <div class="nav__quick-links">
-      <a href="collection-v2.html">Collection</a>
-      <a href="la-maison-v2.html">La Maison</a>
-    </div>
+    <a href="collection-v2.html" class="nav__collection-btn"><span>La Collection</span></a>
   </div>
   <a href="homepage-v2.html" class="nav__logo">French Bloom</a>
   <div class="nav__right">
+    <span class="nav__lang">FR</span>
     <a href="#" class="nav__icon" aria-label="Rechercher">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </a>
-    <a href="cart-v2.html" class="nav__icon nav__cart" aria-label="Panier">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      <span class="nav__cart-count">3</span>
+    <a href="#" class="nav__icon" aria-label="Compte">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </a>
+    <a href="cart-v2.html" class="nav__cart-text" aria-label="Panier">(0)</a>
   </div>
 </nav>
 
@@ -1144,18 +1115,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
         <div class="overlay-menu__item">
           <span class="overlay-menu__ghost" aria-hidden="true">La Collection</span>
-          <a href="collection-v2.html" class="overlay-menu__link" data-img="assets/lifestyle/lifestyle-festive.jpg">La Collection</a>
+          <a href="collection-v2.html" class="overlay-menu__link" data-img="assets/lifestyle/ambiance-1.jpg">La Collection</a>
           <div class="overlay-menu__sub">
             <a href="product-v2.html">Le Blanc</a>
-            <a href="product-v2.html">Le Rosé</a>
+            <a href="product-v2.html">Le Rose</a>
             <a href="product-v2.html">L'Extra Brut</a>
-            <a href="product-v2.html">La Cuvée Vintage</a>
+            <a href="product-v2.html">La Cuvee Vintage</a>
           </div>
         </div>
 
         <div class="overlay-menu__item">
           <span class="overlay-menu__ghost" aria-hidden="true">La Maison</span>
-          <a href="la-maison-v2.html" class="overlay-menu__link" data-img="assets/lifestyle/lifestyle-convivial.jpg">La Maison</a>
+          <a href="la-maison-v2.html" class="overlay-menu__link" data-img="assets/lifestyle/vignoble-hero.jpg">La Maison</a>
           <div class="overlay-menu__sub">
             <a href="la-maison-v2.html">Savoir-Faire</a>
             <a href="la-maison-v2.html">Notre Histoire</a>
@@ -1165,12 +1136,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
         <div class="overlay-menu__item">
           <span class="overlay-menu__ghost" aria-hidden="true">Nos Moments</span>
-          <a href="#" class="overlay-menu__link" data-img="assets/lifestyle/hero-mediterranean.jpg">Nos Moments</a>
+          <a href="#" class="overlay-menu__link" data-img="assets/lifestyle/shopping-moment.jpg">Nos Moments</a>
         </div>
 
         <div class="overlay-menu__item">
           <span class="overlay-menu__ghost" aria-hidden="true">Journal</span>
-          <a href="#" class="overlay-menu__link" data-img="assets/lifestyle/editorial-large.jpg">Journal</a>
+          <a href="#" class="overlay-menu__link" data-img="assets/lifestyle/food-pairing.jpg">Journal</a>
         </div>
 
       </div>
@@ -1183,7 +1154,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
     <!-- Right: Image -->
     <div class="overlay-menu__right">
-      <img src="assets/lifestyle/lifestyle-festive.jpg" alt="" id="overlayImg">
+      <img src="assets/lifestyle/ambiance-1.jpg" alt="" id="overlayImg">
     </div>
 
     <!-- Footer: spans full width -->
@@ -1192,341 +1163,303 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       <a href="#">FAQ</a>
       <a href="#">Presse</a>
       <a href="#">Contact</a>
-      <a href="#">Mentions légales</a>
+      <a href="#">Mentions Legales</a>
     </div>
 
   </div>
 </div>
 
 <!-- ========================================
-     SECTION 1 — HERO CINEMATIQUE
+     SECTION 1 — HERO
      ======================================== -->
 <section class="hero" aria-label="French Bloom — Accueil">
-  <div class="hero__bg" aria-hidden="true"></div>
-  <div class="hero__noise" aria-hidden="true"></div>
-  <div class="hero__bubbles" aria-hidden="true">
-    <div class="bubble" style="left:10%; bottom:-20px; width:6px; height:6px; --duration:7s; --delay:0s; --max-opacity:0.25; --end-scale:0.4;"></div>
-    <div class="bubble" style="left:25%; bottom:-20px; width:10px; height:10px; --duration:9s; --delay:1.2s; --max-opacity:0.2; --end-scale:0.6;"></div>
-    <div class="bubble" style="left:40%; bottom:-20px; width:4px; height:4px; --duration:6s; --delay:0.5s; --max-opacity:0.35; --end-scale:0.3;"></div>
-    <div class="bubble" style="left:55%; bottom:-20px; width:8px; height:8px; --duration:10s; --delay:2s; --max-opacity:0.2; --end-scale:0.5;"></div>
-    <div class="bubble" style="left:70%; bottom:-20px; width:5px; height:5px; --duration:7.5s; --delay:3s; --max-opacity:0.3; --end-scale:0.4;"></div>
-    <div class="bubble" style="left:82%; bottom:-20px; width:12px; height:12px; --duration:11s; --delay:0.8s; --max-opacity:0.15; --end-scale:0.6;"></div>
-    <div class="bubble" style="left:15%; bottom:-20px; width:7px; height:7px; --duration:8.5s; --delay:4s; --max-opacity:0.2; --end-scale:0.5;"></div>
-    <div class="bubble" style="left:90%; bottom:-20px; width:3px; height:3px; --duration:6.5s; --delay:1.8s; --max-opacity:0.4; --end-scale:0.3;"></div>
-    <div class="bubble" style="left:35%; bottom:-20px; width:9px; height:9px; --duration:9.5s; --delay:2.5s; --max-opacity:0.18; --end-scale:0.55;"></div>
-    <div class="bubble" style="left:62%; bottom:-20px; width:5px; height:5px; --duration:7s; --delay:3.5s; --max-opacity:0.28; --end-scale:0.4;"></div>
+  <div class="hero__bg" aria-hidden="true">
+    <img src="assets/lifestyle/sand-lifestyle.jpg" alt="">
   </div>
-
   <div class="hero__content">
-    <img src="assets/logos/french-bloom-crest.png" alt="French Bloom" class="hero__crest">
     <h1 class="hero__title">
-      <span class="hero__title-line">L'Art de</span>
-      <span class="hero__title-line">Célébrer</span>
+      <span class="hero__title-line">L'effervescence</span>
+      <span class="hero__title-line">sans alcool</span>
     </h1>
-    <p class="hero__tagline">L'effervescence sans alcool, réinventée</p>
-    <a href="collection-v2.html" class="hero__cta cta--ripple">Découvrir l'art de célébrer</a>
   </div>
-
-  <div class="hero__scroll" aria-hidden="true">
-    <span class="hero__scroll-text">Défiler</span>
-    <div class="hero__scroll-line"></div>
+  <div class="hero__bottom">
+    <span class="hero__scroll-label">Scroll down &#8595;</span>
+    <a href="collection-v2.html" class="btn"><span>Decouvrir &#8594;</span></a>
   </div>
 </section>
 
 <!-- ========================================
-     SECTION 2 — MANIFESTE SCROLL (PINNED)
+     SECTION 2a — FULL WIDTH LIFESTYLE IMAGE
      ======================================== -->
-<section class="manifeste" aria-label="Notre manifeste">
-  <div class="manifeste__sticky">
+<section class="about-image" aria-label="Vignoble">
+  <img src="assets/lifestyle/vignoble-hero.jpg" alt="Vignoble French Bloom" loading="lazy">
+</section>
 
-    <!-- Shot 1 -->
-    <div class="manifeste__shot" data-shot="1">
-      <div class="manifeste__shot-bg" style="background-image: url('assets/lifestyle/hero-poolside.jpg');"></div>
-      <div class="manifeste__shot-overlay"></div>
-      <div class="manifeste__shot-content">
-        <p class="manifeste__text" data-manifeste-text>Nous croyons que chaque instant mérite d'être célébré</p>
-      </div>
+<!-- ========================================
+     SECTION 2b — ABOUT TEXT
+     ======================================== -->
+<section class="about-text" aria-label="A propos">
+  <div class="about-text__bg" aria-hidden="true">
+    <img src="assets/lifestyle/brut-closeup.jpg" alt="">
+  </div>
+  <div class="about-text__overlay" aria-hidden="true"></div>
+  <h2 class="about-text__title">
+    <span class="about-text__title-line">French Bloom est</span>
+    <span class="about-text__title-line">synonyme d'excellence</span>
+  </h2>
+  <p class="about-text__subtitle">Pionniers du sparkling sans alcool depuis 2020, nous reinventons l'art de celebrer</p>
+</section>
+
+<!-- ========================================
+     SECTION 3 — LETTER REVEAL
+     ======================================== -->
+<section class="letter-reveal" aria-label="French Bloom">
+  <div class="letter-reveal__sticky">
+    <div class="letter-reveal__text" id="letterRevealText">French Bloom</div>
+  </div>
+</section>
+
+<!-- ========================================
+     SECTION 4 — LES CUVEES
+     ======================================== -->
+<section class="cuvees" aria-label="Les Cuvees">
+
+  <!-- Slide 1: Le Blanc -->
+  <div class="cuvee-slide" data-reveal>
+    <div class="cuvee-slide__info">
+      <h2 class="cuvee-slide__name">Le Blanc</h2>
+      <p class="cuvee-slide__tagline">Fraicheur petillante</p>
+      <a href="product-v2.html" class="btn btn--brown"><span>Decouvrir &#8594;</span></a>
     </div>
-
-    <!-- Shot 2 -->
-    <div class="manifeste__shot" data-shot="2">
-      <div class="manifeste__shot-bg" style="background-image: url('assets/lifestyle/lifestyle-convivial.jpg');"></div>
-      <div class="manifeste__shot-overlay"></div>
-      <div class="manifeste__shot-content">
-        <p class="manifeste__text" data-manifeste-text>Que l'effervescence est un art de vivre, pas une question d'alcool</p>
-      </div>
+    <div class="cuvee-slide__visual">
+      <div class="starburst" aria-hidden="true"></div>
+      <img src="assets/bottles/le-blanc-hq.png" alt="Le Blanc" class="cuvee-slide__bottle" loading="lazy">
     </div>
+  </div>
 
-    <!-- Shot 3 -->
-    <div class="manifeste__shot" data-shot="3">
-      <div class="manifeste__shot-bg" style="background-image: url('assets/lifestyle/lifestyle-festive.jpg');"></div>
-      <div class="manifeste__shot-overlay"></div>
-      <div class="manifeste__shot-content">
-        <p class="manifeste__text" data-manifeste-text>French Bloom. L'art de célébrer autrement.</p>
-        <div class="manifeste__bottles">
-          <img src="assets/bottles/le-blanc.png" alt="Le Blanc" loading="lazy">
-          <img src="assets/bottles/le-rose.png" alt="Le Rosé" loading="lazy">
+  <!-- Slide 2: Le Rose -->
+  <div class="cuvee-slide" data-reveal>
+    <div class="cuvee-slide__info">
+      <h2 class="cuvee-slide__name">Le Rose</h2>
+      <p class="cuvee-slide__tagline">Elegance fruitee</p>
+      <a href="product-v2.html" class="btn btn--brown"><span>Decouvrir &#8594;</span></a>
+    </div>
+    <div class="cuvee-slide__visual">
+      <div class="starburst" aria-hidden="true"></div>
+      <img src="assets/bottles/le-rose-hq.png" alt="Le Rose" class="cuvee-slide__bottle" loading="lazy">
+    </div>
+  </div>
+
+  <!-- Slide 3: L'Extra Brut -->
+  <div class="cuvee-slide" data-reveal>
+    <div class="cuvee-slide__info">
+      <h2 class="cuvee-slide__name">L'Extra Brut</h2>
+      <p class="cuvee-slide__tagline">Intensite raffinee</p>
+      <a href="product-v2.html" class="btn btn--brown"><span>Decouvrir &#8594;</span></a>
+    </div>
+    <div class="cuvee-slide__visual">
+      <div class="starburst" aria-hidden="true"></div>
+      <img src="assets/bottles/extra-brut-hq.png" alt="L'Extra Brut" class="cuvee-slide__bottle" loading="lazy">
+    </div>
+  </div>
+
+  <!-- Slide 4: La Cuvee Vintage -->
+  <div class="cuvee-slide" data-reveal>
+    <div class="cuvee-slide__info">
+      <h2 class="cuvee-slide__name">La Cuvee Vintage</h2>
+      <p class="cuvee-slide__tagline">Prestige millesime</p>
+      <a href="product-v2.html" class="btn btn--brown"><span>Decouvrir &#8594;</span></a>
+    </div>
+    <div class="cuvee-slide__visual">
+      <div class="starburst" aria-hidden="true"></div>
+      <img src="assets/bottles/la-cuvee-hq.png" alt="La Cuvee Vintage" class="cuvee-slide__bottle" loading="lazy">
+    </div>
+  </div>
+
+</section>
+
+<!-- ========================================
+     SECTION 4b — PRODUCT CAROUSEL
+     ======================================== -->
+<section class="product-carousel" aria-label="Nos Produits">
+  <div class="product-carousel__inner" id="productCarousel">
+
+    <!-- Card 1: Le Blanc -->
+    <article class="product-card">
+      <div class="product-card__glow" aria-hidden="true"></div>
+      <div class="product-card__top">
+        <span class="product-card__brand">French Bloom</span>
+        <span class="product-card__format">750ml</span>
+      </div>
+      <div class="product-card__image">
+        <img src="assets/bottles/le-blanc-hq.png" alt="Le Blanc" loading="lazy">
+      </div>
+      <div class="product-card__bottom">
+        <h3 class="product-card__name">Le Blanc</h3>
+        <p class="product-card__price">29,00&#8364;</p>
+        <div class="product-card__actions">
+          <a href="product-v2.html" class="btn"><span>Decouvrir</span></a>
+          <button class="btn btn--frosted" type="button"><span>Ajout rapide</span></button>
         </div>
       </div>
-    </div>
+    </article>
 
+    <!-- Card 2: Le Rose -->
+    <article class="product-card">
+      <div class="product-card__glow" aria-hidden="true"></div>
+      <div class="product-card__top">
+        <span class="product-card__brand">French Bloom</span>
+        <span class="product-card__format">750ml</span>
+      </div>
+      <div class="product-card__image">
+        <img src="assets/bottles/le-rose-hq.png" alt="Le Rose" loading="lazy">
+      </div>
+      <div class="product-card__bottom">
+        <h3 class="product-card__name">Le Rose</h3>
+        <p class="product-card__price">29,00&#8364;</p>
+        <div class="product-card__actions">
+          <a href="product-v2.html" class="btn"><span>Decouvrir</span></a>
+          <button class="btn btn--frosted" type="button"><span>Ajout rapide</span></button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Card 3: L'Extra Brut -->
+    <article class="product-card">
+      <div class="product-card__glow" aria-hidden="true"></div>
+      <div class="product-card__top">
+        <span class="product-card__brand">French Bloom</span>
+        <span class="product-card__format">750ml</span>
+      </div>
+      <div class="product-card__image">
+        <img src="assets/bottles/extra-brut-hq.png" alt="L'Extra Brut" loading="lazy">
+      </div>
+      <div class="product-card__bottom">
+        <h3 class="product-card__name">L'Extra Brut</h3>
+        <p class="product-card__price">39,00&#8364;</p>
+        <div class="product-card__actions">
+          <a href="product-v2.html" class="btn"><span>Decouvrir</span></a>
+          <button class="btn btn--frosted" type="button"><span>Ajout rapide</span></button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+  <div class="product-carousel__arrows">
+    <button class="product-carousel__arrow" id="carouselPrev" aria-label="Precedent">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="product-carousel__arrow" id="carouselNext" aria-label="Suivant">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
   </div>
 </section>
 
 <!-- ========================================
-     SECTION 3 — LES MOMENTS (ASYMMETRIC GRID)
+     SECTION 5 — EDITORIAL
      ======================================== -->
-<section class="moments" aria-label="Les Moments French Bloom">
-  <div class="moments__header">
-    <p class="moments__label">L'expérience</p>
-    <h2 class="moments__title">Chaque Moment Mérite French Bloom</h2>
-  </div>
+<section class="editorial" aria-label="Editorial">
+  <div class="editorial__grid">
 
-  <div class="moments__grid">
-
-    <!-- Card 1 — L'Apéro Rooftop (large) -->
-    <article class="moment-card" data-reveal>
-      <div class="moment-card__bg" style="background-image: url('assets/lifestyle/hero-mediterranean.jpg');"></div>
-      <div class="moment-card__overlay"></div>
-      <span class="moment-card__number">01</span>
-      <div class="moment-card__content">
-        <h3 class="moment-card__title">L'Apéro Rooftop</h3>
-        <p class="moment-card__subtitle">Effervescence en altitude</p>
-      </div>
-      <img src="assets/bottles/le-blanc.png" alt="Le Blanc" class="moment-card__bottle" loading="lazy">
+    <article class="editorial__post" data-reveal>
+      <img src="assets/lifestyle/vignoble-2.jpg" alt="La Maison" class="editorial__post-image" loading="lazy">
+      <h3 class="editorial__post-title">La Maison</h3>
+      <p class="editorial__post-caption">Tradition et innovation</p>
+      <a href="la-maison-v2.html" class="editorial__post-cta">Decouvrir &#8594;</a>
     </article>
 
-    <!-- Card 2 — La Célébration -->
-    <article class="moment-card" data-reveal>
-      <div class="moment-card__bg" style="background-image: url('assets/lifestyle/lifestyle-festive.jpg');"></div>
-      <div class="moment-card__overlay"></div>
-      <span class="moment-card__number">02</span>
-      <div class="moment-card__content">
-        <h3 class="moment-card__title">La Célébration</h3>
-        <p class="moment-card__subtitle">Trinquer sans modération</p>
-      </div>
-      <img src="assets/bottles/le-rose.png" alt="Le Rosé" class="moment-card__bottle" loading="lazy">
+    <article class="editorial__post" data-reveal>
+      <img src="assets/lifestyle/shopping-moment.jpg" alt="L'art de celebrer" class="editorial__post-image" loading="lazy">
+      <h3 class="editorial__post-title">L'art de celebrer</h3>
+      <p class="editorial__post-caption">Moments precieux</p>
+      <a href="#" class="editorial__post-cta">Decouvrir &#8594;</a>
     </article>
 
-    <!-- Card 3 — Le Brunch Ensoleillé -->
-    <article class="moment-card" data-reveal>
-      <div class="moment-card__bg" style="background-image: url('assets/lifestyle/lifestyle-dining.jpg');"></div>
-      <div class="moment-card__overlay"></div>
-      <span class="moment-card__number">03</span>
-      <div class="moment-card__content">
-        <h3 class="moment-card__title">Le Brunch Ensoleillé</h3>
-        <p class="moment-card__subtitle">La dolce vita commence ici</p>
-      </div>
-      <img src="assets/bottles/le-blanc.png" alt="Le Blanc" class="moment-card__bottle" loading="lazy">
-    </article>
-
-    <!-- Card 4 — L'Art d'Offrir -->
-    <article class="moment-card" data-reveal>
-      <div class="moment-card__bg" style="background-image: url('assets/lifestyle/lifestyle-bag.jpg');"></div>
-      <div class="moment-card__overlay"></div>
-      <span class="moment-card__number">04</span>
-      <div class="moment-card__content">
-        <h3 class="moment-card__title">L'Art d'Offrir</h3>
-        <p class="moment-card__subtitle">Le geste qui dit tout</p>
-      </div>
-      <img src="assets/bottles/la-cuvee-coffret.png" alt="La Cuvée Coffret" class="moment-card__bottle" loading="lazy">
-    </article>
-
-    <!-- Card 5 — L'After F1 -->
-    <article class="moment-card" data-reveal>
-      <div class="moment-card__bg" style="background-image: url('assets/lifestyle/lifestyle-service.jpg');"></div>
-      <div class="moment-card__overlay"></div>
-      <span class="moment-card__number">05</span>
-      <div class="moment-card__content">
-        <h3 class="moment-card__title">L'After F1</h3>
-        <p class="moment-card__subtitle">La victoire se fête autrement</p>
-      </div>
-      <img src="assets/bottles/le-rose.png" alt="Le Rosé" class="moment-card__bottle" loading="lazy">
+    <article class="editorial__post" data-reveal>
+      <img src="assets/lifestyle/ambiance-3.jpg" alt="Nos engagements" class="editorial__post-image" loading="lazy">
+      <h3 class="editorial__post-title">Nos engagements</h3>
+      <p class="editorial__post-caption">Responsabilite</p>
+      <a href="#" class="editorial__post-cta">Decouvrir &#8594;</a>
     </article>
 
   </div>
+  <p class="editorial__counter">01 / 03</p>
 </section>
 
 <!-- ========================================
-     SECTION 4 — LE RITUEL (QUIZ)
+     SECTION 6 — SOCIAL / INSTAGRAM
      ======================================== -->
-<section class="rituel" aria-label="Trouvez votre cuvée">
-  <h2 class="rituel__title">Quel est votre moment<br>French Bloom ?</h2>
-
-  <div class="rituel__container" id="rituelContainer">
-
-    <!-- Step 1 — L'État d'Esprit -->
-    <div class="rituel__step active" data-step="1">
-      <p class="rituel__step-label">L'État d'Esprit</p>
-      <div class="rituel__images">
-        <button class="rituel__img-btn" data-answer="festif" type="button">
-          <div class="rituel__img-btn-bg" style="background-image: url('assets/lifestyle/lifestyle-festive.jpg');"></div>
-          <div class="rituel__img-btn-overlay"></div>
-          <span class="rituel__img-btn-label">Festif</span>
-        </button>
-        <button class="rituel__img-btn" data-answer="detendu" type="button">
-          <div class="rituel__img-btn-bg" style="background-image: url('assets/lifestyle/hero-poolside.jpg');"></div>
-          <div class="rituel__img-btn-overlay"></div>
-          <span class="rituel__img-btn-label">Détendu</span>
-        </button>
-        <button class="rituel__img-btn" data-answer="intime" type="button">
-          <div class="rituel__img-btn-bg" style="background-image: url('assets/lifestyle/lifestyle-dinner.jpg');"></div>
-          <div class="rituel__img-btn-overlay"></div>
-          <span class="rituel__img-btn-label">Intime</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Step 2 — L'Occasion -->
-    <div class="rituel__step" data-step="2">
-      <p class="rituel__step-label">L'Occasion</p>
-      <div class="rituel__options">
-        <button class="rituel__opt-btn" data-answer="diner" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17h18M5 12h14M7 7h10"/></svg>
-          Un Dîner
-        </button>
-        <button class="rituel__opt-btn" data-answer="apero" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l1.5 9h5L16 2M12 11v8M7 22h10"/></svg>
-          Un Apéro
-        </button>
-        <button class="rituel__opt-btn" data-answer="brunch" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          Un Brunch
-        </button>
-        <button class="rituel__opt-btn" data-answer="cadeau" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M12 8v13M3 12h18M7.5 8C7.5 6 9 4 12 4s4.5 2 4.5 4"/></svg>
-          Un Cadeau
-        </button>
-      </div>
-    </div>
-
-    <!-- Step 3 — Le Palais -->
-    <div class="rituel__step" data-step="3">
-      <p class="rituel__step-label">Le Palais</p>
-      <div class="rituel__palais">
-        <button class="rituel__palais-btn" data-answer="sec" type="button">Sec &amp; Minéral</button>
-        <button class="rituel__palais-btn" data-answer="fruite" type="button">Fruité &amp; Floral</button>
-        <button class="rituel__palais-btn" data-answer="prestige" type="button">Prestige &amp; Complexe</button>
-      </div>
-    </div>
-
-    <!-- Result -->
-    <div class="rituel__step" data-step="result">
-      <div class="rituel__result">
-        <img src="" alt="" class="rituel__result-bottle" id="resultBottle">
-        <p class="rituel__result-name" id="resultName"></p>
-        <p class="rituel__result-tagline" id="resultTagline"></p>
-        <a href="product-v2.html" class="rituel__result-cta cta--ripple" id="resultCta">Découvrir cette cuvée</a>
-      </div>
-    </div>
-
+<section class="social" aria-label="Instagram">
+  <h2 class="social__title">Suivez-nous</h2>
+  <p class="social__text">Rejoignez la communaute French Bloom</p>
+  <div class="social__cta-wrap">
+    <a href="https://instagram.com" class="btn" target="_blank" rel="noopener"><span>Instagram &#8594;</span></a>
   </div>
-
-  <div class="rituel__dots" aria-hidden="true">
-    <div class="rituel__dot active" data-dot="1"></div>
-    <div class="rituel__dot" data-dot="2"></div>
-    <div class="rituel__dot" data-dot="3"></div>
+  <div class="social__grid">
+    <img src="assets/lifestyle/ambiance-1.jpg" alt="French Bloom Instagram" loading="lazy">
+    <img src="assets/lifestyle/ambiance-2.jpg" alt="French Bloom Instagram" loading="lazy">
+    <img src="assets/lifestyle/ambiance-4.jpg" alt="French Bloom Instagram" loading="lazy">
   </div>
+  <p class="social__counter">01 / 04</p>
 </section>
 
 <!-- ========================================
-     SECTION 5 — SOCIAL PROOF / PRESSE
+     SECTION 7 — NEWSLETTER
      ======================================== -->
-<section class="presse" aria-label="Presse">
-  <div class="presse__marquee" aria-hidden="true">
-    <div class="presse__marquee-inner">
-      <span class="presse__item">Vogue</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">Elle</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">GQ</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">Forbes</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">Monocle</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">Wallpaper*</span><span class="presse__sep">&#183;</span>
-    </div>
-    <div class="presse__marquee-inner">
-      <span class="presse__item">Vogue</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">Elle</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">GQ</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">Forbes</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">Monocle</span><span class="presse__sep">&#183;</span>
-      <span class="presse__item">Wallpaper*</span><span class="presse__sep">&#183;</span>
-    </div>
-  </div>
+<section class="newsletter" aria-label="Newsletter">
+  <!-- Decorative starbursts -->
+  <div class="newsletter__starburst" aria-hidden="true"><div class="starburst" id="nlStar1"></div></div>
+  <div class="newsletter__starburst" aria-hidden="true"><div class="starburst" id="nlStar2"></div></div>
+  <div class="newsletter__starburst" aria-hidden="true"><div class="starburst" id="nlStar3"></div></div>
+  <div class="newsletter__starburst" aria-hidden="true"><div class="starburst" id="nlStar4"></div></div>
+  <div class="newsletter__starburst" aria-hidden="true"><div class="starburst" id="nlStar5"></div></div>
 
-  <div class="presse__citation">
-    <span class="presse__guillemet" aria-hidden="true">"</span>
-    <blockquote class="presse__quote">Une révolution dans le verre</blockquote>
-    <p class="presse__author">— Vogue</p>
-  </div>
-</section>
-
-<!-- ========================================
-     SECTION 6 — CRM CAPTURE (NEWSLETTER)
-     ======================================== -->
-<section class="newsletter" aria-label="Rejoindre la Maison">
-  <img src="assets/logos/french-bloom-crest.png" alt="French Bloom" class="newsletter__crest">
-  <h2 class="newsletter__title">Rejoignez La Maison French Bloom</h2>
-  <p class="newsletter__subtitle">Accédez aux cuvées avant tout le monde, aux invitations privées et aux récits de la Maison.</p>
-  <form class="newsletter__form" onsubmit="event.preventDefault(); this.querySelector('.newsletter__btn').textContent = 'Merci';">
-    <input
-      type="email"
-      class="newsletter__input"
-      placeholder="Votre adresse e-mail"
-      required
-      aria-label="Adresse e-mail"
-    >
-    <button type="submit" class="newsletter__btn">Rejoindre</button>
+  <h2 class="newsletter__title">Rejoignez la Maison</h2>
+  <form class="newsletter__form" id="newsletterForm">
+    <input type="email" class="newsletter__input" placeholder="Votre email" required aria-label="Adresse e-mail">
+    <button type="submit" class="btn newsletter__submit"><span>Rejoindre &#8594;</span></button>
   </form>
+  <p class="newsletter__success" id="newsletterSuccess">Merci pour votre inscription</p>
 </section>
 
 <!-- ========================================
-     SECTION 7 — FOOTER LUXE
+     SECTION 8 — FOOTER
      ======================================== -->
 <footer class="footer">
-  <div class="footer__top">
-    <img src="assets/logos/french-bloom-crest.png" alt="French Bloom" class="footer__crest">
-    <p class="footer__tagline">L'effervescence réinventée</p>
+  <!-- Pre-footer bar -->
+  <div class="footer__prefooter">
+    <a href="collection-v2.html" class="footer__prefooter-item">La Collection</a>
+    <div class="footer__prefooter-sep" aria-hidden="true"></div>
+    <span class="footer__prefooter-item">FR</span>
+    <div class="footer__prefooter-sep" aria-hidden="true"></div>
+    <a href="la-maison-v2.html" class="btn" style="height:36px; padding:6px 16px; font-size:12px;"><span>Decouvrir la Maison</span></a>
+    <div class="footer__prefooter-sep" aria-hidden="true"></div>
+    <a href="#" class="footer__prefooter-item" id="backToTop">Haut de page &#8593;</a>
   </div>
 
-  <div class="footer__grid">
-    <div class="footer__col">
-      <p class="footer__col-title">Les Moments</p>
-      <ul>
-        <li><a href="collection-v2.html">L'Apéro</a></li>
-        <li><a href="collection-v2.html">La Célébration</a></li>
-        <li><a href="collection-v2.html">Le Brunch</a></li>
-        <li><a href="collection-v2.html">Le Cadeau</a></li>
-      </ul>
+  <!-- Nav links -->
+  <div class="footer__nav">
+    <div class="footer__nav-group">
+      <a href="la-maison-v2.html" class="footer__nav-link">La Maison</a>
+      <a href="#" class="footer__nav-link">L'art de celebrer</a>
+      <a href="collection-v2.html" class="footer__nav-link">La Collection</a>
+      <a href="#" class="footer__nav-link">Contact</a>
     </div>
-    <div class="footer__col">
-      <p class="footer__col-title">La Maison</p>
-      <ul>
-        <li><a href="la-maison-v2.html">Savoir-Faire</a></li>
-        <li><a href="la-maison-v2.html">Histoire</a></li>
-        <li><a href="la-maison-v2.html">Terroir</a></li>
-        <li><a href="la-maison-v2.html">Formule 1</a></li>
-      </ul>
-    </div>
-    <div class="footer__col">
-      <p class="footer__col-title">Aide</p>
-      <ul>
-        <li><a href="#">FAQ</a></li>
-        <li><a href="#">Livraison</a></li>
-        <li><a href="#">Contact</a></li>
-        <li><a href="#">CGV</a></li>
-      </ul>
-    </div>
-    <div class="footer__col">
-      <p class="footer__col-title">Suivez-nous</p>
-      <ul>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">LinkedIn</a></li>
-        <li><a href="#">Facebook</a></li>
-      </ul>
+    <div class="footer__nav-group">
+      <a href="#" class="footer__nav-link">Mentions legales</a>
+      <a href="#" class="footer__nav-link">CGV</a>
+      <a href="#" class="footer__nav-link">Politique de confidentialite</a>
     </div>
   </div>
 
-  <p class="footer__badges">0,0% Alcool · Bio · Vegan · Sans sulfite</p>
-  <p class="footer__bottom">© 2025 French Bloom — L'effervescence réinventée.</p>
+  <!-- Legal bar -->
+  <div class="footer__legal">
+    <span class="footer__legal-text">French Bloom SAS &mdash; Tous droits reserves</span>
+    <div class="footer__legal-social">
+      <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://facebook.com" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
 </footer>
 
 <!-- ========== JAVASCRIPT ========== -->
@@ -1534,61 +1467,60 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 document.addEventListener('DOMContentLoaded', () => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Register ScrollTrigger plugin */
+  /* Register GSAP plugins */
   gsap.registerPlugin(ScrollTrigger);
 
   /* ============================================
      LENIS SMOOTH SCROLL
      ============================================ */
-  const lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-  gsap.ticker.add(t => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
-  lenis.on('scroll', ScrollTrigger.update);
+  let lenis;
+  if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    lenis.on('scroll', ScrollTrigger.update);
+  }
 
   /* ============================================
-     PAGE REVEAL
+     STARBURST GENERATION
      ============================================ */
-  const overlay = document.querySelector('.reveal-overlay');
-  if (!prefersReducedMotion) {
-    gsap.fromTo(overlay,
-      { clipPath: 'inset(0 0 0 0)' },
-      { clipPath: 'inset(0 0 100% 0)', duration: 1.2, ease: 'power3.inOut', delay: 0.4,
-        onComplete: () => overlay.remove()
-      }
-    );
-  } else {
-    overlay.remove();
+  function createStarburst(container) {
+    if (!container) return;
+    const lineCount = 12;
+    for (let i = 0; i < lineCount; i++) {
+      const line = document.createElement('div');
+      line.classList.add('starburst__line');
+      line.style.transform = 'translate(-50%, 0) rotate(' + (i * (360 / lineCount)) + 'deg)';
+      container.appendChild(line);
+    }
   }
+
+  /* Create starbursts for cuvee slides */
+  document.querySelectorAll('.starburst').forEach(sb => createStarburst(sb));
+
+  /* Create starbursts for newsletter */
+  document.querySelectorAll('.newsletter__starburst .starburst').forEach(sb => createStarburst(sb));
 
   /* ============================================
      CUSTOM CURSOR
      ============================================ */
-  const cursor = document.querySelector('.cursor');
-  const cursorDot = document.querySelector('.cursor__dot');
-  if (cursor && window.matchMedia('(pointer: fine)').matches) {
-    let cx = 0, cy = 0, tx = 0, ty = 0;
-    window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+  const cursorEl = document.getElementById('customCursor');
+  if (cursorEl && window.matchMedia('(hover: hover)').matches) {
+    let mx = 0, my = 0;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
     gsap.ticker.add(() => {
-      cx += (tx - cx) * 0.15;
-      cy += (ty - cy) * 0.15;
-      gsap.set(cursor, { x: cx, y: cy });
-      gsap.set(cursorDot, { x: tx, y: ty });
+      gsap.set(cursorEl, { x: mx, y: my });
     });
-    document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
-    });
-  } else {
-    if (cursor) cursor.remove();
-    if (cursorDot) cursorDot.remove();
+  } else if (cursorEl) {
+    cursorEl.remove();
   }
 
   /* ============================================
-     NAV — TRANSPARENT ON HERO, AUTO-HIDE + FROSTED
+     NAV — AUTO-HIDE + FROSTED
      ============================================ */
   const nav = document.querySelector('.nav');
   const heroSection = document.querySelector('.hero');
-  let lastY = 0;
+  let lastScrollY = 0;
   let heroBottom = 0;
   let overlayOpen = false;
 
@@ -1598,25 +1530,27 @@ document.addEventListener('DOMContentLoaded', () => {
   updateHeroBottom();
   window.addEventListener('resize', updateHeroBottom);
 
-  lenis.on('scroll', ({ scroll }) => {
-    /* Skip nav state changes when overlay is open */
-    if (overlayOpen) { lastY = scroll; return; }
+  function handleNavScroll(scrollY) {
+    if (overlayOpen) { lastScrollY = scrollY; return; }
 
-    /* Homepage-specific: nav hidden until past hero */
-    if (scroll < heroBottom - 100) {
-      nav.classList.add('nav--transparent');
-      nav.classList.remove('nav--frosted', 'nav--hidden');
-    } else {
-      nav.classList.remove('nav--transparent');
-      nav.classList.toggle('nav--frosted', scroll > heroBottom);
-      if (scroll > heroBottom + 200) {
-        nav.classList.toggle('nav--hidden', scroll > lastY);
+    if (scrollY > heroBottom) {
+      nav.classList.add('nav--frosted');
+      if (scrollY > lastScrollY && scrollY > heroBottom + 200) {
+        nav.classList.add('nav--hidden');
       } else {
         nav.classList.remove('nav--hidden');
       }
+    } else {
+      nav.classList.remove('nav--frosted', 'nav--hidden');
     }
-    lastY = scroll;
-  });
+    lastScrollY = scrollY;
+  }
+
+  if (lenis) {
+    lenis.on('scroll', ({ scroll }) => handleNavScroll(scroll));
+  } else {
+    window.addEventListener('scroll', () => handleNavScroll(window.scrollY), { passive: true });
+  }
 
   /* ============================================
      OVERLAY MENU
@@ -1632,16 +1566,15 @@ document.addEventListener('DOMContentLoaded', () => {
     nav.classList.toggle('overlay-open', overlayOpen);
     hamburger.setAttribute('aria-expanded', String(overlayOpen));
     overlayMenu.setAttribute('aria-hidden', String(!overlayOpen));
-    // Force nav visible when overlay open
     if (overlayOpen) {
-      nav.classList.remove('nav--transparent', 'nav--hidden', 'nav--frosted');
-      lenis.stop();
+      nav.classList.remove('nav--hidden', 'nav--frosted');
+      if (lenis) lenis.stop();
     } else {
-      lenis.start();
+      if (lenis) lenis.start();
     }
   });
 
-  // Image swap on hover over nav links with data-img
+  /* Image swap on hover over nav links with data-img */
   document.querySelectorAll('.overlay-menu__link[data-img]').forEach(link => {
     link.addEventListener('mouseenter', () => {
       const src = link.getAttribute('data-img');
@@ -1659,369 +1592,203 @@ document.addEventListener('DOMContentLoaded', () => {
      SECTION 1 — HERO ENTRANCE
      ============================================ */
   if (!prefersReducedMotion) {
-    const heroTl = gsap.timeline({ delay: 0.9 });
+    const heroTl = gsap.timeline({ delay: 0.3 });
     heroTl
-      .fromTo('.hero__crest',
-        { opacity: 0, scale: 0.8 },
-        { opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out' }
-      )
       .fromTo('.hero__title-line',
-        { opacity: 0, y: 50, skewY: 3 },
-        { opacity: 1, y: 0, skewY: 0, duration: 1, ease: 'power3.out', stagger: 0.15 },
-        '-=0.3'
+        { opacity: 0, y: 60 },
+        { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', stagger: 0.2 }
       )
-      .fromTo('.hero__tagline',
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
-        '-=0.4'
-      )
-      .fromTo('.hero__cta',
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' },
-        '-=0.3'
-      )
-      .fromTo('.hero__scroll',
+      .fromTo('.hero__bottom',
         { opacity: 0 },
-        { opacity: 1, duration: 0.6 },
-        '-=0.2'
+        { opacity: 1, duration: 0.8, ease: 'power3.out' },
+        '-=0.4'
       );
   } else {
-    document.querySelectorAll('.hero__crest, .hero__title-line, .hero__tagline, .hero__cta, .hero__scroll').forEach(el => {
-      el.style.opacity = '1';
+    document.querySelectorAll('.hero__title-line').forEach(el => { el.style.opacity = '1'; });
+  }
+
+  /* ============================================
+     SECTION 2b — ABOUT TEXT STAGGER
+     ============================================ */
+  if (!prefersReducedMotion) {
+    gsap.fromTo('.about-text__title-line',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.2,
+        scrollTrigger: { trigger: '.about-text', start: 'top 75%' }
+      }
+    );
+    gsap.fromTo('.about-text__subtitle',
+      { opacity: 0, y: 20 },
+      { opacity: 0.8, y: 0, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: '.about-text', start: 'top 70%' }
+      }
+    );
+  } else {
+    document.querySelectorAll('.about-text__title-line').forEach(el => { el.style.opacity = '1'; });
+  }
+
+  /* ============================================
+     SECTION 3 — LETTER REVEAL (SCRUB)
+     ============================================ */
+  (function setupLetterReveal() {
+    const textEl = document.getElementById('letterRevealText');
+    if (!textEl) return;
+
+    const text = textEl.textContent.trim();
+    textEl.innerHTML = '';
+    for (let i = 0; i < text.length; i++) {
+      const span = document.createElement('span');
+      span.classList.add('letter-reveal__char');
+      span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+      textEl.appendChild(span);
+    }
+
+    if (prefersReducedMotion) return;
+
+    const chars = textEl.querySelectorAll('.letter-reveal__char');
+    gsap.fromTo(chars,
+      { opacity: 0.1 },
+      { opacity: 1, stagger: { amount: 0.8 }, ease: 'none',
+        scrollTrigger: {
+          trigger: '.letter-reveal',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.5
+        }
+      }
+    );
+  })();
+
+  /* ============================================
+     SECTION 4 — CUVEE SLIDES STAGGER
+     ============================================ */
+  if (!prefersReducedMotion) {
+    document.querySelectorAll('.cuvee-slide').forEach((slide, i) => {
+      gsap.fromTo(slide.querySelector('.cuvee-slide__name'),
+        { opacity: 0, x: i % 2 === 0 ? -60 : 60 },
+        { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: slide, start: 'top 80%' }
+        }
+      );
+      gsap.fromTo(slide.querySelector('.cuvee-slide__tagline'),
+        { opacity: 0, y: 20 },
+        { opacity: 0.7, y: 0, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: slide, start: 'top 75%' }
+        }
+      );
+      gsap.fromTo(slide.querySelector('.cuvee-slide__bottle'),
+        { opacity: 0, y: 80, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out',
+          scrollTrigger: { trigger: slide, start: 'top 75%' }
+        }
+      );
     });
   }
 
   /* ============================================
-     SECTION 2 — MANIFESTE SCROLL (PINNED 3-SHOT)
-     ============================================ */
-  (function setupManifeste() {
-    const shots = document.querySelectorAll('.manifeste__shot');
-    const textEls = document.querySelectorAll('[data-manifeste-text]');
-
-    /* Split each text block into word spans */
-    textEls.forEach(textEl => {
-      const raw = textEl.textContent.trim();
-      const words = raw.split(/\s+/);
-      textEl.innerHTML = words
-        .map(w => '<span class="manifeste__word">' + w + '</span>')
-        .join(' ');
-    });
-
-    if (prefersReducedMotion) {
-      shots.forEach(s => { s.style.opacity = '1'; });
-      document.querySelectorAll('.manifeste__word').forEach(w => {
-        w.style.opacity = '1';
-        w.style.color = 'var(--blanc)';
-      });
-      const bottles = document.querySelector('.manifeste__bottles');
-      if (bottles) { bottles.style.opacity = '1'; bottles.style.transform = 'none'; }
-      return;
-    }
-
-    /* Shot 1 visible by default — word-reveal scrub during first 33% of scroll */
-    const words1 = shots[0].querySelectorAll('.manifeste__word');
-    gsap.fromTo(words1,
-      { opacity: 0.15, color: 'var(--gris)' },
-      { opacity: 1, color: 'var(--blanc)', stagger: { amount: 0.8 }, ease: 'none',
-        scrollTrigger: {
-          trigger: '.manifeste',
-          start: 'top top',
-          end: '33% top',
-          scrub: 0.5
-        }
-      }
-    );
-
-    /* Cross-fade Shot 1 → Shot 2 at ~30-40% */
-    gsap.fromTo(shots[0],
-      { opacity: 1 },
-      { opacity: 0, ease: 'none',
-        scrollTrigger: {
-          trigger: '.manifeste',
-          start: '28% top',
-          end: '38% top',
-          scrub: true
-        }
-      }
-    );
-    gsap.fromTo(shots[1],
-      { opacity: 0 },
-      { opacity: 1, ease: 'none',
-        scrollTrigger: {
-          trigger: '.manifeste',
-          start: '28% top',
-          end: '38% top',
-          scrub: true
-        }
-      }
-    );
-
-    /* Shot 2 word reveal during 35-60% */
-    const words2 = shots[1].querySelectorAll('.manifeste__word');
-    gsap.fromTo(words2,
-      { opacity: 0.15, color: 'var(--gris)' },
-      { opacity: 1, color: 'var(--blanc)', stagger: { amount: 0.8 }, ease: 'none',
-        scrollTrigger: {
-          trigger: '.manifeste',
-          start: '33% top',
-          end: '60% top',
-          scrub: 0.5
-        }
-      }
-    );
-
-    /* Cross-fade Shot 2 → Shot 3 at ~58-68% */
-    gsap.fromTo(shots[1],
-      { opacity: 1 },
-      { opacity: 0, ease: 'none',
-        scrollTrigger: {
-          trigger: '.manifeste',
-          start: '56% top',
-          end: '66% top',
-          scrub: true
-        }
-      }
-    );
-    gsap.fromTo(shots[2],
-      { opacity: 0 },
-      { opacity: 1, ease: 'none',
-        scrollTrigger: {
-          trigger: '.manifeste',
-          start: '56% top',
-          end: '66% top',
-          scrub: true
-        }
-      }
-    );
-
-    /* Shot 3 word reveal during 63-85% */
-    const words3 = shots[2].querySelectorAll('.manifeste__word');
-    gsap.fromTo(words3,
-      { opacity: 0.15, color: 'var(--gris)' },
-      { opacity: 1, color: 'var(--blanc)', stagger: { amount: 0.8 }, ease: 'none',
-        scrollTrigger: {
-          trigger: '.manifeste',
-          start: '63% top',
-          end: '85% top',
-          scrub: 0.5
-        }
-      }
-    );
-
-    /* Bottles fade in from below on shot 3 */
-    const bottles = document.querySelector('.manifeste__bottles');
-    if (bottles) {
-      gsap.fromTo(bottles,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.manifeste',
-            start: '72% top',
-            end: '85% top',
-            scrub: 0.5
-          }
-        }
-      );
-    }
-  })();
-
-  /* ============================================
-     SECTION 3 — LES MOMENTS REVEAL
+     SECTION 4b — PRODUCT CARDS STAGGER
      ============================================ */
   if (!prefersReducedMotion) {
-    gsap.fromTo('.moments__label',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.8,
-        scrollTrigger: { trigger: '.moments', start: 'top 80%' }
-      }
-    );
-    gsap.fromTo('.moments__title',
+    document.querySelectorAll('.product-card').forEach((card, i) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 60 },
+        { opacity: 1, y: 0, duration: 0.9, delay: i * 0.15, ease: 'power3.out',
+          scrollTrigger: { trigger: '.product-carousel', start: 'top 80%' }
+        }
+      );
+    });
+  }
+
+  /* Product carousel arrows */
+  const carousel = document.getElementById('productCarousel');
+  const prevBtn = document.getElementById('carouselPrev');
+  const nextBtn = document.getElementById('carouselNext');
+  if (carousel && prevBtn && nextBtn) {
+    const cardWidth = () => carousel.querySelector('.product-card')?.offsetWidth || 400;
+    prevBtn.addEventListener('click', () => {
+      carousel.scrollBy({ left: -cardWidth(), behavior: 'smooth' });
+    });
+    nextBtn.addEventListener('click', () => {
+      carousel.scrollBy({ left: cardWidth(), behavior: 'smooth' });
+    });
+  }
+
+  /* ============================================
+     SECTION 5 — EDITORIAL STAGGER
+     ============================================ */
+  if (!prefersReducedMotion) {
+    document.querySelectorAll('.editorial__post').forEach((post, i) => {
+      gsap.fromTo(post,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.9, delay: i * 0.15, ease: 'power3.out',
+          scrollTrigger: { trigger: '.editorial', start: 'top 75%' }
+        }
+      );
+    });
+  }
+
+  /* ============================================
+     SECTION 6 — SOCIAL STAGGER
+     ============================================ */
+  if (!prefersReducedMotion) {
+    gsap.fromTo('.social__title',
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-        scrollTrigger: { trigger: '.moments', start: 'top 75%' }
+        scrollTrigger: { trigger: '.social', start: 'top 80%' }
       }
     );
-
-    document.querySelectorAll('.moment-card').forEach((card, i) => {
-      gsap.fromTo(card,
-        { opacity: 0, y: 60, scale: 0.96 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.9, delay: i * 0.08, ease: 'power3.out',
-          scrollTrigger: { trigger: card, start: 'top 85%' }
+    document.querySelectorAll('.social__grid img').forEach((img, i) => {
+      gsap.fromTo(img,
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 0.8, delay: i * 0.1, ease: 'power3.out',
+          scrollTrigger: { trigger: '.social__grid', start: 'top 80%' }
         }
       );
     });
   }
 
   /* ============================================
-     SECTION 4 — LE RITUEL (QUIZ)
-     ============================================ */
-  (function setupRituel() {
-    const container = document.getElementById('rituelContainer');
-    if (!container) return;
-
-    const answers = { mood: null, occasion: null, palate: null };
-    let currentStep = 1;
-
-    const bottles = {
-      'le-rose':     { name: 'Le Rosé', tagline: 'L\'élégance incarnée — notes de fruits rouges et pétales de rose', img: 'assets/bottles/le-rose.png' },
-      'le-blanc':    { name: 'Le Blanc', tagline: 'La fraîcheur lumineuse — agrumes, fleurs blanches et minéralité', img: 'assets/bottles/le-blanc.png' },
-      'la-cuvee':    { name: 'La Cuvée Vintage 2023', tagline: 'L\'exception absolue — complexité, profondeur et raffinement', img: 'assets/bottles/la-cuvee.png' },
-      'extra-brut':  { name: 'L\'Extra Brut', tagline: 'L\'élégance de la précision — sec, vif et cristallin', img: 'assets/bottles/extra-brut.png' }
-    };
-
-    function getRecommendation() {
-      const m = answers.mood;
-      const o = answers.occasion;
-      const p = answers.palate;
-
-      if (m === 'festif' && o === 'apero' && p === 'fruite') return bottles['le-rose'];
-      if (m === 'detendu' && o === 'brunch' && p === 'sec') return bottles['le-blanc'];
-      if (m === 'intime' && o === 'diner' && p === 'prestige') return bottles['la-cuvee'];
-
-      /* Weighted fallback logic */
-      if (p === 'fruite') return bottles['le-rose'];
-      if (p === 'prestige') return bottles['la-cuvee'];
-      if (p === 'sec' && (m === 'detendu' || o === 'brunch')) return bottles['le-blanc'];
-      if (m === 'festif') return bottles['le-rose'];
-      if (m === 'intime') return bottles['la-cuvee'];
-
-      return bottles['extra-brut'];
-    }
-
-    function goToStep(step) {
-      const allSteps = container.querySelectorAll('.rituel__step');
-      allSteps.forEach(s => { s.classList.remove('active'); });
-
-      const target = container.querySelector('[data-step="' + step + '"]');
-      if (target) {
-        setTimeout(() => { target.classList.add('active'); }, 50);
-      }
-
-      /* Update dots */
-      const dots = document.querySelectorAll('.rituel__dot');
-      dots.forEach(d => { d.classList.remove('active'); });
-      if (step !== 'result') {
-        const activeDot = document.querySelector('[data-dot="' + step + '"]');
-        if (activeDot) activeDot.classList.add('active');
-      } else {
-        dots.forEach(d => { d.classList.add('active'); });
-      }
-
-      currentStep = step;
-    }
-
-    function showResult() {
-      const rec = getRecommendation();
-      document.getElementById('resultBottle').src = rec.img;
-      document.getElementById('resultBottle').alt = rec.name;
-      document.getElementById('resultName').textContent = rec.name;
-      document.getElementById('resultTagline').textContent = rec.tagline;
-      goToStep('result');
-      launchConfetti();
-    }
-
-    function launchConfetti() {
-      const colors = ['#D4B188', '#EA5438', '#D4A094', '#ACB99C', '#E2C9A6', '#F2D5CC', '#B89A6E'];
-      const count = 18;
-      for (let i = 0; i < count; i++) {
-        const piece = document.createElement('div');
-        piece.classList.add('confetti-piece');
-        const tx = (Math.random() - 0.5) * 500;
-        const ty = (Math.random() - 0.5) * 400 - 100;
-        const rot = Math.random() * 720 - 360;
-        piece.style.cssText =
-          'left: 50%; top: 50%;' +
-          'background:' + colors[Math.floor(Math.random() * colors.length)] + ';' +
-          '--tx:' + tx + 'px; --ty:' + ty + 'px; --rot:' + rot + 'deg;' +
-          'border-radius:' + (Math.random() > 0.5 ? '50%' : '2px') + ';' +
-          'width:' + (6 + Math.random() * 6) + 'px;' +
-          'height:' + (6 + Math.random() * 6) + 'px;';
-        document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), 1600);
-      }
-    }
-
-    /* Step 1 handlers */
-    container.querySelectorAll('[data-step="1"] [data-answer]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        answers.mood = btn.dataset.answer;
-        goToStep(2);
-      });
-    });
-
-    /* Step 2 handlers */
-    container.querySelectorAll('[data-step="2"] [data-answer]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        answers.occasion = btn.dataset.answer;
-        goToStep(3);
-      });
-    });
-
-    /* Step 3 handlers */
-    container.querySelectorAll('[data-step="3"] [data-answer]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        answers.palate = btn.dataset.answer;
-        showResult();
-      });
-    });
-
-    /* Section entrance */
-    if (!prefersReducedMotion) {
-      gsap.fromTo('.rituel__title',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: '.rituel', start: 'top 75%' }
-        }
-      );
-    }
-  })();
-
-  /* ============================================
-     SECTION 5 — PRESSE REVEAL
+     SECTION 7 — NEWSLETTER
      ============================================ */
   if (!prefersReducedMotion) {
-    gsap.fromTo('.presse__citation',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-        scrollTrigger: { trigger: '.presse__citation', start: 'top 80%' }
-      }
-    );
-  }
-
-  /* ============================================
-     SECTION 6 — NEWSLETTER REVEAL
-     ============================================ */
-  if (!prefersReducedMotion) {
-    gsap.fromTo('.newsletter__crest',
-      { opacity: 0, scale: 0.8 },
-      { opacity: 0.6, scale: 1, duration: 0.7, ease: 'power3.out',
-        scrollTrigger: { trigger: '.newsletter', start: 'top 80%' }
-      }
-    );
     gsap.fromTo('.newsletter__title',
-      { opacity: 0, y: 25 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-        scrollTrigger: { trigger: '.newsletter', start: 'top 75%' }
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: '.newsletter', start: 'top 80%' }
       }
     );
     gsap.fromTo('.newsletter__form',
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-        scrollTrigger: { trigger: '.newsletter__form', start: 'top 85%' }
+        scrollTrigger: { trigger: '.newsletter', start: 'top 75%' }
       }
     );
   }
 
+  /* Newsletter form submission */
+  const nlForm = document.getElementById('newsletterForm');
+  const nlSuccess = document.getElementById('newsletterSuccess');
+  if (nlForm) {
+    nlForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      nlForm.style.display = 'none';
+      if (nlSuccess) nlSuccess.style.display = 'block';
+    });
+  }
+
   /* ============================================
-     SECTION 7 — FOOTER REVEAL
+     BACK TO TOP
      ============================================ */
-  if (!prefersReducedMotion) {
-    gsap.fromTo('.footer__top',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.8,
-        scrollTrigger: { trigger: '.footer', start: 'top 85%' }
+  const backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    backToTop.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (lenis) {
+        lenis.scrollTo(0);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    );
+    });
   }
 
 }); /* end DOMContentLoaded */
