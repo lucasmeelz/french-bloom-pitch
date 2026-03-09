@@ -745,8 +745,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.3s !important;
-    transition-duration: 0.4s !important;
     animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
   }
 }
 </style>
@@ -1034,8 +1034,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let cx = 0, cy = 0, tx = 0, ty = 0;
     window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
     gsap.ticker.add(() => {
-      cx += (tx - cx) * 0.15;
-      cy += (ty - cy) * 0.15;
+      cx += (tx - cx) * 0.5;
+      cy += (ty - cy) * 0.5;
       gsap.set(cursorEl, { x: cx, y: cy });
     });
   } else if (cursorEl) {
