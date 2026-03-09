@@ -272,7 +272,47 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .overlay-menu__footer a:hover { opacity: 0.8; }
 
 /* ============================================
-   SECTION 1 — HERO PRODUIT
+   SHARED BUTTON STYLE
+   ============================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 42px; padding: 0 28px;
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  border-radius: 0; position: relative; overflow: hidden;
+  transition: color 0.4s var(--ease-luxe);
+}
+.btn::before {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  width: 0; height: 0; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s var(--ease-luxe), height 0.5s var(--ease-luxe);
+  z-index: 0;
+}
+.btn span { position: relative; z-index: 1; }
+
+.btn--outline {
+  color: var(--cream); border: 1px solid var(--cream-border); background: none;
+}
+.btn--outline::before { background: var(--cream); }
+.btn--outline:hover::before { width: 300px; height: 300px; }
+.btn--outline:hover { color: var(--brown-body); }
+
+.btn--solid {
+  color: var(--cream); background: var(--brown-cta); border: none;
+}
+.btn--solid::before { background: var(--brown-dark); }
+.btn--solid:hover::before { width: 300px; height: 300px; }
+
+.btn--dark-outline {
+  color: var(--brown-text); border: 1px solid var(--separator); background: none;
+}
+.btn--dark-outline::before { background: var(--brown-text); }
+.btn--dark-outline:hover::before { width: 300px; height: 300px; }
+.btn--dark-outline:hover { color: var(--cream); }
+
+/* ============================================
+   SECTION 1 — HERO (full viewport)
    ============================================ */
 .hero {
   position: relative;
@@ -289,7 +329,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   position: absolute;
   top: 160px; left: 50%; transform: translateX(-50%);
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px; font-weight: 400;
+  font-size: 12px; font-weight: 400;
   letter-spacing: 0.1em;
   color: var(--cream);
   opacity: 0.7;
@@ -304,15 +344,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   font-family: 'Begum', serif;
-  font-size: clamp(80px, 12vw, 160px);
+  font-size: clamp(80px, 12vw, 180px);
   font-weight: 400;
   text-transform: uppercase;
   color: var(--cream);
+  opacity: 0.15;
   line-height: 0.88;
   text-align: center;
   z-index: 2;
-  white-space: nowrap;
   pointer-events: none;
+  width: 90%;
+  max-width: 1000px;
 }
 
 .hero__bottle {
@@ -320,53 +362,402 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   top: 50%; left: 50%;
   transform: translate(-50%, -45%);
   z-index: 3;
+  height: 70vh;
   max-height: 70vh;
   object-fit: contain;
   filter: drop-shadow(0 30px 80px rgba(0,0,0,0.3));
 }
 
-.hero__cta-left {
+.hero__bottom-left {
   position: absolute;
+  bottom: var(--padding-edge);
   left: var(--padding-edge);
-  top: 50%; transform: translateY(-50%);
   z-index: 5;
 }
-.hero__cta-right {
-  position: absolute;
-  right: var(--padding-edge);
-  top: 50%; transform: translateY(-50%);
-  z-index: 5;
+.hero__bottom-left a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--cream);
+  opacity: 0.7;
+  transition: opacity 0.3s;
 }
+.hero__bottom-left a:hover { opacity: 1; }
 
-.hero__side-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 42px; padding: 0 24px;
-  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--cream); border: 1px solid var(--cream-border);
-  border-radius: 0; position: relative; overflow: hidden;
-  transition: color 0.4s var(--ease-luxe);
+.hero__bottom-right {
+  position: absolute;
+  bottom: var(--padding-edge);
+  right: var(--padding-edge);
+  z-index: 5;
 }
-.hero__side-btn::before {
-  content: ''; position: absolute; top: 50%; left: 50%;
-  width: 0; height: 0; border-radius: 50%;
-  background: var(--cream); transform: translate(-50%, -50%);
-  transition: width 0.5s var(--ease-luxe), height 0.5s var(--ease-luxe);
-  z-index: 0;
-}
-.hero__side-btn:hover::before { width: 300px; height: 300px; }
-.hero__side-btn:hover { color: var(--brown-body); }
-.hero__side-btn span { position: relative; z-index: 1; }
 
 /* ============================================
-   STICKY BOTTOM CART BAR
+   SECTION 2 — DESCRIPTION
+   ============================================ */
+.product-desc {
+  background: var(--brown-body);
+  padding: 100px var(--padding-edge);
+}
+.product-desc__inner {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+.product-desc__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(28px, 3.5vw, 45px);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 32px;
+}
+.product-desc__text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream-light);
+  letter-spacing: 1.4px;
+  line-height: 1.9;
+  opacity: 0.85;
+}
+
+/* ============================================
+   SECTION 3 — SPECS TABLE
+   ============================================ */
+.specs {
+  background: var(--cream-light);
+  padding: 80px var(--padding-edge);
+}
+.specs__inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.specs__title {
+  font-family: 'Begum', serif;
+  font-size: 24px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--brown-text);
+  margin-bottom: 48px;
+  text-align: center;
+}
+.specs__table {
+  width: 100%;
+}
+.specs__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid rgba(93,70,53,0.12);
+}
+.specs__row:nth-child(odd) {
+  background: rgba(93,70,53,0.04);
+}
+.specs__label,
+.specs__value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--brown-text);
+  padding: 16px 20px;
+  line-height: 1.6;
+}
+.specs__label {
+  font-weight: 600;
+  opacity: 0.8;
+}
+.specs__value {
+  opacity: 0.7;
+}
+
+/* ============================================
+   SECTION 4 — TASTING NOTES (3 columns)
+   ============================================ */
+.tasting {
+  background: var(--brown-body);
+  padding: 80px 0;
+}
+.tasting__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.tasting__col {
+  padding: 48px;
+  border-left: 1px solid var(--separator);
+}
+.tasting__col:first-child { border-left: none; }
+.tasting__number {
+  font-family: 'Begum', serif;
+  font-size: 40px;
+  color: var(--cream);
+  margin-bottom: 24px;
+  opacity: 0.5;
+}
+.tasting__title {
+  font-family: 'Begum', serif;
+  font-size: 20px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+.tasting__text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  letter-spacing: 1.4px;
+  line-height: 1.8;
+  opacity: 0.75;
+}
+
+/* ============================================
+   SECTION 5 — FLAVOR PROFILE
+   ============================================ */
+.flavor {
+  background: var(--brown-body);
+  border-top: 1px solid var(--separator);
+  padding: 80px var(--padding-edge);
+  position: relative;
+  overflow: hidden;
+}
+.flavor__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(24px, 3vw, 28px);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-align: center;
+  margin-bottom: 64px;
+}
+.flavor__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.flavor__item {
+  padding: 32px 24px;
+  border-left: 1px solid var(--separator);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.flavor__item:first-child { border-left: none; }
+.flavor__number {
+  font-family: 'Begum', serif;
+  font-size: 48px;
+  color: var(--cream);
+  opacity: 0.3;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+.flavor__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--cream);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}
+.flavor__bottle-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 80px;
+  padding-right: 5%;
+}
+.flavor__bottle-img {
+  height: 55vh;
+  max-height: 500px;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 60px rgba(0,0,0,0.2));
+}
+
+/* ============================================
+   SECTION 6 — VINIFICATION
+   ============================================ */
+.vinification {
+  background: var(--cream-light);
+}
+.vinification__grid {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  min-height: 600px;
+}
+.vinification__text {
+  padding: 80px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.vinification__title {
+  font-family: 'Begum', serif;
+  font-size: 32px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--brown-text);
+  margin-bottom: 40px;
+}
+.vinification__body p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--brown-text);
+  letter-spacing: 1.2px;
+  line-height: 1.9;
+  margin-bottom: 24px;
+  opacity: 0.8;
+}
+.vinification__body p:last-child { margin-bottom: 0; }
+.vinification__images {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.vinification__images img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* ============================================
+   SECTION 7 — FOOD PAIRING
+   ============================================ */
+.pairing {
+  background: var(--brown-body);
+  padding: 100px var(--padding-edge);
+}
+.pairing__header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.pairing__title {
+  font-family: 'Begum', serif;
+  font-size: clamp(28px, 3.5vw, 32px);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 20px;
+}
+.pairing__subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.7;
+  letter-spacing: 0.08em;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.pairing__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1100px;
+  margin: 0 auto 80px;
+}
+.pairing__card {
+  padding: 32px 24px;
+  border-left: 1px solid var(--separator);
+  border-bottom: 1px solid var(--separator);
+}
+.pairing__card:nth-child(3n+1) { border-left: none; }
+.pairing__card:nth-child(n+4) { border-bottom: none; }
+.pairing__card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--cream);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+.pairing__card-items {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.65;
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+}
+.pairing__image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+/* ============================================
+   SECTION 8 — NEXT WINE
+   ============================================ */
+.next-wine {
+  background: var(--brown-body);
+  border-top: 1px solid var(--separator);
+  padding: 120px 48px;
+  padding-bottom: 120px;
+  text-align: center;
+  position: relative;
+}
+.next-wine__link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.next-wine__number {
+  font-family: 'Begum', serif;
+  font-size: 24px;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.next-wine__label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+.next-wine__bottle {
+  max-height: 50vh;
+  object-fit: contain;
+  margin: -40px auto 0;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 20px 50px rgba(0,0,0,0.2));
+}
+.next-wine__name {
+  font-family: 'Begum', serif;
+  font-size: clamp(60px, 10vw, 120px);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.15;
+  transition: opacity 0.5s var(--ease-luxe);
+  line-height: 1;
+  pointer-events: none;
+}
+.next-wine__link:hover .next-wine__name { opacity: 0.4; }
+
+/* ============================================
+   SECTION 9 — STICKY CART BAR
    ============================================ */
 .cart-bar {
   position: fixed;
   bottom: 16px;
   left: 50%; transform: translateX(-50%);
   width: 80%; max-width: 1200px;
-  height: 88px;
+  height: 60px;
   background: var(--frosted);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--cream-border);
@@ -385,14 +776,20 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .cart-bar__name {
   font-family: 'Begum', serif;
-  font-size: 20px;
+  font-size: 18px;
   color: var(--brown-dark);
   white-space: nowrap;
 }
 
+.cart-bar__center {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .cart-bar__format-label {
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px; font-weight: 700;
+  font-size: 11px; font-weight: 700;
   color: var(--brown-dark);
   letter-spacing: 0.08em;
   white-space: nowrap;
@@ -400,10 +797,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .cart-bar__size-btn {
   display: inline-flex; align-items: center; justify-content: center;
-  height: 36px; padding: 6px 16px;
+  height: 34px; padding: 6px 14px;
   background: var(--brown-accent);
   color: var(--cream);
-  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600;
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
   border-radius: 0; border: none;
 }
@@ -413,7 +810,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .cart-bar__qty-btn {
   display: flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px;
+  width: 34px; height: 34px;
   border: 1px solid var(--cream-border);
   background: transparent;
   color: var(--brown-dark);
@@ -423,19 +820,19 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .cart-bar__qty-btn:hover { background: rgba(251,238,216,0.3); }
 .cart-bar__qty-value {
   display: flex; align-items: center; justify-content: center;
-  width: 40px; height: 36px;
+  width: 36px; height: 34px;
   border-top: 1px solid var(--cream-border);
   border-bottom: 1px solid var(--cream-border);
-  font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 500;
+  font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 500;
   color: var(--brown-dark);
 }
 
 .cart-bar__buy {
   display: inline-flex; align-items: center; justify-content: center;
-  height: 42px; padding: 0 28px;
+  height: 40px; padding: 0 24px;
   background: var(--brown-cta);
   color: var(--cream);
-  font-family: 'Begum', serif; font-size: 14px;
+  font-family: 'Begum', serif; font-size: 13px;
   letter-spacing: 0.08em; text-transform: uppercase;
   border-radius: 0; border: none;
   position: relative; overflow: hidden;
@@ -443,316 +840,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   white-space: nowrap;
 }
 .cart-bar__buy:hover { background: var(--brown-dark); }
-
-/* ============================================
-   SECTION 1b — PRODUCT DESCRIPTION
-   ============================================ */
-.product-desc {
-  background: var(--brown-body);
-  padding: 80px var(--padding-edge);
-}
-.product-desc__inner {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-.product-desc__title {
-  font-family: 'Begum', serif;
-  font-size: 45px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  margin-bottom: 32px;
-}
-.product-desc__text {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  letter-spacing: 1.4px;
-  line-height: 1.8;
-  opacity: 0.85;
-}
-
-/* ============================================
-   SECTION 2 — TASTING NOTES
-   ============================================ */
-.tasting {
-  background: var(--brown-body);
-  border-top: 1px solid var(--separator);
-}
-.tasting__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-.tasting__col {
-  padding: 48px;
-  border-left: 1px solid var(--cream-border);
-}
-.tasting__col:first-child { border-left: none; }
-.tasting__number {
-  font-family: 'Begum', serif;
-  font-size: 40px;
-  color: var(--cream);
-  margin-bottom: 24px;
-}
-.tasting__title {
-  font-family: 'Begum', serif;
-  font-size: 20px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  margin-bottom: 16px;
-}
-.tasting__text {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  letter-spacing: 1.4px;
-  line-height: 1.8;
-}
-
-/* ============================================
-   SECTION 3 — VINIFICATION
-   ============================================ */
-.vinification {
-  background: var(--brown-body);
-  border-top: 1px solid var(--separator);
-}
-.vinification__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 500px;
-}
-.vinification__text {
-  padding: 80px 48px;
-}
-.vinification__title {
-  font-family: 'Begum', serif;
-  font-size: 45px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  margin-bottom: 32px;
-}
-.vinification__body {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  letter-spacing: 1.4px;
-  line-height: 1.8;
-}
-.vinification__images {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.vinification__images img {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  object-fit: cover;
-}
-
-/* ============================================
-   SECTION 4 — FOOD PAIRING / ACCORDS
-   ============================================ */
-.pairing {
-  background: var(--brown-body);
-  border-top: 1px solid var(--separator);
-}
-.pairing__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-.pairing__left {
-  padding: 80px 48px;
-}
-.pairing__title {
-  font-family: 'Begum', serif;
-  font-size: 50px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  line-height: 1.0;
-  margin-bottom: 40px;
-}
-.pairing__bottle {
-  max-height: 200px;
-  object-fit: contain;
-}
-.pairing__right {
-  padding: 80px 48px;
-}
-
-/* Accordion */
-.accordion__item {
-  border-top: 1px solid var(--cream-border);
-}
-.accordion__item:last-child {
-  border-bottom: 1px solid var(--cream-border);
-}
-.accordion__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 72px;
-  cursor: pointer;
-  transition: opacity 0.3s;
-}
-.accordion__header:hover { opacity: 0.7; }
-.accordion__header-text {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  letter-spacing: 0.08em;
-}
-.accordion__chevron {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 20px;
-  color: var(--cream);
-  transition: transform 0.4s var(--ease-luxe);
-  user-select: none;
-  line-height: 1;
-}
-.accordion__item.open .accordion__chevron {
-  transform: rotate(45deg);
-}
-.accordion__body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s var(--ease-luxe), padding 0.5s var(--ease-luxe);
-}
-.accordion__item.open .accordion__body {
-  max-height: 200px;
-}
-.accordion__body-text {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.7;
-  padding-bottom: 20px;
-  letter-spacing: 1px;
-  line-height: 1.6;
-}
-
-/* ============================================
-   SECTION 5 — SECOND BOTTLE IMAGE
-   ============================================ */
-.bottle-showcase {
-  position: relative;
-  background: var(--cream-light);
-  height: 80vh;
-  min-height: 600px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 48px;
-}
-
-/* Starburst decorative lines */
-.bottle-showcase__starburst {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
-.bottle-showcase__ray {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 1px;
-  height: 120%;
-  background: var(--brown-text);
-  opacity: 0.05;
-  transform-origin: top center;
-}
-
-.bottle-showcase__ghost {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'Begum', serif;
-  font-size: 200px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--brown-text);
-  opacity: 0.06;
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-  z-index: 1;
-}
-
-.bottle-showcase__img {
-  position: relative;
-  z-index: 2;
-  max-height: 65vh;
-  object-fit: contain;
-  filter: drop-shadow(0 20px 60px rgba(0,0,0,0.15));
-}
-
-/* ============================================
-   SECTION 6 — NEXT WINE (CROSS-SELL)
-   ============================================ */
-.next-wine {
-  background: var(--brown-body);
-  border-top: 1px solid var(--separator);
-  padding: 120px 48px;
-  padding-bottom: 120px;
-  text-align: center;
-  position: relative;
-}
-.next-wine__link {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-.next-wine__number {
-  font-family: 'Begum', serif;
-  font-size: 40px;
-  color: var(--cream);
-  margin-bottom: 8px;
-}
-.next-wine__label {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.6;
-  letter-spacing: 0.1em;
-  margin-bottom: 24px;
-}
-.next-wine__name {
-  font-family: 'Begum', serif;
-  font-size: clamp(60px, 10vw, 100px);
-  font-weight: 400;
-  text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.3;
-  transition: opacity 0.5s var(--ease-luxe);
-  line-height: 1;
-}
-.next-wine__link:hover .next-wine__name { opacity: 0.8; }
-.next-wine__bottle {
-  max-height: 50vh;
-  object-fit: contain;
-  margin: -40px auto 0;
-  position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 20px 50px rgba(0,0,0,0.2));
-}
 
 /* ============================================
    PRE-FOOTER BAR
@@ -857,44 +944,53 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    RESPONSIVE (max-width: 900px)
    ============================================ */
 @media (max-width: 900px) {
+  :root { --padding-edge: 24px; }
+
   .nav { height: 80px; padding: 0 24px; }
   .nav__collection-btn { display: none; }
   .nav__lang { display: none; }
 
-  .hero__title { font-size: 64px; }
-  .hero__bottle { max-height: 50vh; }
-  .hero__cta-left, .hero__cta-right { display: none; }
-  .hero__back { top: 100px; font-size: 12px; }
+  .hero__title { font-size: clamp(48px, 10vw, 80px); }
+  .hero__bottle { height: 50vh; max-height: 50vh; }
+  .hero__back { top: 100px; font-size: 11px; }
+  .hero__bottom-left, .hero__bottom-right { display: none; }
 
   .cart-bar {
-    width: 95%; height: 64px; padding: 0 16px;
+    width: 95%; height: auto; padding: 12px 16px;
+    flex-direction: row; flex-wrap: wrap; gap: 8px;
   }
-  .cart-bar__format-label,
-  .cart-bar__size-btn,
-  .cart-bar__qty { display: none; }
-  .cart-bar__name { font-size: 16px; }
-  .cart-bar__buy { height: 38px; font-size: 12px; padding: 0 20px; }
+  .cart-bar__center { display: none; }
+  .cart-bar__name { font-size: 15px; }
+  .cart-bar__buy { height: 36px; font-size: 12px; padding: 0 18px; }
 
   .product-desc { padding: 60px 24px; }
-  .product-desc__title { font-size: 32px; }
+  .product-desc__title { font-size: 28px; }
 
+  .specs { padding: 60px 24px; }
+  .specs__row { grid-template-columns: 1fr; }
+  .specs__label { padding-bottom: 4px; border-bottom: none; }
+  .specs__value { padding-top: 0; }
+
+  .tasting { padding: 60px 0; }
   .tasting__grid { grid-template-columns: 1fr; }
-  .tasting__col { border-left: none; border-top: 1px solid var(--cream-border); }
+  .tasting__col { border-left: none; border-top: 1px solid var(--separator); }
   .tasting__col:first-child { border-top: none; }
+
+  .flavor__grid { grid-template-columns: 1fr 1fr; }
+  .flavor__item { border-left: none; border-bottom: 1px solid var(--separator); }
+  .flavor__item:nth-child(odd) { border-right: 1px solid var(--separator); }
+  .flavor__bottle-wrap { justify-content: center; padding-right: 0; }
+  .flavor__bottle-img { height: 40vh; }
 
   .vinification__grid { grid-template-columns: 1fr; }
   .vinification__text { padding: 60px 24px; }
   .vinification__images { height: 400px; }
   .vinification__images img { height: 200px; }
 
-  .pairing__grid { grid-template-columns: 1fr; }
-  .pairing__left { padding: 60px 24px 40px; }
-  .pairing__right { padding: 0 24px 60px; }
-  .pairing__title { font-size: 36px; }
-
-  .bottle-showcase { height: 60vh; min-height: 400px; }
-  .bottle-showcase__ghost { display: none; }
-  .bottle-showcase__img { max-height: 50vh; }
+  .pairing { padding: 60px 24px; }
+  .pairing__grid { grid-template-columns: 1fr 1fr; }
+  .pairing__card { border-left: none; }
+  .pairing__card:nth-child(even) { border-left: 1px solid var(--separator); }
 
   .next-wine { padding: 80px 24px; }
   .next-wine__name { font-size: 48px; }
@@ -922,17 +1018,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 @media (max-width: 600px) {
-  .hero__title { font-size: 48px; }
-  .hero__bottle { max-height: 40vh; }
-  .product-desc__title { font-size: 26px; }
-  .vinification__title { font-size: 32px; }
+  .hero__title { font-size: clamp(40px, 10vw, 56px); }
+  .hero__bottle { height: 40vh; max-height: 40vh; }
+  .product-desc__title { font-size: 24px; }
   .tasting__col { padding: 32px 24px; }
   .tasting__number { font-size: 32px; }
   .tasting__title { font-size: 16px; }
+  .flavor__grid { grid-template-columns: 1fr; }
+  .flavor__item { border-right: none !important; border-left: none; border-bottom: 1px solid var(--separator); }
+  .pairing__grid { grid-template-columns: 1fr; }
+  .pairing__card { border-left: none !important; }
   .next-wine__name { font-size: 36px; }
   .footer__col { flex: 1 1 100%; }
-  .bottle-showcase__ghost { display: none; }
-  .bottle-showcase__img { max-height: 40vh; }
 }
 </style>
 </head>
@@ -1013,43 +1110,83 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </div>
 </div>
 
-<!-- ========== SECTION 1 — HERO PRODUIT ========== -->
+<!-- ========== SECTION 1 — HERO (full viewport) ========== -->
 <section class="hero" aria-label="L'Extra Brut" id="hero">
-  <a href="collection-v2.html" class="hero__back">&larr; Retour a la Collection</a>
+  <a href="collection-v2.html" class="hero__back" id="heroBack">&larr; Retour a la Collection</a>
 
-  <h1 class="hero__title" id="heroTitle">L'Extra Brut</h1>
+  <h1 class="hero__title" id="heroTitle">L'Extra<br>Brut</h1>
   <img src="assets/bottles/extra-brut-hq.png" alt="L'Extra Brut — French Bloom" class="hero__bottle" id="heroBottle">
 
-  <div class="hero__cta-left">
-    <a href="#" class="hero__side-btn"><span>Fiche Technique</span></a>
+  <div class="hero__bottom-left" id="heroBottomLeft">
+    <a href="#specs">&darr; Fiche Technique</a>
   </div>
-  <div class="hero__cta-right">
-    <a href="#" class="hero__side-btn" id="heroBuyBtn"><span>Acheter &middot; 39&euro;</span></a>
+  <div class="hero__bottom-right" id="heroBottomRight">
+    <a href="#" class="btn btn--outline" id="heroBuyBtn"><span>Acheter &middot; 39&euro;</span></a>
   </div>
 </section>
 
-<!-- ========== STICKY BOTTOM CART BAR ========== -->
-<div class="cart-bar" id="cartBar">
-  <span class="cart-bar__name">L'Extra Brut</span>
-  <span class="cart-bar__format-label">Format et Quantite</span>
-  <button class="cart-bar__size-btn">750ML</button>
-  <div class="cart-bar__qty">
-    <button class="cart-bar__qty-btn" id="qtyMinus" aria-label="Diminuer la quantite">&minus;</button>
-    <span class="cart-bar__qty-value" id="qtyValue">1</span>
-    <button class="cart-bar__qty-btn" id="qtyPlus" aria-label="Augmenter la quantite">+</button>
-  </div>
-  <button class="cart-bar__buy" id="cartBarBuy">Acheter &middot; <span id="cartBarPrice">39</span>&euro;</button>
-</div>
-
-<!-- ========== SECTION 1b — PRODUCT DESCRIPTION ========== -->
+<!-- ========== SECTION 2 — DESCRIPTION ========== -->
 <section class="product-desc" id="productDesc">
-  <div class="product-desc__inner">
+  <div class="product-desc__inner" data-fade>
     <h2 class="product-desc__title">L'Extra Brut</h2>
-    <p class="product-desc__text">L'Extra Brut est une cuvee d'exception, elaboree avec la plus grande rigueur pour offrir une effervescence vive et minerale. Notes d'agrumes, de pomme verte et de fleurs blanches se melent dans une harmonie parfaite, ideale pour les palais les plus exigeants.</p>
+    <p class="product-desc__text">Elabore a partir de Chardonnay de premiere qualite, l'Extra Brut est vinifie selon une methode traditionnelle revisitee. Apres une fermentation lente a basse temperature, le vin est desalcoolise par distillation sous vide, preservant ainsi l'integralite de ses aromes. Notes d'agrumes, de pomme verte et de fleurs blanches se melent dans une harmonie parfaite, ideale pour les palais les plus exigeants.</p>
   </div>
 </section>
 
-<!-- ========== SECTION 2 — TASTING NOTES ========== -->
+<!-- ========== SECTION 3 — SPECS TABLE ========== -->
+<section class="specs" id="specs">
+  <div class="specs__inner" data-fade>
+    <h2 class="specs__title">Specifications</h2>
+    <div class="specs__table">
+      <div class="specs__row">
+        <div class="specs__label">Nom du Vin</div>
+        <div class="specs__value">L'Extra Brut</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Typologie</div>
+        <div class="specs__value">Sparkling Blanc Non Alcoolise</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Origine</div>
+        <div class="specs__value">France</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Cepage</div>
+        <div class="specs__value">Chardonnay</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Degre d'Alcool</div>
+        <div class="specs__value">&lt; 0.3% Vol.</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Sucres Residuels</div>
+        <div class="specs__value">20 g/L</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Acidite Totale</div>
+        <div class="specs__value">4.5 g/L</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Temperature de Service</div>
+        <div class="specs__value">6-8&deg;C</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Conservation</div>
+        <div class="specs__value">Dans un endroit frais et sec, a l'abri de la lumiere</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Kcal / 100ML</div>
+        <div class="specs__value">18 kcal</div>
+      </div>
+      <div class="specs__row">
+        <div class="specs__label">Ingredients</div>
+        <div class="specs__value">Vin desalcoolise de Chardonnay, sucre de raisin, conservateurs (sulfites)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 4 — TASTING NOTES ========== -->
 <section class="tasting" id="tasting">
   <div class="tasting__grid">
     <div class="tasting__col" data-tasting-col>
@@ -1070,109 +1207,86 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </div>
 </section>
 
-<!-- ========== SECTION 3 — VINIFICATION ========== -->
+<!-- ========== SECTION 5 — FLAVOR PROFILE ========== -->
+<section class="flavor" id="flavor">
+  <h2 class="flavor__title" data-fade>Profil Degustatif</h2>
+  <div class="flavor__grid" data-flavor-grid>
+    <div class="flavor__item">
+      <p class="flavor__number">01</p>
+      <p class="flavor__label">Une Effervescence Vive et Minerale</p>
+    </div>
+    <div class="flavor__item">
+      <p class="flavor__number">02</p>
+      <p class="flavor__label">Agrumes et Fleurs Blanches</p>
+    </div>
+    <div class="flavor__item">
+      <p class="flavor__number">03</p>
+      <p class="flavor__label">Frais et Cisele</p>
+    </div>
+    <div class="flavor__item">
+      <p class="flavor__number">04</p>
+      <p class="flavor__label">Finale Longue et Persistante</p>
+    </div>
+  </div>
+  <div class="flavor__bottle-wrap" data-fade>
+    <img src="assets/bottles/extra-brut-hq.png" alt="L'Extra Brut" class="flavor__bottle-img" loading="lazy">
+  </div>
+</section>
+
+<!-- ========== SECTION 6 — VINIFICATION ========== -->
 <section class="vinification" id="vinification">
   <div class="vinification__grid">
     <div class="vinification__text" data-vini-text>
       <h2 class="vinification__title">Vinification</h2>
-      <p class="vinification__body">Elabore a partir de Chardonnay de premiere qualite, l'Extra Brut est vinifie selon une methode traditionnelle revisitee. Apres une fermentation lente a basse temperature, le vin est desalcoolise par distillation sous vide, preservant ainsi l'integralite de ses aromes.</p>
-    </div>
-    <div class="vinification__images" data-vini-images>
-      <img src="assets/lifestyle/brut-closeup.jpg" alt="Gros plan sur L'Extra Brut" loading="lazy">
-      <img src="assets/lifestyle/sand-lifestyle.jpg" alt="French Bloom lifestyle" loading="lazy">
-    </div>
-  </div>
-</section>
-
-<!-- ========== SECTION 4 — FOOD PAIRING ========== -->
-<section class="pairing" id="pairing">
-  <div class="pairing__grid">
-    <div class="pairing__left">
-      <h2 class="pairing__title">Ce Vin Accompagne</h2>
-      <img src="assets/bottles/extra-brut-hq.png" alt="L'Extra Brut" class="pairing__bottle" loading="lazy">
-    </div>
-    <div class="pairing__right">
-      <div class="accordion" id="accordion">
-        <div class="accordion__item" data-accordion-item>
-          <div class="accordion__header">
-            <span class="accordion__header-text">Aperitifs</span>
-            <span class="accordion__chevron">+</span>
-          </div>
-          <div class="accordion__body">
-            <p class="accordion__body-text">Parfait pour accompagner des amuse-bouches raffines, des verrines et des canapes.</p>
-          </div>
-        </div>
-        <div class="accordion__item" data-accordion-item>
-          <div class="accordion__header">
-            <span class="accordion__header-text">Entrees</span>
-            <span class="accordion__chevron">+</span>
-          </div>
-          <div class="accordion__body">
-            <p class="accordion__body-text">S'accorde merveilleusement avec des carpaccios, tartares et salades composees.</p>
-          </div>
-        </div>
-        <div class="accordion__item" data-accordion-item>
-          <div class="accordion__header">
-            <span class="accordion__header-text">Poissons</span>
-            <span class="accordion__chevron">+</span>
-          </div>
-          <div class="accordion__body">
-            <p class="accordion__body-text">Ideal avec des poissons grilles, en papillote ou en ceviche.</p>
-          </div>
-        </div>
-        <div class="accordion__item" data-accordion-item>
-          <div class="accordion__header">
-            <span class="accordion__header-text">Fruits de Mer</span>
-            <span class="accordion__chevron">+</span>
-          </div>
-          <div class="accordion__body">
-            <p class="accordion__body-text">Le compagnon parfait des huitres, crevettes et plateaux de fruits de mer.</p>
-          </div>
-        </div>
-        <div class="accordion__item" data-accordion-item>
-          <div class="accordion__header">
-            <span class="accordion__header-text">Fromages</span>
-            <span class="accordion__chevron">+</span>
-          </div>
-          <div class="accordion__body">
-            <p class="accordion__body-text">Sublime les fromages frais de chevre et les pates molles a croute fleurie.</p>
-          </div>
-        </div>
-        <div class="accordion__item" data-accordion-item>
-          <div class="accordion__header">
-            <span class="accordion__header-text">Desserts</span>
-            <span class="accordion__chevron">+</span>
-          </div>
-          <div class="accordion__body">
-            <p class="accordion__body-text">Magnifique avec des tartes aux fruits, sorbets et desserts legers.</p>
-          </div>
-        </div>
+      <div class="vinification__body">
+        <p>Les raisins sont recoltes a maturite optimale pour obtenir un vin riche en composants aromatiques, tout en preservant la fraicheur. Apres une premiere fermentation d'une semaine, le vin est affine sur lies fines pendant environ six mois avec des batonnages frequents.</p>
+        <p>Une filtration est ensuite effectuee pour preparer le vin a la desalcoolisation. L'alcool est separe de la matrice vineuse grace au passage a travers des membranes selectives.</p>
+        <p>La derniere etape de la production est la preparation du vin a la mise en bouteille, avec un stade de filtration supplementaire garantissant la parfaite limpidite.</p>
       </div>
     </div>
+    <div class="vinification__images" data-vini-images>
+      <img src="assets/lifestyle/food-pairing.jpg" alt="French Bloom — accords gastronomiques" loading="lazy">
+      <img src="assets/lifestyle/sand-lifestyle.jpg" alt="French Bloom — lifestyle" loading="lazy">
+    </div>
   </div>
 </section>
 
-<!-- ========== SECTION 5 — SECOND BOTTLE IMAGE ========== -->
-<section class="bottle-showcase" id="bottleShowcase">
-  <div class="bottle-showcase__starburst" aria-hidden="true">
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(0deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(30deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(60deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(90deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(120deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(150deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(180deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(210deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(240deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(270deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(300deg);"></div>
-    <div class="bottle-showcase__ray" style="transform: translate(-50%, -50%) rotate(330deg);"></div>
+<!-- ========== SECTION 7 — FOOD PAIRING ========== -->
+<section class="pairing" id="pairing">
+  <div class="pairing__header" data-fade>
+    <h2 class="pairing__title">Ce Vin Accompagne</h2>
+    <p class="pairing__subtitle">L'Extra Brut se revele un compagnon polyvalent, sublimant aussi bien les instants d'aperitif que les repas les plus elabores.</p>
   </div>
-  <span class="bottle-showcase__ghost" aria-hidden="true">L'Extra Brut</span>
-  <img src="assets/bottles/extra-brut-hq.png" alt="L'Extra Brut — French Bloom" class="bottle-showcase__img" id="showcaseBottle" loading="lazy">
+  <div class="pairing__grid" data-pairing-grid>
+    <div class="pairing__card">
+      <p class="pairing__card-title">Aperitifs Creatifs</p>
+      <p class="pairing__card-items">Blinis a l'avocat et crevettes — Mini quiches au saumon fume</p>
+    </div>
+    <div class="pairing__card">
+      <p class="pairing__card-title">Entrees Raffinees</p>
+      <p class="pairing__card-items">Salade de poulpe aux pommes de terre nouvelles — Carpaccio de boeuf au romarin</p>
+    </div>
+    <div class="pairing__card">
+      <p class="pairing__card-title">Plats Legers</p>
+      <p class="pairing__card-items">Spaghetti aux tomates confites et basilic — Risotto aux asperges</p>
+    </div>
+    <div class="pairing__card">
+      <p class="pairing__card-title">Poissons & Viandes Blanches</p>
+      <p class="pairing__card-items">Truite saumonee laquee au citron — Poulet roti aux herbes</p>
+    </div>
+    <div class="pairing__card">
+      <p class="pairing__card-title">Fromages Frais</p>
+      <p class="pairing__card-items">Caprese a la mozzarella di bufala — Chevre frais au miel d'acacia</p>
+    </div>
+    <div class="pairing__card">
+      <p class="pairing__card-title">Desserts Fruites</p>
+      <p class="pairing__card-items">Pavlova aux fruits rouges — Sorbet au cassis</p>
+    </div>
+  </div>
+  <img src="assets/lifestyle/food-pairing-2.jpg" alt="French Bloom — accords gourmands" class="pairing__image" loading="lazy" data-fade>
 </section>
 
-<!-- ========== SECTION 6 — NEXT WINE ========== -->
+<!-- ========== SECTION 8 — NEXT WINE ========== -->
 <section class="next-wine" id="nextWine">
   <a href="product-v2.html" class="next-wine__link">
     <p class="next-wine__number">(01)</p>
@@ -1181,6 +1295,21 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     <h2 class="next-wine__name">Le Rose</h2>
   </a>
 </section>
+
+<!-- ========== SECTION 9 — STICKY CART BAR ========== -->
+<div class="cart-bar" id="cartBar">
+  <span class="cart-bar__name">L'Extra Brut</span>
+  <div class="cart-bar__center">
+    <span class="cart-bar__format-label">Format et Quantite</span>
+    <button class="cart-bar__size-btn">750ML</button>
+    <div class="cart-bar__qty">
+      <button class="cart-bar__qty-btn" id="qtyMinus" aria-label="Diminuer la quantite">&minus;</button>
+      <span class="cart-bar__qty-value" id="qtyValue">1</span>
+      <button class="cart-bar__qty-btn" id="qtyPlus" aria-label="Augmenter la quantite">+</button>
+    </div>
+  </div>
+  <button class="cart-bar__buy" id="cartBarBuy">Acheter &middot; <span id="cartBarPrice">39</span>&euro;</button>
+</div>
 
 <!-- ========== PRE-FOOTER BAR ========== -->
 <div class="prefooter">
@@ -1260,7 +1389,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cy += (ty - cy) * 0.15;
       gsap.set(cursor, { x: cx, y: cy });
     });
-    document.querySelectorAll('a, button, [role="button"], .accordion__header').forEach(el => {
+    document.querySelectorAll('a, button, [role="button"]').forEach(el => {
       el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%, -50%) scale(2.5)'; });
       el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%, -50%) scale(1)'; });
     });
@@ -1334,27 +1463,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroTl = gsap.timeline({ delay: 0.3 });
     heroTl
       .fromTo('#heroTitle',
-        { opacity: 0, scale: 0.95 },
-        { opacity: 1, scale: 1, duration: 1.6, ease: 'power2.out' }
+        { opacity: 0, y: 20 },
+        { opacity: 0.15, y: 0, duration: 1.5, ease: 'power2.out' }
       )
       .fromTo('#heroBottle',
-        { opacity: 0, y: 60 },
+        { opacity: 0, y: 30 },
         { opacity: 1, y: 0, duration: 1.8, ease: 'power2.out' },
         '-=1.0'
       )
-      .fromTo('.hero__back',
+      .fromTo('#heroBack',
         { opacity: 0, y: -5 },
         { opacity: 0.7, y: 0, duration: 0.9, ease: 'power2.out' },
         '-=0.8'
       )
-      .fromTo('.hero__cta-left, .hero__cta-right',
-        { opacity: 0, x: (i) => i === 0 ? -15 : 15 },
-        { opacity: 1, x: 0, duration: 1.2, ease: 'power2.out', stagger: 0.15 },
+      .fromTo('#heroBottomLeft, #heroBottomRight',
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out', stagger: 0.15 },
         '-=0.6'
       );
   } else {
-    document.querySelectorAll('#heroTitle, #heroBottle, .hero__back, .hero__cta-left, .hero__cta-right').forEach(el => {
-      el.style.opacity = '1';
+    document.querySelectorAll('#heroTitle, #heroBottle, #heroBack, #heroBottomLeft, #heroBottomRight').forEach(el => {
+      el.style.opacity = el.id === 'heroTitle' ? '0.15' : '1';
     });
   }
 
@@ -1377,15 +1506,35 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ============================================
-     PRODUCT DESCRIPTION — fade in
+     GENERIC FADE-IN FOR [data-fade] ELEMENTS
      ============================================ */
   if (!prefersReducedMotion) {
-    gsap.fromTo('.product-desc__inner',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 1.4, ease: 'power2.out',
+    document.querySelectorAll('[data-fade]').forEach(el => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 1.4, ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+    });
+  }
+
+  /* ============================================
+     SPECS TABLE — stagger rows
+     ============================================ */
+  if (!prefersReducedMotion) {
+    const specRows = document.querySelectorAll('.specs__row');
+    gsap.fromTo(specRows,
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out',
+        stagger: 0.06,
         scrollTrigger: {
-          trigger: '.product-desc',
-          start: 'top 85%',
+          trigger: '.specs',
+          start: 'top 88%',
           toggleActions: 'play none none none'
         }
       }
@@ -1400,10 +1549,28 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.fromTo(tastingCols,
       { opacity: 0, y: 25 },
       { opacity: 1, y: 0, duration: 1.3, ease: 'power2.out',
-        stagger: 0.2,
+        stagger: 0.15,
         scrollTrigger: {
           trigger: '.tasting',
-          start: 'top 85%',
+          start: 'top 88%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  /* ============================================
+     FLAVOR PROFILE — stagger items
+     ============================================ */
+  if (!prefersReducedMotion) {
+    const flavorItems = document.querySelectorAll('.flavor__item');
+    gsap.fromTo(flavorItems,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out',
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: '.flavor__grid',
+          start: 'top 88%',
           toggleActions: 'play none none none'
         }
       }
@@ -1415,21 +1582,21 @@ document.addEventListener('DOMContentLoaded', () => {
      ============================================ */
   if (!prefersReducedMotion) {
     gsap.fromTo('[data-vini-text]',
-      { opacity: 0, x: -30 },
+      { opacity: 0, x: -25 },
       { opacity: 1, x: 0, duration: 1.4, ease: 'power2.out',
         scrollTrigger: {
           trigger: '.vinification',
-          start: 'top 85%',
+          start: 'top 88%',
           toggleActions: 'play none none none'
         }
       }
     );
     gsap.fromTo('[data-vini-images]',
-      { opacity: 0, x: 30 },
+      { opacity: 0, x: 25 },
       { opacity: 1, x: 0, duration: 1.4, ease: 'power2.out',
         scrollTrigger: {
           trigger: '.vinification',
-          start: 'top 85%',
+          start: 'top 88%',
           toggleActions: 'play none none none'
         }
       }
@@ -1437,41 +1604,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ============================================
-     FOOD PAIRING — stagger accordion items
+     FOOD PAIRING — stagger cards
      ============================================ */
   if (!prefersReducedMotion) {
-    const accordionItems = document.querySelectorAll('[data-accordion-item]');
-    gsap.fromTo(accordionItems,
-      { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out',
+    const pairingCards = document.querySelectorAll('.pairing__card');
+    gsap.fromTo(pairingCards,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out',
         stagger: 0.1,
         scrollTrigger: {
-          trigger: '.pairing',
-          start: 'top 85%',
+          trigger: '.pairing__grid',
+          start: 'top 88%',
           toggleActions: 'play none none none'
         }
       }
     );
-  }
-
-  /* ============================================
-     SECOND BOTTLE — parallax
-     ============================================ */
-  if (!prefersReducedMotion) {
-    const showcaseBottle = document.getElementById('showcaseBottle');
-    if (showcaseBottle) {
-      gsap.fromTo(showcaseBottle,
-        { y: 40 },
-        { y: -40,
-          scrollTrigger: {
-            trigger: '.bottle-showcase',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5
-          }
-        }
-      );
-    }
   }
 
   /* ============================================
@@ -1483,29 +1630,11 @@ document.addEventListener('DOMContentLoaded', () => {
       { opacity: 1, y: 0, duration: 1.4, ease: 'power2.out',
         scrollTrigger: {
           trigger: '.next-wine',
-          start: 'top 85%',
+          start: 'top 88%',
           toggleActions: 'play none none none'
         }
       }
     );
-  }
-
-  /* ============================================
-     ACCORDION — click to toggle
-     ============================================ */
-  const accordion = document.getElementById('accordion');
-  if (accordion) {
-    const items = accordion.querySelectorAll('[data-accordion-item]');
-    items.forEach(item => {
-      const header = item.querySelector('.accordion__header');
-      header.addEventListener('click', () => {
-        const isOpen = item.classList.contains('open');
-        items.forEach(i => i.classList.remove('open'));
-        if (!isOpen) {
-          item.classList.add('open');
-        }
-      });
-    });
   }
 
   /* ============================================

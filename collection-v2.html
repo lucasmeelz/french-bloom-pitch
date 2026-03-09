@@ -97,7 +97,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   width: 0; height: 0; border-radius: 50%;
   background: var(--brown-text);
   transform: translate(-50%, -50%);
-  transition: width 0.5s ease, height 0.5s ease;
+  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1), height 0.7s cubic-bezier(0.25, 1, 0.5, 1);
   z-index: 0;
 }
 .btn:hover::before { width: 300%; height: 300%; }
@@ -409,7 +409,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .collection-header__title {
   font-family: 'Begum', serif;
-  font-size: clamp(48px, 8vw, 106px);
+  font-size: clamp(36px, 5vw, 64px);
   color: var(--brown-text);
   line-height: 0.9;
   text-transform: uppercase;
@@ -447,6 +447,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-bottom: 1px solid var(--separator);
   border-left: 1px solid var(--separator);
   position: relative;
+  transition: background-color 0.6s ease;
 }
 .card-wrapper:nth-child(3n+1) { border-left: none; }
 
@@ -490,15 +491,19 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   max-height: 400px;
   object-fit: contain;
   position: relative; z-index: 1;
-  transition: transform 0.6s var(--ease-luxe);
+  transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
   filter: drop-shadow(0 10px 30px rgba(0,0,0,0.08));
 }
 .card-wrapper:hover .card-wrapper__bottle {
-  transform: scale(1.02);
+  transform: scale(1.04) translateY(-4px);
 }
 
 .card-wrapper__info {
   display: flex; flex-direction: column;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.card-wrapper:hover .card-wrapper__info {
+  transform: translateY(-2px);
 }
 .card-wrapper__name {
   font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 400;
